@@ -1,7 +1,7 @@
 package de.gilljan.gworld;
 
+import de.gilljan.gworld.data.DataHandler;
 import de.gilljan.gworld.utils.EntityUtil;
-import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -12,6 +12,7 @@ public final class GWorld extends JavaPlugin {
     public static List<String> availableGenerators = new ArrayList<>();
     public static final List<String> ANIMALS = new ArrayList<>();
     public static final List<String> MONSTER = new ArrayList<>();
+    private DataHandler dataHandler;
 
     @Override
     public void onEnable() {
@@ -32,5 +33,9 @@ public final class GWorld extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public static GWorld getInstance() {
+        return instance;
     }
 }

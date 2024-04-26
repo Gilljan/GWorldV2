@@ -1,7 +1,6 @@
 name: GWorld
 version: '${project.version}'
 main: de.gilljan.gworld.GWorld
-api-version: '1.20'
 prefix: GWorld
 load: STARTUP
 authors: [Gilljan]
