@@ -2,6 +2,7 @@ package de.gilljan.gworld;
 
 import de.gilljan.gworld.data.DataHandler;
 import de.gilljan.gworld.utils.EntityUtil;
+import de.gilljan.gworld.world.WorldManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public final class GWorld extends JavaPlugin {
     public static final List<String> ANIMALS = new ArrayList<>();
     public static final List<String> MONSTER = new ArrayList<>();
     private DataHandler dataHandler;
+    private WorldManager worldManager;
 
     @Override
     public void onEnable() {
