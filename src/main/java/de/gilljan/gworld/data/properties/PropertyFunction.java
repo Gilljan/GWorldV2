@@ -1,0 +1,8 @@
+package de.gilljan.gworld.data.properties;
+
+import de.gilljan.gworld.data.world.WorldData;
+
+@FunctionalInterface
+public interface PropertyFunction<T> {
+    T apply(WorldData data);
+}

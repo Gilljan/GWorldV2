@@ -14,4 +14,6 @@ public interface DataHandler {
 
     void refetchWorlds();
 
+    WorldData fetchWorld(String name);
+
 }

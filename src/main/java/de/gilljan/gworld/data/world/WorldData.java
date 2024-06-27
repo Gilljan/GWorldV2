@@ -6,11 +6,12 @@ import org.bukkit.GameMode;
 import org.bukkit.WorldType;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorldData {
     private GeneralInformation generalInformation;
-    private boolean loaded;
+    private boolean loaded = false;
 
     //World properties
     private boolean allowPvP;
@@ -36,11 +37,25 @@ public class WorldData {
 
     public WorldData(String worldName, org.bukkit.World.Environment environment, WorldType worldType, long seed, String worldGenerator) {
         this.generalInformation = new GeneralInformation(worldName, environment, worldType, seed, worldGenerator);
+        this.allowPvP = true;
+        this.keepSpawnInMemory = true;
+        this.animalSpawning = true;
+        this.disabledAnimals = new ArrayList<>();
+        this.monsterSpawning = true;
+        this.disabledMonsters = new ArrayList<>();
+        this.weatherCycle = true;
+        this.weatherType = WeatherType.CLEAR;
+        this.timeCycle = true;
+        this.time = 0;
+        this.defaultGamemode = false;
+        this.gameMode = GameMode.SURVIVAL;
+        this.difficulty = Difficulty.NORMAL;
+        this.spawnChunkRadius = 2;
     }
 
-    public WorldData(GeneralInformation generalInformation, boolean loaded, boolean allowPvP, boolean keepSpawnInMemory, boolean animalSpawning, List<String> disabledAnimals, boolean monsterSpawning, List<String> disabledMonsters, boolean weatherCycle, WeatherType weatherType, boolean timeCycle, long time, boolean defaultGamemode, GameMode gameMode, Difficulty difficulty, int spawnChunkRadius) {
+    public WorldData(GeneralInformation generalInformation, boolean allowPvP, boolean keepSpawnInMemory, boolean animalSpawning, List<String> disabledAnimals, boolean monsterSpawning, List<String> disabledMonsters, boolean weatherCycle, WeatherType weatherType, boolean timeCycle, long time, boolean defaultGamemode, GameMode gameMode, Difficulty difficulty, int spawnChunkRadius) {
         this.generalInformation = generalInformation;
-        this.loaded = loaded;
+        this.loaded = false;
         this.allowPvP = allowPvP;
         this.keepSpawnInMemory = keepSpawnInMemory;
         this.animalSpawning = animalSpawning;
@@ -65,10 +80,70 @@ public class WorldData {
         return dataHandler.getWorld(worldName);
     }
 
+    public boolean isLoaded() {
+        return loaded;
+    }
+
+    public boolean isAllowPvP() {
+        return allowPvP;
+    }
+
+    public boolean isKeepSpawnInMemory() {
+        return keepSpawnInMemory;
+    }
+
+    public boolean isAnimalSpawning() {
+        return animalSpawning;
+    }
+
+    public List<String> getDisabledAnimals() {
+        return disabledAnimals;
+    }
+
+    public boolean isMonsterSpawning() {
+        return monsterSpawning;
+    }
+
+    public List<String> getDisabledMonsters() {
+        return disabledMonsters;
+    }
+
+    public boolean isWeatherCycle() {
+        return weatherCycle;
+    }
+
+    public WeatherType getWeatherType() {
+        return weatherType;
+    }
+
+    public boolean isTimeCycle() {
+        return timeCycle;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public boolean isDefaultGamemode() {
+        return defaultGamemode;
+    }
+
+    public GameMode getGameMode() {
+        return gameMode;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public int getSpawnChunkRadius() {
+        return spawnChunkRadius;
+    }
+
     public record GeneralInformation(String worldName, org.bukkit.World.Environment environment, WorldType worldType, long seed, @Nullable String worldGenerator) {
     }
 
-    enum WeatherType {
+    public enum WeatherType {
         CLEAR,
         RAIN,
         THUNDER
