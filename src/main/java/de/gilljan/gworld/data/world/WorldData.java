@@ -72,6 +72,118 @@ public class WorldData {
         this.spawnChunkRadius = spawnChunkRadius;
     }
 
+    public boolean isAllowPvP() {
+        return allowPvP;
+    }
+
+    public void setAllowPvP(boolean allowPvP) {
+        this.allowPvP = allowPvP;
+    }
+
+    public boolean isKeepSpawnInMemory() {
+        return keepSpawnInMemory;
+    }
+
+    public void setKeepSpawnInMemory(boolean keepSpawnInMemory) {
+        this.keepSpawnInMemory = keepSpawnInMemory;
+    }
+
+    public boolean isAnimalSpawning() {
+        return animalSpawning;
+    }
+
+    public void setAnimalSpawning(boolean animalSpawning) {
+        this.animalSpawning = animalSpawning;
+    }
+
+    public List<String> getDisabledAnimals() {
+        return disabledAnimals;
+    }
+
+    public void setDisabledAnimals(List<String> disabledAnimals) {
+        this.disabledAnimals = disabledAnimals;
+    }
+
+    public boolean isMonsterSpawning() {
+        return monsterSpawning;
+    }
+
+    public void setMonsterSpawning(boolean monsterSpawning) {
+        this.monsterSpawning = monsterSpawning;
+    }
+
+    public List<String> getDisabledMonsters() {
+        return disabledMonsters;
+    }
+
+    public void setDisabledMonsters(List<String> disabledMonsters) {
+        this.disabledMonsters = disabledMonsters;
+    }
+
+    public boolean isWeatherCycle() {
+        return weatherCycle;
+    }
+
+    public void setWeatherCycle(boolean weatherCycle) {
+        this.weatherCycle = weatherCycle;
+    }
+
+    public WeatherType getWeatherType() {
+        return weatherType;
+    }
+
+    public void setWeatherType(WeatherType weatherType) {
+        this.weatherType = weatherType;
+    }
+
+    public boolean isTimeCycle() {
+        return timeCycle;
+    }
+
+    public void setTimeCycle(boolean timeCycle) {
+        this.timeCycle = timeCycle;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public boolean isDefaultGamemode() {
+        return defaultGamemode;
+    }
+
+    public void setDefaultGamemode(boolean defaultGamemode) {
+        this.defaultGamemode = defaultGamemode;
+    }
+
+    public GameMode getGameMode() {
+        return gameMode;
+    }
+
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public int getSpawnChunkRadius() {
+        return spawnChunkRadius;
+    }
+
+    public void setSpawnChunkRadius(int spawnChunkRadius) {
+        this.spawnChunkRadius = spawnChunkRadius;
+    }
+
     public GeneralInformation getGeneralInformation() {
         return generalInformation;
     }
