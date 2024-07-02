@@ -129,4 +129,24 @@ public class FileConfiguration implements DataHandler {
         worlds.remove(name);
         return getWorld(name);
     }
+
+    @Override
+    public void addWorld(WorldData world) {
+        worlds.put(world.getGeneralInformation().worldName(), world);
+        saveWorld(world);
+    }
+
+    @Override
+    public void removeWorld(WorldData world) {
+        worlds.remove(world.getGeneralInformation().worldName());
+        setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName(), null);
+
+        synchronized (worldData) {
+            try {
+                worldData.save(worldFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

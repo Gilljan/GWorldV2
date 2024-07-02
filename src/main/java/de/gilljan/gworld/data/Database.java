@@ -173,4 +173,18 @@ public class Database implements DataHandler {
         }
         return null;
     }
+
+    @Override
+    public void addWorld(WorldData world) {
+        worlds.put(world.getGeneralInformation().worldName(), world);
+        saveWorld(world);
+    }
+
+    @Override
+    public void removeWorld(WorldData worldData) {
+        worlds.remove(worldData.getGeneralInformation().worldName());
+        mySQL.update("DELETE FROM maps WHERE mapName = '" + worldData.getGeneralInformation().worldName() + "'");
+        mySQL.update("DELETE FROM disabledMonsters WHERE mapName = '" + worldData.getGeneralInformation().worldName() + "'");
+        mySQL.update("DELETE FROM disabledAnimals WHERE mapName = '" + worldData.getGeneralInformation().worldName() + "'");
+    }
 }

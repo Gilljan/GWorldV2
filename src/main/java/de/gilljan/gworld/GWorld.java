@@ -40,4 +40,12 @@ public final class GWorld extends JavaPlugin {
     public static GWorld getInstance() {
         return instance;
     }
+
+    public WorldManager getWorldManager() {
+        return worldManager;
+    }
+
+    public DataHandler getDataHandler() {
+        return dataHandler;
+    }
 }

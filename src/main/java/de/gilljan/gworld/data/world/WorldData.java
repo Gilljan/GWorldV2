@@ -192,65 +192,14 @@ public class WorldData {
         return dataHandler.getWorld(worldName);
     }
 
+    public String getWorldGenerator() {
+        return generalInformation.worldGenerator();
+    }
+
     public boolean isLoaded() {
         return loaded;
     }
 
-    public boolean isAllowPvP() {
-        return allowPvP;
-    }
-
-    public boolean isKeepSpawnInMemory() {
-        return keepSpawnInMemory;
-    }
-
-    public boolean isAnimalSpawning() {
-        return animalSpawning;
-    }
-
-    public List<String> getDisabledAnimals() {
-        return disabledAnimals;
-    }
-
-    public boolean isMonsterSpawning() {
-        return monsterSpawning;
-    }
-
-    public List<String> getDisabledMonsters() {
-        return disabledMonsters;
-    }
-
-    public boolean isWeatherCycle() {
-        return weatherCycle;
-    }
-
-    public WeatherType getWeatherType() {
-        return weatherType;
-    }
-
-    public boolean isTimeCycle() {
-        return timeCycle;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public boolean isDefaultGamemode() {
-        return defaultGamemode;
-    }
-
-    public GameMode getGameMode() {
-        return gameMode;
-    }
-
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
-
-    public int getSpawnChunkRadius() {
-        return spawnChunkRadius;
-    }
 
     public record GeneralInformation(String worldName, org.bukkit.World.Environment environment, WorldType worldType, long seed, @Nullable String worldGenerator) {
     }
@@ -259,5 +208,102 @@ public class WorldData {
         CLEAR,
         RAIN,
         THUNDER
+    }
+
+    public static class Builder {
+        private GeneralInformation generalInformation;
+        private boolean allowPvP;
+        private boolean keepSpawnInMemory;
+        private boolean animalSpawning;
+        private List<String> disabledAnimals;
+        private boolean monsterSpawning;
+        private List<String> disabledMonsters;
+        private boolean weatherCycle;
+        private WeatherType weatherType;
+        private boolean timeCycle;
+        private long time;
+        private boolean defaultGamemode;
+        private GameMode gameMode;
+        private Difficulty difficulty;
+        private int spawnChunkRadius;
+
+        public Builder setGeneralInformation(GeneralInformation generalInformation) {
+            this.generalInformation = generalInformation;
+            return this;
+        }
+
+        public Builder setAllowPvP(boolean allowPvP) {
+            this.allowPvP = allowPvP;
+            return this;
+        }
+
+        public Builder setKeepSpawnInMemory(boolean keepSpawnInMemory) {
+            this.keepSpawnInMemory = keepSpawnInMemory;
+            return this;
+        }
+
+        public Builder setAnimalSpawning(boolean animalSpawning) {
+            this.animalSpawning = animalSpawning;
+            return this;
+        }
+
+        public Builder setDisabledAnimals(List<String> disabledAnimals) {
+            this.disabledAnimals = disabledAnimals;
+            return this;
+        }
+
+        public Builder setMonsterSpawning(boolean monsterSpawning) {
+            this.monsterSpawning = monsterSpawning;
+            return this;
+        }
+
+        public Builder setDisabledMonsters(List<String> disabledMonsters) {
+            this.disabledMonsters = disabledMonsters;
+            return this;
+        }
+
+        public Builder setWeatherCycle(boolean weatherCycle) {
+            this.weatherCycle = weatherCycle;
+            return this;
+        }
+
+        public Builder setWeatherType(WeatherType weatherType) {
+            this.weatherType = weatherType;
+            return this;
+        }
+
+        public Builder setTimeCycle(boolean timeCycle) {
+            this.timeCycle = timeCycle;
+            return this;
+        }
+
+        public Builder setTime(long time) {
+            this.time = time;
+            return this;
+        }
+
+        public Builder setDefaultGamemode(boolean defaultGamemode) {
+            this.defaultGamemode = defaultGamemode;
+            return this;
+        }
+
+        public Builder setGameMode(GameMode gameMode) {
+            this.gameMode = gameMode;
+            return this;
+        }
+
+        public Builder setDifficulty(Difficulty difficulty) {
+            this.difficulty = difficulty;
+            return this;
+        }
+
+        public Builder setSpawnChunkRadius(int spawnChunkRadius) {
+            this.spawnChunkRadius = spawnChunkRadius;
+            return this;
+        }
+
+        public WorldData build() {
+            return new WorldData(generalInformation, allowPvP, keepSpawnInMemory, animalSpawning, disabledAnimals, monsterSpawning, disabledMonsters, weatherCycle, weatherType, timeCycle, time, defaultGamemode, gameMode, difficulty, spawnChunkRadius);
+        }
     }
 }

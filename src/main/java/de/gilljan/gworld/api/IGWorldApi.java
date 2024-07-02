@@ -1,6 +1,6 @@
 package de.gilljan.gworld.api;
 
-import de.gilljan.gworld.data.properties.WorldProperties;
+import de.gilljan.gworld.data.world.WorldData;
 import org.bukkit.WorldType;
 
 import javax.annotation.Nullable;
@@ -32,7 +32,7 @@ public interface IGWorldApi {
 
     boolean saveWorld();
 
-    <T> T getProperty(WorldProperties property);
+    //<T> T getProperty(WorldProperties property);
 
 
 

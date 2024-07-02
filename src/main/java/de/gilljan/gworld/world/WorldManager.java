@@ -1,5 +1,6 @@
 package de.gilljan.gworld.world;
 
+import de.gilljan.gworld.api.IGWorldApi;
 import de.gilljan.gworld.data.world.WorldData;
 
 import java.util.HashMap;
@@ -19,24 +20,5 @@ public class WorldManager {
         this.worlds.put(world.getGeneralInformation().worldName(), world);
     }
 
-    public boolean loadWorld(String worldName) {
-        return false;
-    }
-
-    public boolean unloadWorld(String worldName) {
-        return false;
-    }
-
-    public boolean deleteWorld(String worldName) {
-        return false;
-    }
-
-    public WorldData getWorld(String worldName) {
-        return this.worlds.get(worldName);
-    }
-
-    public boolean saveWorld(String worldName) {
-        return false;
-    }
 
 }
