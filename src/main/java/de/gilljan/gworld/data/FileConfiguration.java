@@ -149,4 +149,9 @@ public class FileConfiguration implements DataHandler {
             }
         }
     }
+
+    @Override
+    public boolean containsWorld(String name) {
+        return worlds.containsKey(name);
+    }
 }

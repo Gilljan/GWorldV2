@@ -22,4 +22,6 @@ public interface DataHandler {
 
     void removeWorld(WorldData worldData);
 
+    boolean containsWorld(String name);
+
 }

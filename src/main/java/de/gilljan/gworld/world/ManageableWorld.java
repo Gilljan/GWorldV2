@@ -173,4 +173,9 @@ public class ManageableWorld implements IGWorldApi {
         Bukkit.getWorld(worldData.getGeneralInformation().worldName()).save();
         return false;
     }
+
+    @Override
+    public void setAllProperties() {
+        //todo
+    }
 }

@@ -187,4 +187,10 @@ public class Database implements DataHandler {
         mySQL.update("DELETE FROM disabledMonsters WHERE mapName = '" + worldData.getGeneralInformation().worldName() + "'");
         mySQL.update("DELETE FROM disabledAnimals WHERE mapName = '" + worldData.getGeneralInformation().worldName() + "'");
     }
+
+    @Override
+    public boolean containsWorld(String name) {
+        return worlds.containsKey(name);
+    }
+
 }
