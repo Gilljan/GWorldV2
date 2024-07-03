@@ -5,6 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.WorldType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public class WorldData {
     private boolean defaultGamemode;
     private GameMode gameMode;
     private Difficulty difficulty;
-    private int spawnChunkRadius;
+    private int spawnChunkRadius; //todo entfernen und dafür loaded in DB!
 
 
 
@@ -101,6 +103,8 @@ public class WorldData {
 
     public void setAnimalSpawning(boolean animalSpawning) {
         this.animalSpawning = animalSpawning;
+
+        setDisabledAnimals(disabledAnimals);
     }
 
     public List<String> getDisabledAnimals() {
@@ -109,6 +113,15 @@ public class WorldData {
 
     public void setDisabledAnimals(List<String> disabledAnimals) {
         this.disabledAnimals = disabledAnimals;
+
+        if(isLoaded() && !animalSpawning) {
+            for(Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
+                if(disabledAnimals.contains(entity.getType().name())) {
+                    entity.remove();
+                }
+            }
+        }
+
     }
 
     public boolean isMonsterSpawning() {
@@ -117,6 +130,8 @@ public class WorldData {
 
     public void setMonsterSpawning(boolean monsterSpawning) {
         this.monsterSpawning = monsterSpawning;
+
+        setDisabledMonsters(disabledMonsters);
     }
 
     public List<String> getDisabledMonsters() {
@@ -125,6 +140,14 @@ public class WorldData {
 
     public void setDisabledMonsters(List<String> disabledMonsters) {
         this.disabledMonsters = disabledMonsters;
+
+        if(isLoaded() && !monsterSpawning) {
+            for(Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
+                if(disabledMonsters.contains(entity.getType().name())) {
+                    entity.remove();
+                }
+            }
+        }
     }
 
     public boolean isWeatherCycle() {
@@ -133,6 +156,11 @@ public class WorldData {
 
     public void setWeatherCycle(boolean weatherCycle) {
         this.weatherCycle = weatherCycle;
+
+        if(isLoaded())
+            Bukkit.getWorld(generalInformation.worldName()).setGameRuleValue("doWeatherCycle", String.valueOf(weatherCycle));
+
+        setWeatherType(weatherType);
     }
 
     public WeatherType getWeatherType() {
@@ -141,6 +169,11 @@ public class WorldData {
 
     public void setWeatherType(WeatherType weatherType) {
         this.weatherType = weatherType;
+
+        if(isLoaded() && !weatherCycle) {
+            Bukkit.getWorld(generalInformation.worldName()).setStorm(weatherType == WeatherType.RAIN || weatherType == WeatherType.THUNDER);
+            Bukkit.getWorld(generalInformation.worldName()).setThundering(weatherType == WeatherType.THUNDER);
+        }
     }
 
     public boolean isTimeCycle() {
@@ -149,6 +182,11 @@ public class WorldData {
 
     public void setTimeCycle(boolean timeCycle) {
         this.timeCycle = timeCycle;
+
+        if(isLoaded())
+            Bukkit.getWorld(generalInformation.worldName()).setGameRuleValue("doDaylightCycle", String.valueOf(timeCycle));
+
+        setTime(time);
     }
 
     public long getTime() {
@@ -157,6 +195,9 @@ public class WorldData {
 
     public void setTime(long time) {
         this.time = time;
+
+        if(isLoaded() && !timeCycle)
+            Bukkit.getWorld(generalInformation.worldName()).setTime(time);
     }
 
     public boolean isDefaultGamemode() {
@@ -165,6 +206,8 @@ public class WorldData {
 
     public void setDefaultGamemode(boolean defaultGamemode) {
         this.defaultGamemode = defaultGamemode;
+
+        setGameMode(gameMode);
     }
 
     public GameMode getGameMode() {
@@ -173,6 +216,12 @@ public class WorldData {
 
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
+
+        if(isLoaded() && defaultGamemode) {
+            for(Player player : Bukkit.getWorld(generalInformation.worldName()).getPlayers()) {
+                player.setGameMode(gameMode);
+            }
+        }
     }
 
     public Difficulty getDifficulty() {
@@ -181,14 +230,21 @@ public class WorldData {
 
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
+
+        if(isLoaded())
+            Bukkit.getWorld(generalInformation.worldName()).setDifficulty(difficulty);
     }
 
+    @Deprecated //todo entfernen und dafür loaded in DB!
     public int getSpawnChunkRadius() {
         return spawnChunkRadius;
     }
 
+    @Deprecated //todo entfernen und dafür loaded in DB!
     public void setSpawnChunkRadius(int spawnChunkRadius) {
         this.spawnChunkRadius = spawnChunkRadius;
+
+        //todo
     }
 
     public GeneralInformation getGeneralInformation() {
