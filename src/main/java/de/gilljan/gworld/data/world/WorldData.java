@@ -1,6 +1,7 @@
 package de.gilljan.gworld.data.world;
 
 import de.gilljan.gworld.data.DataHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.WorldType;
@@ -32,7 +33,7 @@ public class WorldData {
 
 
     public WorldData(String worldName) {
-
+        this(worldName, org.bukkit.World.Environment.NORMAL, WorldType.NORMAL, 0, null);
     }
 
     public WorldData(String worldName, org.bukkit.World.Environment environment, WorldType worldType, long seed, String worldGenerator) {
@@ -78,6 +79,9 @@ public class WorldData {
 
     public void setAllowPvP(boolean allowPvP) {
         this.allowPvP = allowPvP;
+
+        if(isLoaded())
+            Bukkit.getWorld(generalInformation.worldName()).setPVP(allowPvP);
     }
 
     public boolean isKeepSpawnInMemory() {
@@ -86,6 +90,9 @@ public class WorldData {
 
     public void setKeepSpawnInMemory(boolean keepSpawnInMemory) {
         this.keepSpawnInMemory = keepSpawnInMemory;
+
+        if(isLoaded())
+            Bukkit.getWorld(generalInformation.worldName()).setKeepSpawnInMemory(keepSpawnInMemory);
     }
 
     public boolean isAnimalSpawning() {
@@ -200,6 +207,13 @@ public class WorldData {
         return loaded;
     }
 
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+    }
+
+    public void updateGeneralInformation(GeneralInformation generalInformation) {
+        this.generalInformation = generalInformation;
+    }
 
     public record GeneralInformation(String worldName, org.bukkit.World.Environment environment, WorldType worldType, long seed, @Nullable String worldGenerator) {
     }

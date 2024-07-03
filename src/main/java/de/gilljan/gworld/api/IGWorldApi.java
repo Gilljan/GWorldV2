@@ -12,21 +12,15 @@ public interface IGWorldApi {
 
     boolean unloadMap();
 
-    boolean deleteMap(boolean saveMap);
+    boolean deleteMap();
 
-    boolean createMap(WorldType type, @Nullable long seed, @Nullable String generator);
+    boolean createMap();
 
-    boolean createMap(WorldType type);
-
-    boolean importExisting(WorldType type, @Nullable String generator);
-
-    boolean importExisting(WorldType type);
+    boolean importExisting();
 
     boolean isMapLoaded();
 
     Optional<IGWorldApi> clone(String newWorldName);
-
-    boolean delete();
 
     boolean reCreate(boolean saveWorldToFile);
 
