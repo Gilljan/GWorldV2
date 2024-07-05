@@ -14,11 +14,11 @@ public class WorldChangeListener implements Listener {
         Player p = event.getPlayer();
 
         if(GWorld.getInstance().getDataHandler().containsWorld(p.getWorld().getName())) {
-            // Get the world data
-            // Set the player's gamemode to the world's default gamemode
-            if(WorldProperty.getValue(WorldProperty.DEFAULT_GAMEMODE, GWorld.getInstance().getDataHandler().getWorld(p.getWorld().getName()))) {
-                p.setGameMode(WorldProperty.getValue(WorldProperty.GAMEMODE, GWorld.getInstance().getDataHandler().getWorld(p.getWorld().getName())));
-            }
+            return;
+        }
+
+        if(WorldProperty.getValue(WorldProperty.DEFAULT_GAMEMODE, GWorld.getInstance().getDataHandler().getWorld(p.getWorld().getName()))) {
+            p.setGameMode(WorldProperty.getValue(WorldProperty.GAMEMODE, GWorld.getInstance().getDataHandler().getWorld(p.getWorld().getName())));
         }
     }
 }

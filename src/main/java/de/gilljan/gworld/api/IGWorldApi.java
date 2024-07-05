@@ -26,9 +26,5 @@ public interface IGWorldApi {
 
     boolean saveWorld();
 
-    //<T> T getProperty(WorldProperties property);
     void setAllProperties();
-
-
-
 }

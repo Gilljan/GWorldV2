@@ -41,6 +41,8 @@ public class ManageableWorld implements IGWorldApi {
 
         worldData.setLoaded(true);
 
+        setAllProperties();
+
         return false;
     }
 
@@ -95,7 +97,9 @@ public class ManageableWorld implements IGWorldApi {
 
         worldData.setLoaded(true);
 
-        //vllt alles einmal setzen
+
+        setAllProperties();
+
         return true;
     }
 
@@ -176,6 +180,12 @@ public class ManageableWorld implements IGWorldApi {
 
     @Override
     public void setAllProperties() {
-        //todo
+        worldData.setDisabledMonsters(worldData.getDisabledMonsters());
+        worldData.setDisabledAnimals(worldData.getDisabledAnimals());
+        worldData.setWeatherCycle(worldData.isWeatherCycle());
+        worldData.setTimeCycle(worldData.isTimeCycle());
+        worldData.setDifficulty(worldData.getDifficulty());
+        worldData.setAllowPvP(worldData.isAllowPvP());
+        worldData.setDefaultGamemode(worldData.isDefaultGamemode());
     }
 }
