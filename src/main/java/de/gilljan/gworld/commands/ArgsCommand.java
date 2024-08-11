@@ -1,5 +1,6 @@
 package de.gilljan.gworld.commands;
 
+import de.gilljan.gworld.utils.SendMessageUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,19 +29,14 @@ public abstract class ArgsCommand implements CommandExecutor {
             return false;
 
         if(args.length < expectedArgs) {
-            if(sender instanceof Player p) {
-                //LobbySystem.getInstance().getMessageManager().sendMessage(p, usageMessageKey);
-
-            } else {
-                //sender.sendMessage(LobbySystem.getInstance().getMessageManager().getMessage(usageMessageKey, "en", LobbySystem.getInstance().getMessageManager().getScope()));
-            }//todo get from DB using API
+            sender.sendMessage(SendMessageUtil.sendMessage(usageMessageKey));
 
             return false;
         }
 
         if(permission != null) {
             if(!sender.hasPermission(permission)) {
-                sender.sendMessage("§cYou don't have the permission to do that."); //DB
+                sender.sendMessage(SendMessageUtil.sendMessage("NoPerm")); //DB
                 return false;
             }
         }

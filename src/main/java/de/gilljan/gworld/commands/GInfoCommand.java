@@ -11,25 +11,32 @@ import org.bukkit.entity.Player;
 public class GInfoCommand extends ArgsCommand {
 
     public GInfoCommand() {
-        super("ginfo", 0, "gworld.commands.ginfo.usage", "gworld.commands.ginfo");
+        super("ginfo", 0, "Info.use", "gworld.commands.ginfo");
     }
 
     @Override
     public boolean executeCommandForPlayer(Player player, String[] args) {
         if(args.length > 1) {
-            //LobbySystem.getInstance().getMessageManager().sendMessage(player, "gworld.commands.ginfo.usage");
+            player.sendMessage(SendMessageUtil.sendMessage("Info.use"));
             return false;
         }
 
         WorldData world;
+        boolean arg = false;
         if(args.length == 0) {
             world = GWorld.getInstance().getDataHandler().getWorld(player.getWorld().getName());
         } else {
             world = GWorld.getInstance().getDataHandler().getWorld(args[0]);
+            arg = true;
         }
 
         if(world == null) {
-            //LobbySystem.getInstance().getMessageManager().sendMessage(player, "gworld.commands.ginfo.noWorld");
+            if(arg) {
+                player.sendMessage(SendMessageUtil.sendMessage("Info.failed").replaceAll("%world%", args[0]));
+            } else {
+                player.sendMessage(SendMessageUtil.sendMessage("Info.failed_world"));
+            }
+
             return false;
         }
 
@@ -42,14 +49,14 @@ public class GInfoCommand extends ArgsCommand {
     @Override
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
         if(args.length != 1) {
-            //LobbySystem.getInstance().getMessageManager().sendMessage(console, "gworld.commands.ginfo.usage");
+            console.sendMessage(SendMessageUtil.sendMessage("Info.use"));
             return false;
         }
 
         WorldData world = GWorld.getInstance().getDataHandler().getWorld(args[0]);
 
         if(world == null) {
-            //LobbySystem.getInstance().getMessageManager().sendMessage(console, "gworld.commands.ginfo.noWorld");
+            console.sendMessage(SendMessageUtil.sendMessage("Info.failed").replaceAll("%world%", args[0]));
             return false;
         }
 
@@ -82,7 +89,7 @@ public class GInfoCommand extends ArgsCommand {
         for(String animal : WorldProperty.getValue(WorldProperty.DISABLED_ANIMALS, world)) {
             sender.sendMessage(" §7- " + SendMessageUtil.sendMessage("Info.flags.values").replaceAll("%value%", animal));
         }
-        System.out.println(WorldProperty.getValue(WorldProperty.KEEP_SPAWN_IN_MEMORY, world));
+        //System.out.println(WorldProperty.getValue(WorldProperty.KEEP_SPAWN_IN_MEMORY, world));
 
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.forcedGamemode") + SendMessageUtil.sendMessage("Info.flags." + String.valueOf(WorldProperty.getValue(WorldProperty.DEFAULT_GAMEMODE, world))));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.defaultGamemode") + SendMessageUtil.sendMessage("Info.flags.values").replaceAll("%value%", WorldProperty.getValue(WorldProperty.GAMEMODE, world).name()));
