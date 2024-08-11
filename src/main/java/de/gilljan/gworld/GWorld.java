@@ -1,5 +1,6 @@
 package de.gilljan.gworld;
 
+import de.gilljan.gworld.commands.GCreateCommand;
 import de.gilljan.gworld.commands.GInfoCommand;
 import de.gilljan.gworld.commands.GTpCommand;
 import de.gilljan.gworld.commands.GWorldsCommand;
@@ -134,6 +135,7 @@ public final class GWorld extends JavaPlugin {
         getCommand("ginfo").setExecutor(new GInfoCommand());
         getCommand("gtp").setExecutor(new GTpCommand());
         getCommand("gworlds").setExecutor(new GWorldsCommand());
+        getCommand("gcreate").setExecutor(new GCreateCommand());
     }
 
 }

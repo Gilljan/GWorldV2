@@ -2,7 +2,7 @@ name: GWorld
 version: '${project.version}'
 main: de.gilljan.gworld.GWorld
 prefix: GWorld
-load: STARTUP
+load: POSTWORLD
 authors: [Gilljan]
 website: https://gilljan.de
 
@@ -10,3 +10,4 @@ commands:
   ginfo:
   gtp:
   gworlds:
+  gcreate:
