@@ -5,13 +5,35 @@ import de.gilljan.gworld.data.world.WorldData;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class FileConfiguration implements DataHandler {
     public HashMap<String, WorldData> worlds = new HashMap<>();
     private final File worldFile = new File(GWorld.getInstance().getDataFolder().getPath() + "/worlds.yml");
     private final YamlConfiguration worldData = YamlConfiguration.loadConfiguration(worldFile);
     private static final String WORLD_PATH = "Worlds.";
+
+    public FileConfiguration() {
+        if(!worldFile.exists()) {
+            try {
+                worldFile.createNewFile();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(worldData.getConfigurationSection(WORLD_PATH.substring(0, WORLD_PATH.length()-1)) == null) {
+            worldData.createSection(WORLD_PATH.substring(0, WORLD_PATH.length()-1));
+
+            try {
+                worldData.save(worldFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
 
     @Override
@@ -41,7 +63,10 @@ public class FileConfiguration implements DataHandler {
                     worldData.getBoolean(WORLD_PATH + name + ".DefaultGamemode"),
                     org.bukkit.GameMode.valueOf(worldData.getString(WORLD_PATH + name + ".GameMode")),
                     org.bukkit.Difficulty.valueOf(worldData.getString(WORLD_PATH + name + ".Difficulty")),
-                    worldData.getInt(WORLD_PATH + name + ".SpawnChunkRadius"));
+                    worldData.getBoolean(WORLD_PATH + name + ".LoadOnStartup"),
+                    worldData.getInt(WORLD_PATH + name + ".RandomTickSpeed"),
+                    worldData.getBoolean(WORLD_PATH + name + ".AnnounceAdvancements")
+                    );
             worlds.put(name, world);
             return world;
         }
@@ -86,7 +111,9 @@ public class FileConfiguration implements DataHandler {
         setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".DefaultGamemode", world.isDefaultGamemode());
         setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".GameMode", world.getGameMode().name());
         setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".Difficulty", world.getDifficulty().name());
-        setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".SpawnChunkRadius", world.getSpawnChunkRadius());
+        setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".LoadOnStartup", world.isLoadOnStartup());
+        setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".RandomTickSpeed", world.getRandomTickSpeed());
+        setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".AnnounceAdvancements", world.isAnnounceAdvancements());
 
 
         synchronized (worldData) {
@@ -153,5 +180,10 @@ public class FileConfiguration implements DataHandler {
     @Override
     public boolean containsWorld(String name) {
         return worlds.containsKey(name);
+    }
+
+    @Override
+    public HashMap<String, WorldData> getWorlds() {
+        return worlds;
     }
 }

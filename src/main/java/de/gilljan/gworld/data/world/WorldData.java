@@ -30,7 +30,10 @@ public class WorldData {
     private boolean defaultGamemode;
     private GameMode gameMode;
     private Difficulty difficulty;
-    private int spawnChunkRadius; //todo entfernen und dafür loaded in DB!
+    //private int spawnChunkRadius; //todo entfernen und dafür loaded in DB!
+    private boolean loadOnStartup;
+    private int randomTickSpeed;
+    private boolean announceAdvancements;
 
 
 
@@ -53,10 +56,13 @@ public class WorldData {
         this.defaultGamemode = false;
         this.gameMode = GameMode.SURVIVAL;
         this.difficulty = Difficulty.NORMAL;
-        this.spawnChunkRadius = 2;
+        this.loadOnStartup = true;
+        this.randomTickSpeed = 3;
+        this.announceAdvancements = true;
+        //this.spawnChunkRadius = 2;
     }
 
-    public WorldData(GeneralInformation generalInformation, boolean allowPvP, boolean keepSpawnInMemory, boolean animalSpawning, List<String> disabledAnimals, boolean monsterSpawning, List<String> disabledMonsters, boolean weatherCycle, WeatherType weatherType, boolean timeCycle, long time, boolean defaultGamemode, GameMode gameMode, Difficulty difficulty, int spawnChunkRadius) {
+    public WorldData(GeneralInformation generalInformation, boolean allowPvP, boolean keepSpawnInMemory, boolean animalSpawning, List<String> disabledAnimals, boolean monsterSpawning, List<String> disabledMonsters, boolean weatherCycle, WeatherType weatherType, boolean timeCycle, long time, boolean defaultGamemode, GameMode gameMode, Difficulty difficulty, boolean loadOnStartup, int randomTickSpeed, boolean announceAdvancements) {
         this.generalInformation = generalInformation;
         this.loaded = false;
         this.allowPvP = allowPvP;
@@ -72,7 +78,10 @@ public class WorldData {
         this.defaultGamemode = defaultGamemode;
         this.gameMode = gameMode;
         this.difficulty = difficulty;
-        this.spawnChunkRadius = spawnChunkRadius;
+        this.loadOnStartup = loadOnStartup;
+        this.randomTickSpeed = randomTickSpeed;
+        this.announceAdvancements = announceAdvancements;
+        //this.spawnChunkRadius = spawnChunkRadius;
     }
 
     public boolean isAllowPvP() {
@@ -235,16 +244,34 @@ public class WorldData {
             Bukkit.getWorld(generalInformation.worldName()).setDifficulty(difficulty);
     }
 
-    @Deprecated //todo entfernen und dafür loaded in DB!
-    public int getSpawnChunkRadius() {
-        return spawnChunkRadius;
+    public boolean isLoadOnStartup() {
+        return loadOnStartup;
     }
 
-    @Deprecated //todo entfernen und dafür loaded in DB!
-    public void setSpawnChunkRadius(int spawnChunkRadius) {
-        this.spawnChunkRadius = spawnChunkRadius;
+    public void setLoadOnStartup(boolean loadOnStartup) {
+        this.loadOnStartup = loadOnStartup;
+    }
 
-        //todo
+    public int getRandomTickSpeed() {
+        return randomTickSpeed;
+    }
+
+    public void setRandomTickSpeed(int randomTickSpeed) {
+        this.randomTickSpeed = randomTickSpeed;
+
+        if(isLoaded())
+            Bukkit.getWorld(generalInformation.worldName()).setGameRuleValue("randomTickSpeed", String.valueOf(randomTickSpeed));
+    }
+
+    public boolean isAnnounceAdvancements() {
+        return announceAdvancements;
+    }
+
+    public void setAnnounceAdvancements(boolean announceAdvancements) {
+        this.announceAdvancements = announceAdvancements;
+
+        if(isLoaded())
+            Bukkit.getWorld(generalInformation.worldName()).setGameRuleValue("announceAdvancements", String.valueOf(announceAdvancements));
     }
 
     public GeneralInformation getGeneralInformation() {
@@ -295,7 +322,9 @@ public class WorldData {
         private boolean defaultGamemode;
         private GameMode gameMode;
         private Difficulty difficulty;
-        private int spawnChunkRadius;
+        private boolean loadOnStartup;
+        private int randomTickSpeed;
+        private boolean announceAdvancements;
 
         public Builder setGeneralInformation(GeneralInformation generalInformation) {
             this.generalInformation = generalInformation;
@@ -367,13 +396,23 @@ public class WorldData {
             return this;
         }
 
-        public Builder setSpawnChunkRadius(int spawnChunkRadius) {
-            this.spawnChunkRadius = spawnChunkRadius;
+        public Builder setLoadOnStartup(boolean loadOnStartup) {
+            this.loadOnStartup = loadOnStartup;
+            return this;
+        }
+
+        public Builder setRandomTickSpeed(int randomTickSpeed) {
+            this.randomTickSpeed = randomTickSpeed;
+            return this;
+        }
+
+        public Builder setAnnounceAdvancements(boolean announceAdvancements) {
+            this.announceAdvancements = announceAdvancements;
             return this;
         }
 
         public WorldData build() {
-            return new WorldData(generalInformation, allowPvP, keepSpawnInMemory, animalSpawning, disabledAnimals, monsterSpawning, disabledMonsters, weatherCycle, weatherType, timeCycle, time, defaultGamemode, gameMode, difficulty, spawnChunkRadius);
+            return new WorldData(generalInformation, allowPvP, keepSpawnInMemory, animalSpawning, disabledAnimals, monsterSpawning, disabledMonsters, weatherCycle, weatherType, timeCycle, time, defaultGamemode, gameMode, difficulty, loadOnStartup, randomTickSpeed, announceAdvancements);
         }
     }
 }

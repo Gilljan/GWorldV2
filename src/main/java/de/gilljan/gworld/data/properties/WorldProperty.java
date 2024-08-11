@@ -16,7 +16,6 @@ public record WorldProperty<T> (PropertyFunction<T> getFunction, T defaultValue,
     public static final WorldProperty<Boolean> WEATHER_CYCLE = new WorldProperty<>(WorldData::isWeatherCycle, true, WorldData::setWeatherCycle);
     public static final WorldProperty<Boolean> TIME_CYCLE = new WorldProperty<>(WorldData::isTimeCycle, true, WorldData::setTimeCycle);
     public static final WorldProperty<Boolean> DEFAULT_GAMEMODE = new WorldProperty<>(WorldData::isDefaultGamemode, false, WorldData::setDefaultGamemode);
-    public static final WorldProperty<Integer> SPAWN_CHUNK_RADIUS = new WorldProperty<>(WorldData::getSpawnChunkRadius, 0, WorldData::setSpawnChunkRadius);
     public static final WorldProperty<Long> TIME = new WorldProperty<>(WorldData::getTime, 0L, WorldData::setTime);
     public static final WorldProperty<WorldData.WeatherType> WEATHER_TYPE = new WorldProperty<>(WorldData::getWeatherType, WorldData.WeatherType.CLEAR, WorldData::setWeatherType);
     public static final WorldProperty<GameMode> GAMEMODE = new WorldProperty<>(WorldData::getGameMode, GameMode.SURVIVAL, WorldData::setGameMode);
@@ -24,6 +23,9 @@ public record WorldProperty<T> (PropertyFunction<T> getFunction, T defaultValue,
     public static final WorldProperty<String> GENERATOR = new WorldProperty<>(WorldData::getWorldGenerator, null, null);
     public static final WorldProperty<List<String>> DISABLED_ANIMALS = new WorldProperty<>(WorldData::getDisabledAnimals, new ArrayList<>(), WorldData::setDisabledAnimals);
     public static final WorldProperty<List<String>> DISABLED_MONSTERS = new WorldProperty<>(WorldData::getDisabledMonsters, new ArrayList<>(), WorldData::setDisabledMonsters);
+    public static final WorldProperty<Integer> RANDOM_TICK_SPEED = new WorldProperty<>(WorldData::getRandomTickSpeed, 3, WorldData::setRandomTickSpeed);
+    public static final WorldProperty<Boolean> ANNOUNCE_ADVANCEMENTS = new WorldProperty<>(WorldData::isAnnounceAdvancements, true, WorldData::setAnnounceAdvancements);
+    public static final WorldProperty<Boolean> LOAD_ON_STARTUP = new WorldProperty<>(WorldData::isLoadOnStartup, true, WorldData::setLoadOnStartup);
 
 
     public static <T> T getValue(WorldProperty<T> property, WorldData data) {

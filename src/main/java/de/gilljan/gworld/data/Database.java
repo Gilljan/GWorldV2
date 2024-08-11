@@ -39,7 +39,9 @@ public class Database implements DataHandler {
                 "  defaultGamemode tinyint(1) NOT NULL," +
                 "  gameMode enum('CREATIVE','SURVIVAL','ADVENTURE','SPECTATOR') NOT NULL DEFAULT 'SURVIVAL'," +
                 "  difficulty enum('PEACEFUL','EASY','NORMAL','HARD') NOT NULL DEFAULT 'NORMAL'," +
-                "  spawnChunkRadius int(11) NOT NULL DEFAULT 2," +
+                "  load tinyint(1) NOT NULL DEFAULT 1," +
+                "  randomTickSpeed int(11) NOT NULL DEFAULT 3," +
+                "  announceAdvancements tinyint(1) NOT NULL DEFAULT 1," +
                 "PRIMARY KEY (mapName))");
         mySQL.update("CREATE TABLE if not exists disabledMonsters (" +
                 "  mapName varchar(32) NOT NULL," +
@@ -65,7 +67,7 @@ public class Database implements DataHandler {
 
     @Override
     public void saveWorld(WorldData world) {
-        mySQL.update("INSERT INTO maps (mapName, environment, type, seed, worldGenerator, allowPvP, keepSpawnInMemory, animalSpawning, monsterSpawning, weatherCycle, weatherType, timeCycle, time, defaultGamemode, gameMode, difficulty, spawnChunkRadius) " +
+        mySQL.update("INSERT INTO maps (mapName, environment, type, seed, worldGenerator, allowPvP, keepSpawnInMemory, animalSpawning, monsterSpawning, weatherCycle, weatherType, timeCycle, time, defaultGamemode, gameMode, difficulty, load, randomTickSpeed, announceAdvancements) " +
                 "VALUES ('" + world.getGeneralInformation().worldName() + "', '" +
                 world.getGeneralInformation().environment().name() + "', '" +
                 world.getGeneralInformation().worldType().name() + "', " +
@@ -82,7 +84,7 @@ public class Database implements DataHandler {
                 world.isDefaultGamemode() + ", '" +
                 world.getGameMode().name() + "', '" +
                 world.getDifficulty().name() + "', " +
-                world.getSpawnChunkRadius() +
+
                 ") ON DUPLICATE KEY UPDATE " +
                 "environment = VALUES(environment), " +
                 "type = VALUES(type), " +
@@ -98,8 +100,7 @@ public class Database implements DataHandler {
                 "time = VALUES(time), " +
                 "defaultGamemode = VALUES(defaultGamemode), " +
                 "gameMode = VALUES(gameMode), " +
-                "difficulty = VALUES(difficulty), " +
-                "spawnChunkRadius = VALUES(spawnChunkRadius)");
+                "difficulty = VALUES(difficulty)");
     }
 
     @Override
@@ -165,7 +166,9 @@ public class Database implements DataHandler {
                         rs.getBoolean("defaultGamemode"),
                         org.bukkit.GameMode.valueOf(rs.getString("gameMode")),
                         org.bukkit.Difficulty.valueOf(rs.getString("difficulty")),
-                        rs.getInt("spawnChunkRadius")
+                        rs.getBoolean("load"),
+                        rs.getInt("randomTickSpeed"),
+                        rs.getBoolean("announceAdvancements")
                 );
             }
         } catch (SQLException e) {
@@ -193,4 +196,8 @@ public class Database implements DataHandler {
         return worlds.containsKey(name);
     }
 
+    @Override
+    public HashMap<String, WorldData> getWorlds() {
+        return worlds;
+    }
 }

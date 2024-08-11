@@ -24,4 +24,6 @@ public interface DataHandler {
 
     boolean containsWorld(String name);
 
+    HashMap<String, WorldData> getWorlds();
+
 }

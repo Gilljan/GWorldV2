@@ -1,5 +1,6 @@
 package de.gilljan.gworld.world;
 
+import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.api.IGWorldApi;
 import de.gilljan.gworld.data.world.WorldData;
 import org.apache.commons.io.FileUtils;
@@ -22,26 +23,28 @@ public class ManageableWorld implements IGWorldApi {
 
     @Override
     public boolean loadMap() {
-        WorldCreator worldCreator = WorldCreator.name(worldData.getGeneralInformation().worldName());
+        Bukkit.getScheduler().runTask(GWorld.getInstance(), () -> {
+            WorldCreator worldCreator = WorldCreator.name(worldData.getGeneralInformation().worldName());
 
-        if(worldData.getGeneralInformation().environment() != null) {
-            worldCreator.environment(worldData.getGeneralInformation().environment());
-        }
+            if(worldData.getGeneralInformation().environment() != null) {
+                worldCreator.environment(worldData.getGeneralInformation().environment());
+            }
 
-        if(worldData.getGeneralInformation().worldType() != null) {
-            worldCreator.type(worldData.getGeneralInformation().worldType());
-        }
+            if(worldData.getGeneralInformation().worldType() != null) {
+                worldCreator.type(worldData.getGeneralInformation().worldType());
+            }
 
-        if(worldData.getGeneralInformation().worldGenerator() != null) {
-            worldCreator.generator(worldData.getGeneralInformation().worldGenerator());
-        }
+            if(worldData.getGeneralInformation().worldGenerator() != null) {
+                worldCreator.generator(worldData.getGeneralInformation().worldGenerator());
+            }
 
-        Bukkit.createWorld(worldCreator);
-        Bukkit.getWorlds().add(Bukkit.getWorld(worldData.getGeneralInformation().worldName()));
+            Bukkit.createWorld(worldCreator);
+            Bukkit.getWorlds().add(Bukkit.getWorld(worldData.getGeneralInformation().worldName()));
 
-        worldData.setLoaded(true);
+            worldData.setLoaded(true);
 
-        setAllProperties();
+            setAllProperties();
+        });
 
         return false;
     }

@@ -5,3 +5,6 @@ prefix: GWorld
 load: STARTUP
 authors: [Gilljan]
 website: https://gilljan.de
+
+commands:
+  ginfo:

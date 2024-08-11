@@ -18,7 +18,10 @@ public enum Settings {
     ANIMALS("true", "false"),
     ANIMAL_SPECIFIC(GWorld.ANIMALS.toArray(new String[0])),
     FORCED_GAMEMODE("true", "false"),
-    DEFAULT_GAMEMODE("survival", "creative", "adventure", "spectator");
+    DEFAULT_GAMEMODE("survival", "creative", "adventure", "spectator"),
+    RANDOM_TICK_SPEED,
+    ANNOUNCE_ADVANCEMENTS("true", "false"),
+    LOAD_ON_STARTUP("true", "false");
 
     private final List<String> values = new ArrayList<>();
 
