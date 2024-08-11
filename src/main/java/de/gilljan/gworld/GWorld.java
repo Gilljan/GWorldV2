@@ -2,6 +2,7 @@ package de.gilljan.gworld;
 
 import de.gilljan.gworld.commands.GInfoCommand;
 import de.gilljan.gworld.commands.GTpCommand;
+import de.gilljan.gworld.commands.GWorldsCommand;
 import de.gilljan.gworld.data.DataHandler;
 import de.gilljan.gworld.data.Database;
 import de.gilljan.gworld.data.FileConfiguration;
@@ -132,6 +133,7 @@ public final class GWorld extends JavaPlugin {
     private void registerCommands() {
         getCommand("ginfo").setExecutor(new GInfoCommand());
         getCommand("gtp").setExecutor(new GTpCommand());
+        getCommand("gworlds").setExecutor(new GWorldsCommand());
     }
 
 }
