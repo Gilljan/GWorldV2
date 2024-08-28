@@ -2,6 +2,8 @@ package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.data.world.WorldData;
+import de.gilljan.gworld.enums.WorldTypeMapping;
+import de.gilljan.gworld.utils.SecureWorldNameUtil;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import de.gilljan.gworld.world.ManageableWorld;
 import org.bukkit.World;
@@ -36,7 +38,7 @@ public class GCreateCommand extends ArgsCommand {
         String worldSeed = null;
         String generator = null;
 
-        if (worldName.contains(".") || worldName.contains("/") || worldName.equalsIgnoreCase("plugins") || worldName.equalsIgnoreCase("logs") || worldName.equalsIgnoreCase("old_maps")) {
+        if (SecureWorldNameUtil.isSecuredWorldName(worldName)) {
             sender.sendMessage(SendMessageUtil.sendMessage("SecurityMessage"));
             return;
         }
@@ -60,41 +62,16 @@ public class GCreateCommand extends ArgsCommand {
             generator = args[3];
         }
 
-        WorldType type = null;
-        World.Environment env = null;
+        WorldTypeMapping mapping = WorldTypeMapping.fromString(worldType);
 
-        switch (worldType.toUpperCase()) {
-            case "NORMAL":
-                type = WorldType.NORMAL;
-                env = World.Environment.NORMAL;
-                break;
-            case "NETHER":
-                type = WorldType.NORMAL;
-                env = World.Environment.NETHER;
-                break;
-            case "END":
-                type = WorldType.NORMAL;
-                env = World.Environment.THE_END;
-                break;
-            case "FLAT":
-                type = WorldType.FLAT;
-                env = World.Environment.NORMAL;
-                break;
-            case "LARGE_BIOMES":
-                type = WorldType.LARGE_BIOMES;
-                env = World.Environment.NORMAL;
-                break;
-            case "AMPLIFIED":
-                type = WorldType.AMPLIFIED;
-                env = World.Environment.NORMAL;
-                break;
-            default:
-                sender.sendMessage(SendMessageUtil.sendMessage("Create.use"));
+        if(mapping == null) {
+            sender.sendMessage(SendMessageUtil.sendMessage("Create.use"));
+            return;
         }
 
         WorldData world = null;
         try {
-            world = new WorldData(worldName, env, type, worldSeed == null ?  (new Random()).nextLong() : Long.parseLong(worldSeed), generator);
+            world = new WorldData(worldName, mapping.getEnvironment(), mapping.getWorldType(), worldSeed == null ?  (new Random()).nextLong() : Long.parseLong(worldSeed), generator);
         } catch (NumberFormatException e) {
             sender.sendMessage(SendMessageUtil.sendMessage("Create.use"));
         }

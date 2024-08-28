@@ -1,0 +1,56 @@
+package de.gilljan.gworld.commands;
+
+import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.api.IGWorldApi;
+import de.gilljan.gworld.utils.SecureWorldNameUtil;
+import de.gilljan.gworld.utils.SendMessageUtil;
+import de.gilljan.gworld.world.ManageableWorld;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Optional;
+
+public class GCloneCommand extends ArgsCommand {
+
+    public GCloneCommand() {
+        super("gclone", 2, "", "");
+    }
+
+    @Override
+    public boolean executeCommandForPlayer(Player player, String[] args) {
+        startClone(player, args[0], args[1]);
+        return true;
+    }
+
+    @Override
+    public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
+        startClone(console, args[0], args[1]);
+        return true;
+    }
+
+    private void startClone(CommandSender sender, String worldName, String targetName) {
+
+        if (SecureWorldNameUtil.isSecuredWorldName(targetName)) {
+            sender.sendMessage(SendMessageUtil.sendMessage("SecurityMessage"));
+            return;
+        }
+
+        if(GWorld.getInstance().getDataHandler().containsWorld(targetName) || !GWorld.getInstance().getDataHandler().containsWorld(worldName)) {
+            sender.sendMessage(SendMessageUtil.sendMessage("Clone.failed").replaceAll("%world%", targetName));
+            return;
+        }
+
+        ManageableWorld mWorld = GWorld.getInstance().getWorldManager().getWorld(worldName);
+
+        Optional<IGWorldApi> optional = mWorld.clone(targetName);
+
+        if(optional.isEmpty()) {
+            sender.sendMessage(SendMessageUtil.sendMessage("Clone.failed").replaceAll("%world%", targetName));
+            return;
+        }
+
+        sender.sendMessage(SendMessageUtil.sendMessage("Clone.success").replaceAll("%world%", worldName).replaceAll("%targetworld%", targetName));
+    }
+
+}

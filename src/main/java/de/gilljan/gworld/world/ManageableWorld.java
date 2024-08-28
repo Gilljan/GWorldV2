@@ -1,6 +1,5 @@
 package de.gilljan.gworld.world;
 
-import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.api.IGWorldApi;
 import de.gilljan.gworld.data.world.WorldData;
 import org.apache.commons.io.FileUtils;
@@ -14,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 public class ManageableWorld implements IGWorldApi {
-    private WorldData worldData;
+    private final WorldData worldData;
 
     public ManageableWorld(WorldData worldData) {
         this.worldData = worldData;
@@ -23,30 +22,28 @@ public class ManageableWorld implements IGWorldApi {
 
     @Override
     public boolean loadMap() {
-        Bukkit.getScheduler().runTask(GWorld.getInstance(), () -> {
-            WorldCreator worldCreator = WorldCreator.name(worldData.getGeneralInformation().worldName());
+        WorldCreator worldCreator = WorldCreator.name(worldData.getGeneralInformation().worldName());
 
-            if(worldData.getGeneralInformation().environment() != null) {
-                worldCreator.environment(worldData.getGeneralInformation().environment());
-            }
+        if (worldData.getGeneralInformation().environment() != null) {
+            worldCreator.environment(worldData.getGeneralInformation().environment());
+        }
 
-            if(worldData.getGeneralInformation().worldType() != null) {
-                worldCreator.type(worldData.getGeneralInformation().worldType());
-            }
+        if (worldData.getGeneralInformation().worldType() != null) {
+            worldCreator.type(worldData.getGeneralInformation().worldType());
+        }
 
-            if(worldData.getGeneralInformation().worldGenerator() != null) {
-                worldCreator.generator(worldData.getGeneralInformation().worldGenerator());
-            }
+        if (worldData.getGeneralInformation().worldGenerator() != null) {
+            worldCreator.generator(worldData.getGeneralInformation().worldGenerator());
+        }
 
-            Bukkit.createWorld(worldCreator);
-            Bukkit.getWorlds().add(Bukkit.getWorld(worldData.getGeneralInformation().worldName()));
+        Bukkit.createWorld(worldCreator);
+        Bukkit.getWorlds().add(Bukkit.getWorld(worldData.getGeneralInformation().worldName()));
 
-            worldData.setLoaded(true);
+        worldData.setLoaded(true);
 
-            setAllProperties();
-        });
+        setAllProperties();
 
-        return false;
+        return true;
     }
 
     @Override
@@ -70,7 +67,8 @@ public class ManageableWorld implements IGWorldApi {
         try {
             //delete directory
             FileUtils.deleteDirectory(world);
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
 
         return false;
     }
@@ -79,19 +77,19 @@ public class ManageableWorld implements IGWorldApi {
     public boolean createMap() {
         WorldCreator worldCreator = WorldCreator.name(worldData.getGeneralInformation().worldName());
 
-        if(worldData.getGeneralInformation().environment() != null) {
+        if (worldData.getGeneralInformation().environment() != null) {
             worldCreator.environment(worldData.getGeneralInformation().environment());
         }
 
-        if(worldData.getGeneralInformation().worldType() != null) {
+        if (worldData.getGeneralInformation().worldType() != null) {
             worldCreator.type(worldData.getGeneralInformation().worldType());
         }
 
-        if(worldData.getGeneralInformation().seed() != 0) {
+        if (worldData.getGeneralInformation().seed() != 0) {
             worldCreator.seed(worldData.getGeneralInformation().seed());
         }
 
-        if(worldData.getGeneralInformation().worldGenerator() != null) {
+        if (worldData.getGeneralInformation().worldGenerator() != null) {
             worldCreator.generator(worldData.getGeneralInformation().worldGenerator());
         }
 
@@ -113,13 +111,13 @@ public class ManageableWorld implements IGWorldApi {
             new File(target, "uid.dat").delete();
         } catch (Exception ignored) {}
 
-        loadMap();
+        boolean success = loadMap();
 
         World world = Bukkit.getWorld(worldData.getGeneralInformation().worldName());
 
-        worldData.updateGeneralInformation(new WorldData.GeneralInformation(world.getName(), world.getEnvironment(), world.getWorldType(), world.getSeed(), world.getGenerator().toString()));
+        worldData.updateGeneralInformation(new WorldData.GeneralInformation(world.getName(), world.getEnvironment(), world.getWorldType(), world.getSeed(), world.getGenerator() == null ? null : world.getGenerator().toString()));
 
-        return false;
+        return success;
     }
 
     @Override
@@ -133,7 +131,7 @@ public class ManageableWorld implements IGWorldApi {
 
         manageableWorld.worldData.updateGeneralInformation(new WorldData.GeneralInformation(newWorldName, worldData.getGeneralInformation().environment(), worldData.getGeneralInformation().worldType(), worldData.getGeneralInformation().seed(), worldData.getGeneralInformation().worldGenerator()));
 
-        if(manageableWorld.createMap()) {
+        if (manageableWorld.createMap()) {
             return Optional.of(manageableWorld);
         }
 
@@ -142,7 +140,7 @@ public class ManageableWorld implements IGWorldApi {
 
     @Override
     public boolean reCreate(boolean saveWorldToFile) {
-        if(!isMapLoaded()) {
+        if (!isMapLoaded()) {
             return false;
         }
 
@@ -151,12 +149,12 @@ public class ManageableWorld implements IGWorldApi {
         File world = new File(Bukkit.getWorldContainer(), worldData.getGeneralInformation().worldName());
 
 
-        if(saveWorldToFile) {
+        if (saveWorldToFile) {
             File destinationDir = new File("old_maps//");
             File destination = new File(destinationDir, worldData.getGeneralInformation().worldName() + " - " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
 
             try {
-                if(!destinationDir.exists()) {
+                if (!destinationDir.exists()) {
                     destinationDir.mkdirs();
                 }
 
@@ -173,7 +171,7 @@ public class ManageableWorld implements IGWorldApi {
 
     @Override
     public boolean saveWorld() {
-        if(!isMapLoaded()) {
+        if (!isMapLoaded()) {
             return false;
         }
 

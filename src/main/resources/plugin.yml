@@ -11,3 +11,8 @@ commands:
   gtp:
   gworlds:
   gcreate:
+  gimport:
+  gclone:
+  gdelete:
+  gload:
+  gunload:

@@ -1,9 +1,6 @@
 package de.gilljan.gworld;
 
-import de.gilljan.gworld.commands.GCreateCommand;
-import de.gilljan.gworld.commands.GInfoCommand;
-import de.gilljan.gworld.commands.GTpCommand;
-import de.gilljan.gworld.commands.GWorldsCommand;
+import de.gilljan.gworld.commands.*;
 import de.gilljan.gworld.data.DataHandler;
 import de.gilljan.gworld.data.Database;
 import de.gilljan.gworld.data.FileConfiguration;
@@ -17,6 +14,7 @@ import de.gilljan.gworld.utils.EntityUtil;
 import de.gilljan.gworld.utils.GeneratorUtil;
 import de.gilljan.gworld.world.ManageableWorld;
 import de.gilljan.gworld.world.WorldManager;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,7 +29,7 @@ public final class GWorld extends JavaPlugin {
     public static final List<String> ANIMALS = new ArrayList<>();
     public static final List<String> MONSTER = new ArrayList<>();
     private DataHandler dataHandler;
-    private WorldManager worldManager = new WorldManager();
+    private final WorldManager worldManager = new WorldManager();
 
     private YamlConfiguration languageFile;
 
@@ -44,14 +42,13 @@ public final class GWorld extends JavaPlugin {
         registerCommands();
         GeneratorUtil.getGenerators();
 
-        for(String entity : ANIMALS) {
-            getLogger().info("Animal: " + entity);
-        }
-
-        for(String entity : MONSTER) {
-            getLogger().info("Monster: " + entity);
-        }
-        // Plugin startup logic
+//        for(String entity : ANIMALS) {
+//            getLogger().info("Animal: " + entity);
+//        }
+//
+//        for(String entity : MONSTER) {
+//            getLogger().info("Monster: " + entity);
+//        }
 
     }
 
@@ -116,7 +113,7 @@ public final class GWorld extends JavaPlugin {
         for (WorldData world : dataHandler.getWorlds().values()) {
             if(world.isLoadOnStartup()) {
                 ManageableWorld manageableWorld = new ManageableWorld(world);
-                manageableWorld.loadMap();
+                Bukkit.getScheduler().runTask(this, manageableWorld::loadMap);
             }
         }
     }
@@ -136,6 +133,11 @@ public final class GWorld extends JavaPlugin {
         getCommand("gtp").setExecutor(new GTpCommand());
         getCommand("gworlds").setExecutor(new GWorldsCommand());
         getCommand("gcreate").setExecutor(new GCreateCommand());
+        getCommand("gimport").setExecutor(new GImportCommand());
+        getCommand("glone").setExecutor(new GCloneCommand());
+        getCommand("gdelete").setExecutor(new GDeleteCommand());
+        getCommand("gload").setExecutor(new GLoadCommand());
+        getCommand("gunload").setExecutor(new GUnloadCommand());
     }
 
 }

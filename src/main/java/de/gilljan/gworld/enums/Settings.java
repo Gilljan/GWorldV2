@@ -25,7 +25,7 @@ public enum Settings {
 
     private final List<String> values = new ArrayList<>();
 
-    private Settings(String... values) {
+    Settings(String... values) {
         this.values.addAll(Arrays.asList(values));
     }
 
