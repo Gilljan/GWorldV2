@@ -13,7 +13,8 @@
 
     <distributionManagement>
         <repository>
-            <id>github-repo</id>
+            <id>github</id>
+            <name>GitHub Packages</name>
             <url>https://github.com/Gilljan/GWorldV2/</url>
         </repository>
     </distributionManagement>
