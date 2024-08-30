@@ -15,7 +15,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://github.com/Gilljan/GWorldV2/</url>
+            <url>https://maven.pkg.github.com/Gilljan/GWorldV2/</url>
         </repository>
     </distributionManagement>
 
