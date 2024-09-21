@@ -29,7 +29,7 @@ public class SendMessageUtil {
                 .replaceAll("&u", "§u")
                 .replaceAll("&r", "§r")
                 .replaceAll("&k", "§k")
-                .replaceAll("%prefix%", GWorld.PREFIX);
+                .replaceAll("%prefix%", GWorld.prefix);
     }
 
 }
