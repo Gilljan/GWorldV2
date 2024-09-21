@@ -45,8 +45,7 @@ Worlds:
   noMapsloaded: '%prefix% &cEs sind gerade keine Maps geladen.'
   use: '%prefix% &cBenutze: /gworlds'
 Reload:
-  success: '%prefix% &aDie Konfigurationen wurden erfolgreich neu geladen.'
-  failed: '%prefix% &cBei dem Reload ist etwas schief gelaufen. Gucke dafür in die Konsole.'
+  info: '%prefix% &aEs ist nicht empfohlen, die Konfigurationen während des laufenden Betriebs zu ändern. Bitte starte den Server dafür neu.'
   use: '%prefix% &cBenutze: /gwreload'
 Set:
   success: '%prefix% &aDie Weltenkonfiguration der Welt &e%world% &awurde erfolgreich geändert:'
