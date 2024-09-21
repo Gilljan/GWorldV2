@@ -28,6 +28,7 @@ public final class GWorld extends JavaPlugin {
     public static List<String> availableGenerators = new ArrayList<>();
     public static final List<String> ANIMALS = new ArrayList<>();
     public static final List<String> MONSTER = new ArrayList<>();
+    public static String PREFIX;
     private DataHandler dataHandler;
     private final WorldManager worldManager = new WorldManager();
 
@@ -105,6 +106,8 @@ public final class GWorld extends JavaPlugin {
                     getConfig().getInt("Storage.MySQL.Port")
                     ));
         }
+
+        PREFIX = getConfig().getString("Prefix");
     }
 
     private void loadWorlds() {

@@ -2,7 +2,7 @@
 # GWorld v2
 
 #General
-Prefix: '&eGWorld &8┃ &7' #prefix of the plugin
+Prefix: '&eGWorld &8┃&7' #prefix of the plugin
 Language: 'EN' #avaiable languages: german (de), english (en)
 MainWorld: 'world' #while deleting a world the players which are on the world will be teleported to this world
 
