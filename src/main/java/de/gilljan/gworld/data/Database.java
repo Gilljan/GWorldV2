@@ -46,10 +46,12 @@ public class Database implements DataHandler {
         mySQL.update("CREATE TABLE if not exists disabledMonsters (" +
                 "  mapName varchar(32) NOT NULL," +
                 "  monster varchar(32) NOT NULL," +
+                "  FOREIGN KEY (mapName) REFERENCES maps(mapName) ON DELETE CASCADE," +
                 "PRIMARY KEY (mapName))");
         mySQL.update("CREATE TABLE if not exists disabledAnimals (" +
                 "  mapName varchar(32) NOT NULL," +
                 "  animal varchar(32) NOT NULL," +
+                "  FOREIGN KEY (mapName) REFERENCES maps(mapName) ON DELETE CASCADE," +
                 "PRIMARY KEY (mapName))");
     }
 
