@@ -12,7 +12,7 @@ public class GeneratorUtil {
                 if (plugin.isEnabled()) {
                     ChunkGenerator generator = plugin.getDefaultWorldGenerator("", "");
                     if (generator != null) {
-                        GWorld.availableGenerators.add(plugin.getDescription().getName());
+                        GWorld.AVAILABLE_GENERATORS.add(plugin.getDescription().getName());
                     }
                 }
             } catch (Throwable e) {

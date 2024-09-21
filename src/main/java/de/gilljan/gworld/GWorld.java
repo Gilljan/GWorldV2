@@ -25,7 +25,7 @@ import java.util.List;
 
 public final class GWorld extends JavaPlugin {
     private static GWorld instance;
-    public static List<String> availableGenerators = new ArrayList<>();
+    public static final List<String> AVAILABLE_GENERATORS = new ArrayList<>();
     public static final List<String> ANIMALS = new ArrayList<>();
     public static final List<String> MONSTER = new ArrayList<>();
     public static String prefix;
