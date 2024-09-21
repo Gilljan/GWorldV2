@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import java.util.Random;
 
 public class GCreateCommand extends ArgsCommand {
+    private static final Random RANDOM = new Random();
 
     public GCreateCommand() {
         super("gcreate", 2, "Create.use", "gworld.commands.gcreate");
@@ -71,7 +72,7 @@ public class GCreateCommand extends ArgsCommand {
 
         WorldData world = null;
         try {
-            world = new WorldData(worldName, mapping.getEnvironment(), mapping.getWorldType(), worldSeed == null ?  (new Random()).nextLong() : Long.parseLong(worldSeed), generator);
+            world = new WorldData(worldName, mapping.getEnvironment(), mapping.getWorldType(), worldSeed == null ?  RANDOM.nextLong() : Long.parseLong(worldSeed), generator);
         } catch (NumberFormatException e) {
             sender.sendMessage(SendMessageUtil.sendMessage("Create.use"));
         }
