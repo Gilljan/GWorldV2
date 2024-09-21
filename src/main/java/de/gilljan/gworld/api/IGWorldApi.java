@@ -27,4 +27,6 @@ public interface IGWorldApi {
     boolean saveWorld();
 
     void setAllProperties();
+
+    String getWorldName();
 }

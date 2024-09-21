@@ -189,4 +189,9 @@ public class ManageableWorld implements IGWorldApi {
         worldData.setAllowPvP(worldData.isAllowPvP());
         worldData.setDefaultGamemode(worldData.isDefaultGamemode());
     }
+
+    @Override
+    public String getWorldName() {
+        return worldData.getGeneralInformation().worldName();
+    }
 }
