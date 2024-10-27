@@ -20,7 +20,7 @@ public record WorldProperty<T> (PropertyFunction<T> getFunction, T defaultValue,
     public static final WorldProperty<WorldData.WeatherType> WEATHER_TYPE = new WorldProperty<>(WorldData::getWeatherType, WorldData.WeatherType.CLEAR, WorldData::setWeatherType);
     public static final WorldProperty<GameMode> GAMEMODE = new WorldProperty<>(WorldData::getGameMode, GameMode.SURVIVAL, WorldData::setGameMode);
     public static final WorldProperty<Difficulty> DIFFICULTY = new WorldProperty<>(WorldData::getDifficulty, Difficulty.NORMAL, WorldData::setDifficulty);
-    public static final WorldProperty<String> GENERATOR = new WorldProperty<>(WorldData::getWorldGenerator, null, null);
+    public static final WorldProperty<String> GENERATOR = new WorldProperty<>(WorldData::getWorldGenerator, null, (data, value) -> {});
     public static final WorldProperty<List<String>> DISABLED_ANIMALS = new WorldProperty<>(WorldData::getDisabledAnimals, new ArrayList<>(), WorldData::setDisabledAnimals);
     public static final WorldProperty<List<String>> DISABLED_MONSTERS = new WorldProperty<>(WorldData::getDisabledMonsters, new ArrayList<>(), WorldData::setDisabledMonsters);
     public static final WorldProperty<Integer> RANDOM_TICK_SPEED = new WorldProperty<>(WorldData::getRandomTickSpeed, 3, WorldData::setRandomTickSpeed);
