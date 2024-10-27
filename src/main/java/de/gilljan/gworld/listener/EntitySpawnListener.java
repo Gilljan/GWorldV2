@@ -40,8 +40,8 @@ public class EntitySpawnListener implements Listener {
             }
         }
 
-        if(WorldProperty.getValue(WorldProperty.DISABLED_ANIMALS, worldData).contains(event.getEntityType().name())
-                || WorldProperty.getValue(WorldProperty.DISABLED_MONSTERS, worldData).contains(event.getEntityType().name())) {
+        if(WorldProperty.getValue(WorldProperty.DISABLED_ANIMALS, worldData).contains(event.getEntity().getClass().getSimpleName())
+                || WorldProperty.getValue(WorldProperty.DISABLED_MONSTERS, worldData).contains(event.getEntity().getClass().getSimpleName())) {
             event.setCancelled(true);
         }
     }
