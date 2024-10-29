@@ -24,27 +24,28 @@ public abstract class ArgsCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if(!cmd.getName().equalsIgnoreCase(commandName))
+    public final boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!cmd.getName().equalsIgnoreCase(commandName)) {
             return false;
+        }
 
-        if(args.length < expectedArgs) {
+        if (args.length < expectedArgs) {
             sender.sendMessage(SendMessageUtil.sendMessage(usageMessageKey));
 
             return false;
         }
 
-        if(permission != null) {
-            if(!sender.hasPermission(permission)) {
-                sender.sendMessage(SendMessageUtil.sendMessage("NoPerm")); //DB
-                return false;
-            }
+        if (permission != null && !sender.hasPermission(permission)) {
+            sender.sendMessage(SendMessageUtil.sendMessage("NoPerm"));
+
+            return false;
         }
 
-        if(sender instanceof Player) {
-            return executeCommandForPlayer((Player) sender, args);
-        } else if (sender instanceof ConsoleCommandSender)
-            return executeConsoleCommand((ConsoleCommandSender) sender, args);
+        if (sender instanceof Player player) {
+            return executeCommandForPlayer(player, args);
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
+            return executeConsoleCommand(consoleCommandSender, args);
+        }
 
         return false;
     }

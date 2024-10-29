@@ -6,8 +6,6 @@ import de.gilljan.gworld.enums.WorldTypeMapping;
 import de.gilljan.gworld.utils.SecureWorldNameUtil;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import de.gilljan.gworld.world.ManageableWorld;
-import org.bukkit.World;
-import org.bukkit.WorldType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
