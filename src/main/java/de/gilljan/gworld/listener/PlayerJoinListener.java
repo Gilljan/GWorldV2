@@ -17,7 +17,7 @@ public class PlayerJoinListener implements Listener {
             if(WorldProperty.getValue(WorldProperty.DEFAULT_GAMEMODE, worldData)) {
                 player.setGameMode(WorldProperty.getValue(WorldProperty.GAMEMODE, worldData));
             }
-        }
+        });
 
         // Update notification
         //todo
