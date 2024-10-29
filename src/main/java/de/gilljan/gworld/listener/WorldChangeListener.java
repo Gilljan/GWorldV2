@@ -12,13 +12,12 @@ public class WorldChangeListener implements Listener {
     @EventHandler
     public void WorldChange(PlayerChangedWorldEvent event) {
         Player p = event.getPlayer();
+        String worldName = p.getWorld().getName();
 
-        if(GWorld.getInstance().getDataHandler().containsWorld(p.getWorld().getName())) {
-            return;
-        }
-
-        if(WorldProperty.getValue(WorldProperty.DEFAULT_GAMEMODE, GWorld.getInstance().getDataHandler().getWorld(p.getWorld().getName()))) {
-            p.setGameMode(WorldProperty.getValue(WorldProperty.GAMEMODE, GWorld.getInstance().getDataHandler().getWorld(p.getWorld().getName())));
-        }
+        GWorld.getInstance().getDataHandler().getWorld(worldName).ifPresent(worldData -> {
+            if(WorldProperty.getValue(WorldProperty.DEFAULT_GAMEMODE, worldData)) {
+                p.setGameMode(WorldProperty.getValue(WorldProperty.GAMEMODE, worldData));
+            }
+        });
     }
 }

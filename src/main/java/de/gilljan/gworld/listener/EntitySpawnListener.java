@@ -19,21 +19,21 @@ public class EntitySpawnListener implements Listener {
 
         World world = event.getLocation().getWorld();
 
-        if(GWorld.getInstance().getWorldManager().getWorld(world.getName()) != null) {
+        if(GWorld.getInstance().getWorldManager().getWorld(world.getName()).isEmpty()) {
             event.setCancelled(false);
             return;
         }
 
-        WorldData worldData = GWorld.getInstance().getDataHandler().getWorld(world.getName());
+        WorldData worldData = GWorld.getInstance().getDataHandler().getWorld(world.getName()).get();
 
-        if(WorldProperty.getValue(WorldProperty.ANIMAL_SPAWNING, worldData)) {
+        if(!WorldProperty.getValue(WorldProperty.ANIMAL_SPAWNING, worldData)) {
             if(GWorld.ANIMALS.contains(event.getEntity().getClass().getSimpleName())) {
                 event.setCancelled(true);
                 return;
             }
         }
 
-        if(WorldProperty.getValue(WorldProperty.MONSTER_SPAWNING, worldData)) {
+        if(!WorldProperty.getValue(WorldProperty.MONSTER_SPAWNING, worldData)) {
             if(GWorld.MONSTER.contains(event.getEntity().getClass().getSimpleName())) {
                 event.setCancelled(true);
                 return;

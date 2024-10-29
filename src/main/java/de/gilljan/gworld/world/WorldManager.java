@@ -1,10 +1,9 @@
 package de.gilljan.gworld.world;
 
 import de.gilljan.gworld.GWorld;
-import de.gilljan.gworld.api.IGWorldApi;
 import de.gilljan.gworld.data.world.WorldData;
 
-import java.util.HashMap;
+import java.util.Optional;
 
 public class WorldManager {
 
@@ -18,12 +17,13 @@ public class WorldManager {
         return manageableWorld;
     }
 
-    public ManageableWorld getWorld(String name) {
-        return new ManageableWorld(GWorld.getInstance().getDataHandler().getWorld(name));
+    //@Nullable
+    public Optional<ManageableWorld> getWorld(String name) {
+        return GWorld.getInstance().getDataHandler().getWorld(name).map(ManageableWorld::new);
     }
 
     public void removeWorld(WorldData data) {
-        getWorld(data.getGeneralInformation().worldName()).deleteMap();
+        getWorld(data.getGeneralInformation().worldName()).ifPresent(ManageableWorld::deleteMap);
         GWorld.getInstance().getDataHandler().removeWorld(data);
     }
 

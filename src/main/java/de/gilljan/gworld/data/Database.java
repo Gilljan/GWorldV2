@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 public class Database implements DataHandler {
     private final MySQL mySQL;
@@ -56,15 +57,12 @@ public class Database implements DataHandler {
     }
 
     @Override
-    public WorldData getWorld(String name) {
+    public Optional<WorldData> getWorld(String name) {
         if(!worlds.containsKey(name)) {
-            WorldData world = fetchWorld(name);
-            if(world == null) {
-                return null;
-            }
-            worlds.put(name, world);
+            Optional<WorldData> world = fetchWorld(name);
+            world.ifPresent(worldData -> worlds.put(name, worldData));
         }
-        return worlds.get(name);
+        return worlds.get(name) != null ? Optional.of(worlds.get(name)) : Optional.empty();
     }
 
     @Override
@@ -118,8 +116,8 @@ public class Database implements DataHandler {
         ResultSet rs = mySQL.getResult("SELECT * FROM maps");
         try {
             while(rs.next()) {
-                WorldData world = fetchWorld(rs.getString("mapName"));
-                worlds.put(world.getGeneralInformation().worldName(), world);
+                fetchWorld(rs.getString("mapName"))
+                        .ifPresent(world -> worlds.put(world.getGeneralInformation().worldName(), world));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -133,7 +131,7 @@ public class Database implements DataHandler {
     }
 
     @Override
-    public WorldData fetchWorld(String name) {
+    public Optional<WorldData> fetchWorld(String name) {
         ResultSet rs = mySQL.getResult("SELECT * FROM maps WHERE mapName = '" + name + "'");
         try {
             if(rs.next()) {
@@ -147,7 +145,7 @@ public class Database implements DataHandler {
                 while(rsAnimals.next()) {
                     disabledAnimals.add(rsAnimals.getString("animal"));
                 }
-                return new WorldData(
+                return Optional.of(new WorldData(
                         new WorldData.GeneralInformation(
                                 rs.getString("mapName"),
                                 org.bukkit.World.Environment.valueOf(rs.getString("environment")),
@@ -171,7 +169,7 @@ public class Database implements DataHandler {
                         rs.getBoolean("load"),
                         rs.getInt("randomTickSpeed"),
                         rs.getBoolean("announceAdvancements")
-                );
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();

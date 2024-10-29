@@ -1,9 +1,5 @@
 package de.gilljan.gworld.api;
 
-import de.gilljan.gworld.data.world.WorldData;
-import org.bukkit.WorldType;
-
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public interface IGWorldApi {

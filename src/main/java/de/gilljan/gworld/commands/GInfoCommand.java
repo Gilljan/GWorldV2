@@ -8,6 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class GInfoCommand extends ArgsCommand {
 
     public GInfoCommand() {
@@ -16,52 +18,42 @@ public class GInfoCommand extends ArgsCommand {
 
     @Override
     public boolean executeCommandForPlayer(Player player, String[] args) {
-        if(args.length > 1) {
+        if (args.length > 1) {
             player.sendMessage(SendMessageUtil.sendMessage("Info.use"));
             return false;
         }
 
-        WorldData world;
-        boolean arg = false;
-        if(args.length == 0) {
-            world = GWorld.getInstance().getDataHandler().getWorld(player.getWorld().getName());
-        } else {
-            world = GWorld.getInstance().getDataHandler().getWorld(args[0]);
-            arg = true;
-        }
+        String worldName = (args.length > 0) ? args[0] : player.getWorld().getName();
 
-        if(world == null) {
-            if(arg) {
-                player.sendMessage(SendMessageUtil.sendMessage("Info.failed").replaceAll("%world%", args[0]));
-            } else {
-                player.sendMessage(SendMessageUtil.sendMessage("Info.failed_world"));
-            }
+        return GWorld.getInstance().getDataHandler().getWorld(worldName)
+                .map(world -> {
+                    sendInfo(player, world);
 
-            return false;
-        }
+                    return true;
+                }).orElseGet(() -> {
+                    String messageKey = (args.length > 0) ? "Info.failed" : "Info.failed_world";
+                    player.sendMessage(SendMessageUtil.sendMessage(messageKey).replaceAll("%world%", worldName));
 
-        //Send messages
-        sendInfo(player, world);
-
-        return true;
+                    return false;
+                });
     }
 
     @Override
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
-        if(args.length != 1) {
+        if (args.length != 1) {
             console.sendMessage(SendMessageUtil.sendMessage("Info.use"));
             return false;
         }
 
-        WorldData world = GWorld.getInstance().getDataHandler().getWorld(args[0]);
+        Optional<WorldData> world = GWorld.getInstance().getDataHandler().getWorld(args[0]);
 
-        if(world == null) {
+        if (world.isEmpty()) {
             console.sendMessage(SendMessageUtil.sendMessage("Info.failed").replaceAll("%world%", args[0]));
             return false;
         }
 
         //Send messages
-        sendInfo(console, world);
+        sendInfo(console, world.get());
         return true;
     }
 
@@ -80,13 +72,13 @@ public class GInfoCommand extends ArgsCommand {
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.mobs") + SendMessageUtil.sendMessage("Info.flags." + String.valueOf(WorldProperty.getValue(WorldProperty.MONSTER_SPAWNING, world))));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.disabledMobs"));
 
-        for(String mob : WorldProperty.getValue(WorldProperty.DISABLED_MONSTERS, world)) {
+        for (String mob : WorldProperty.getValue(WorldProperty.DISABLED_MONSTERS, world)) {
             sender.sendMessage(" §7- " + SendMessageUtil.sendMessage("Info.flags.values").replaceAll("%value%", mob));
         }
 
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.animals") + SendMessageUtil.sendMessage("Info.flags." + String.valueOf(WorldProperty.getValue(WorldProperty.ANIMAL_SPAWNING, world))));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.disabledAnimals"));
-        for(String animal : WorldProperty.getValue(WorldProperty.DISABLED_ANIMALS, world)) {
+        for (String animal : WorldProperty.getValue(WorldProperty.DISABLED_ANIMALS, world)) {
             sender.sendMessage(" §7- " + SendMessageUtil.sendMessage("Info.flags.values").replaceAll("%value%", animal));
         }
         //System.out.println(WorldProperty.getValue(WorldProperty.KEEP_SPAWN_IN_MEMORY, world));

@@ -1,9 +1,7 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
-import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.SendMessageUtil;
-import de.gilljan.gworld.world.ManageableWorld;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -19,9 +17,7 @@ public class GRecreateCommand extends ArgsCommand {
         String worldName = args[0];
         boolean saveOldWorld = Boolean.parseBoolean(args[1]);
 
-        ManageableWorld world = GWorld.getInstance().getWorldManager().getWorld(worldName);
-
-        reCreateWorld(player, world, saveOldWorld);
+        reCreateWorld(player, worldName, saveOldWorld);
 
         return false;
     }
@@ -31,28 +27,24 @@ public class GRecreateCommand extends ArgsCommand {
         String worldName = args[0];
         boolean saveOldWorld = Boolean.parseBoolean(args[1]);
 
-        ManageableWorld world = GWorld.getInstance().getWorldManager().getWorld(worldName);
 
-        reCreateWorld(console, world, saveOldWorld);
+        reCreateWorld(console, worldName, saveOldWorld);
 
         return false;
     }
 
-    private void reCreateWorld(CommandSender sender, ManageableWorld world, boolean saveOldWorld) {
-        if(world == null) {
-            sender.sendMessage(SendMessageUtil.sendMessage("ReCreate.failed").replaceAll("%world%", "worldNotFound"));
-            return;
-        }
+    private void reCreateWorld(CommandSender sender, String worldName, boolean saveOldWorld) {
+        GWorld.getInstance().getWorldManager().getWorld(worldName).ifPresentOrElse(
+                world -> {
+                    if (!world.isMapLoaded()) {
+                        sender.sendMessage(SendMessageUtil.sendMessage("ReCreate.failed").replace("%world%", worldName));
+                        return;
+                    }
 
-        if(!world.isMapLoaded()) {
-            sender.sendMessage(SendMessageUtil.sendMessage("ReCreate.failed").replaceAll("%world%", world.getWorldName()));
-            return;
-        }
-
-        if(world.reCreate(saveOldWorld)) {
-            sender.sendMessage(SendMessageUtil.sendMessage("ReCreate.success").replaceAll("%world%", world.getWorldName()));
-        } else {
-            sender.sendMessage(SendMessageUtil.sendMessage("ReCreate.failed").replaceAll("%world%", world.getWorldName()));
-        }
+                    String messageKey = world.reCreate(saveOldWorld) ? "ReCreate.success" : "ReCreate.failed";
+                    sender.sendMessage(SendMessageUtil.sendMessage(messageKey).replace("%world%", world.getWorldName()));
+                },
+                () -> sender.sendMessage(SendMessageUtil.sendMessage("ReCreate.failed").replace("%world%", worldName))
+        );
     }
 }

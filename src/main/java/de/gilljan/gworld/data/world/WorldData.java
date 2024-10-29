@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class WorldData {
     private GeneralInformation generalInformation;
@@ -278,7 +279,7 @@ public class WorldData {
         return generalInformation;
     }
 
-    public static WorldData loadWorldData(DataHandler dataHandler, String worldName) {
+    public static Optional<WorldData> loadWorldData(DataHandler dataHandler, String worldName) {
         return dataHandler.getWorld(worldName);
     }
 

@@ -2,7 +2,6 @@ package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.utils.SendMessageUtil;
-import de.gilljan.gworld.world.ManageableWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -34,20 +33,19 @@ public class GDeleteCommand extends ArgsCommand {
             return;
         }
 
-        ManageableWorld mWorld = GWorld.getInstance().getWorldManager().getWorld(worldName);
-
         World mainWorld = Bukkit.getWorld(GWorld.getInstance().getConfig().getString("MainWorld"));
         for(Player player : mainWorld.getPlayers()) {
             player.teleport(mainWorld.getSpawnLocation());
             player.sendMessage(SendMessageUtil.sendMessage("Delete.teleport_players").replaceAll("%world%", worldName));
         }
 
-        if(!mWorld.deleteMap()) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Delete.failed").replaceAll("%world%", worldName));
-            return;
-        }
+        GWorld.getInstance().getWorldManager().getWorld(worldName).ifPresent(world -> {
+            if(!world.deleteMap()) {
+                sender.sendMessage(SendMessageUtil.sendMessage("Delete.failed").replaceAll("%world%", worldName));
+                return;
+            }
 
-        sender.sendMessage(SendMessageUtil.sendMessage("Delete.success").replaceAll("%world%", worldName));
-
+            sender.sendMessage(SendMessageUtil.sendMessage("Delete.success").replaceAll("%world%", worldName));
+        });
     }
 }

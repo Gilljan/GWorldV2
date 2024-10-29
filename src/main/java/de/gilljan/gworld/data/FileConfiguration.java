@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Objects;
+import java.util.Optional;
 
 public class FileConfiguration implements DataHandler {
     public HashMap<String, WorldData> worlds = new HashMap<>();
@@ -37,9 +37,9 @@ public class FileConfiguration implements DataHandler {
 
 
     @Override
-    public WorldData getWorld(String name) {
+    public Optional<WorldData> getWorld(String name) {
         if(worlds.containsKey(name)) {
-            return worlds.get(name);
+            return Optional.of(worlds.get(name));
         }
 
         if(worldData.contains(WORLD_PATH + name)) {
@@ -68,10 +68,10 @@ public class FileConfiguration implements DataHandler {
                     worldData.getBoolean(WORLD_PATH + name + ".AnnounceAdvancements")
                     );
             worlds.put(name, world);
-            return world;
+            return Optional.of(world);
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -140,8 +140,11 @@ public class FileConfiguration implements DataHandler {
     public void loadAllWorlds() {
         worlds.clear();
         for(String key : worldData.getConfigurationSection(WORLD_PATH).getKeys(false)) {
-            WorldData world = getWorld(key);
-            worlds.put(key, world);
+            Optional<WorldData> world = getWorld(key);
+            if(world.isEmpty()) {
+                continue;
+            }
+            worlds.put(key, world.get());
         }
     }
 
@@ -152,7 +155,7 @@ public class FileConfiguration implements DataHandler {
     }
 
     @Override
-    public WorldData fetchWorld(String name) {
+    public Optional<WorldData> fetchWorld(String name) {
         worlds.remove(name);
         return getWorld(name);
     }

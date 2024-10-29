@@ -1,15 +1,11 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
-import de.gilljan.gworld.api.IGWorldApi;
 import de.gilljan.gworld.utils.SecureWorldNameUtil;
 import de.gilljan.gworld.utils.SendMessageUtil;
-import de.gilljan.gworld.world.ManageableWorld;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Optional;
 
 public class GCloneCommand extends ArgsCommand {
 
@@ -30,27 +26,20 @@ public class GCloneCommand extends ArgsCommand {
     }
 
     private void startClone(CommandSender sender, String worldName, String targetName) {
-
-        if (SecureWorldNameUtil.isSecuredWorldName(targetName)) {
+        if (!SecureWorldNameUtil.isSecuredWorldName(targetName)) {
             sender.sendMessage(SendMessageUtil.sendMessage("SecurityMessage"));
             return;
         }
 
-        if(GWorld.getInstance().getDataHandler().containsWorld(targetName) || !GWorld.getInstance().getDataHandler().containsWorld(worldName)) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Clone.failed").replaceAll("%world%", targetName));
-            return;
-        }
+        GWorld.getInstance().getWorldManager().getWorld(worldName).ifPresentOrElse(
+                world -> {
+                    sender.sendMessage(world.clone(targetName)
+                            .map(api -> SendMessageUtil.sendMessage("Clone.success").replaceAll("%world%", worldName).replaceAll("%targetworld%", targetName))
+                            .orElse(SendMessageUtil.sendMessage("Clone.failed").replaceAll("%world%", targetName)));
+                },
+                () -> sender.sendMessage(SendMessageUtil.sendMessage("Clone.failed").replaceAll("%world%", worldName))
+        );
 
-        ManageableWorld mWorld = GWorld.getInstance().getWorldManager().getWorld(worldName);
 
-        Optional<IGWorldApi> optional = mWorld.clone(targetName);
-
-        if(optional.isEmpty()) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Clone.failed").replaceAll("%world%", targetName));
-            return;
-        }
-
-        sender.sendMessage(SendMessageUtil.sendMessage("Clone.success").replaceAll("%world%", worldName).replaceAll("%targetworld%", targetName));
     }
-
 }

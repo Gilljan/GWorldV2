@@ -3,10 +3,11 @@ package de.gilljan.gworld.data;
 import de.gilljan.gworld.data.world.WorldData;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 public interface DataHandler {
 
-    WorldData getWorld(String name);
+    Optional<WorldData> getWorld(String name);
 
     void saveWorld(WorldData world);
 
@@ -16,7 +17,7 @@ public interface DataHandler {
 
     void refetchWorlds();
 
-    WorldData fetchWorld(String name);
+    Optional<WorldData> fetchWorld(String name);
 
     void addWorld(WorldData world);
 

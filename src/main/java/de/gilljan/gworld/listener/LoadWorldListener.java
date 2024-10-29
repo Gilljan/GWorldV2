@@ -3,7 +3,6 @@ package de.gilljan.gworld.listener;
 import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.SendMessageUtil;
-import de.gilljan.gworld.world.ManageableWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,7 +21,7 @@ public class LoadWorldListener implements Listener {
         }
 
         //wenn gworld die welt kennt, dann nicht laden
-        if(GWorld.getInstance().getDataHandler().containsWorld(event.getWorld().getName())) {
+        if(GWorld.getInstance().getDataHandler().getWorld(event.getWorld().getName()).isEmpty()) {
             return;
         }
 

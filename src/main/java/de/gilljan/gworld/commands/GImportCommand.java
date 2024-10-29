@@ -6,8 +6,6 @@ import de.gilljan.gworld.enums.WorldTypeMapping;
 import de.gilljan.gworld.utils.SecureWorldNameUtil;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import de.gilljan.gworld.world.ManageableWorld;
-import org.bukkit.World;
-import org.bukkit.WorldType;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -23,7 +21,7 @@ public class GImportCommand extends ArgsCommand {
         String worldType = args[1];
         String generator = null;
 
-        if (SecureWorldNameUtil.isSecuredWorldName(worldName)) {
+        if (!SecureWorldNameUtil.isSecuredWorldName(worldName)) {
             player.sendMessage(SendMessageUtil.sendMessage("SecurityMessage"));
             return false;
         }
