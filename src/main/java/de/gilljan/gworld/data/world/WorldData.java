@@ -1,5 +1,6 @@
 package de.gilljan.gworld.data.world;
 
+import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.data.DataHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
@@ -114,7 +115,12 @@ public class WorldData {
     public void setAnimalSpawning(boolean animalSpawning) {
         this.animalSpawning = animalSpawning;
 
-        setDisabledAnimals(disabledAnimals);
+        //Remove all animals
+        for(Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
+            if(GWorld.ANIMALS.contains(entity.getType().name())) {
+                entity.remove();
+            }
+        }
     }
 
     public List<String> getDisabledAnimals() {
@@ -124,7 +130,7 @@ public class WorldData {
     public void setDisabledAnimals(List<String> disabledAnimals) {
         this.disabledAnimals = disabledAnimals;
 
-        if(isLoaded() && !animalSpawning) {
+        if(isLoaded()) {
             for(Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
                 if(disabledAnimals.contains(entity.getType().name())) {
                     entity.remove();
@@ -141,7 +147,12 @@ public class WorldData {
     public void setMonsterSpawning(boolean monsterSpawning) {
         this.monsterSpawning = monsterSpawning;
 
-        setDisabledMonsters(disabledMonsters);
+        //Remove all monsters
+        for(Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
+            if(GWorld.MONSTER.contains(entity.getType().name())) {
+                entity.remove();
+            }
+        }
     }
 
     public List<String> getDisabledMonsters() {
@@ -151,8 +162,9 @@ public class WorldData {
     public void setDisabledMonsters(List<String> disabledMonsters) {
         this.disabledMonsters = disabledMonsters;
 
-        if(isLoaded() && !monsterSpawning) {
+        if(isLoaded()) {
             for(Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
+                GWorld.getInstance().getLogger().info(entity.getType().name());
                 if(disabledMonsters.contains(entity.getType().name())) {
                     entity.remove();
                 }
