@@ -139,12 +139,13 @@ public final class GWorld extends JavaPlugin {
         getCommand("gworlds").setExecutor(new GWorldsCommand());
         getCommand("gcreate").setExecutor(new GCreateCommand());
         getCommand("gimport").setExecutor(new GImportCommand());
-        getCommand("glone").setExecutor(new GCloneCommand());
+        getCommand("gclone").setExecutor(new GCloneCommand());
         getCommand("gdelete").setExecutor(new GDeleteCommand());
         getCommand("gload").setExecutor(new GLoadCommand());
         getCommand("gunload").setExecutor(new GUnloadCommand());
         getCommand("grecreate").setExecutor(new GRecreateCommand());
         getCommand("gwreload").setExecutor(new GWReloadCommand());
+        getCommand("gset").setExecutor(new GSetCommand());
     }
 
 }

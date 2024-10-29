@@ -18,3 +18,4 @@ commands:
   gunload:
   grecreate:
   gwreload:
+  gset:
