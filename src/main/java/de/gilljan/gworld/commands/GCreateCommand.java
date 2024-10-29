@@ -37,7 +37,7 @@ public class GCreateCommand extends ArgsCommand {
         String worldSeed = null;
         String generator = null;
 
-        if (SecureWorldNameUtil.isSecuredWorldName(worldName)) {
+        if (!SecureWorldNameUtil.isSecuredWorldName(worldName)) {
             sender.sendMessage(SendMessageUtil.sendMessage("SecurityMessage"));
             return;
         }

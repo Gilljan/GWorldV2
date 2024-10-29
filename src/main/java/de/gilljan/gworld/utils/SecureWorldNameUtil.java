@@ -1,7 +1,5 @@
 package de.gilljan.gworld.utils;
 
-import org.bukkit.command.CommandSender;
-
 public class SecureWorldNameUtil {
 
     public static boolean isSecuredWorldName(String worldName) {
