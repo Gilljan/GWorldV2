@@ -100,11 +100,11 @@ public final class GWorld extends JavaPlugin {
         } else {
             dataHandler = new Database(new MySQL(
                     this,
-                    getConfig().getString("Storage.MySQL.Host"),
-                    getConfig().getString("Storage.MySQL.Database"),
-                    getConfig().getString("Storage.MySQL.Username"),
-                    getConfig().getString("Storage.MySQL.Password"),
-                    getConfig().getInt("Storage.MySQL.Port")
+                    getConfig().getString("Storage.Host"),
+                    getConfig().getString("Storage.Database"),
+                    getConfig().getString("Storage.Username"),
+                    getConfig().getString("Storage.Password"),
+                    getConfig().getInt("Storage.Port")
                     ));
         }
 

@@ -19,6 +19,8 @@ public class Database implements DataHandler {
         this.mySQL = mySQL;
         this.worlds = new HashMap<>();
 
+        this.mySQL.connect();
+
         createTables();
     }
 
@@ -27,7 +29,7 @@ public class Database implements DataHandler {
                 "  mapName varchar(32) NOT NULL," +
                 "  environment enum('NORMAL','NETHER','THE_END','') NOT NULL DEFAULT 'NORMAL'," +
                 "  type enum('NORMAL','FLAT','LARGE_BIOMES','AMPLIFIED') NOT NULL DEFAULT 'NORMAL'," +
-                "  seed int(11) NOT NULL," +
+                "  seed bigint NOT NULL," +
                 "  worldGenerator varchar(64) DEFAULT NULL," +
                 "  allowPvP tinyint(1) NOT NULL," +
                 "  keepSpawnInMemory tinyint(1) NOT NULL," +
@@ -40,7 +42,7 @@ public class Database implements DataHandler {
                 "  defaultGamemode tinyint(1) NOT NULL," +
                 "  gameMode enum('CREATIVE','SURVIVAL','ADVENTURE','SPECTATOR') NOT NULL DEFAULT 'SURVIVAL'," +
                 "  difficulty enum('PEACEFUL','EASY','NORMAL','HARD') NOT NULL DEFAULT 'NORMAL'," +
-                "  load tinyint(1) NOT NULL DEFAULT 1," +
+                "  `load` tinyint(1) NOT NULL DEFAULT 1," +
                 "  randomTickSpeed int(11) NOT NULL DEFAULT 3," +
                 "  announceAdvancements tinyint(1) NOT NULL DEFAULT 1," +
                 "PRIMARY KEY (mapName))");
@@ -67,7 +69,7 @@ public class Database implements DataHandler {
 
     @Override
     public void saveWorld(WorldData world) {
-        mySQL.update("INSERT INTO maps (mapName, environment, type, seed, worldGenerator, allowPvP, keepSpawnInMemory, animalSpawning, monsterSpawning, weatherCycle, weatherType, timeCycle, time, defaultGamemode, gameMode, difficulty, load, randomTickSpeed, announceAdvancements) " +
+        mySQL.update("INSERT INTO maps (mapName, environment, type, seed, worldGenerator, allowPvP, keepSpawnInMemory, animalSpawning, monsterSpawning, weatherCycle, weatherType, timeCycle, time, defaultGamemode, gameMode, difficulty, `load`, randomTickSpeed, announceAdvancements) " +
                 "VALUES ('" + world.getGeneralInformation().worldName() + "', '" +
                 world.getGeneralInformation().environment().name() + "', '" +
                 world.getGeneralInformation().worldType().name() + "', " +
@@ -84,7 +86,9 @@ public class Database implements DataHandler {
                 world.isDefaultGamemode() + ", '" +
                 world.getGameMode().name() + "', '" +
                 world.getDifficulty().name() + "', " +
-
+                world.isLoadOnStartup() + ", " +
+                world.getRandomTickSpeed() + ", " +
+                world.isAnnounceAdvancements() +
                 ") ON DUPLICATE KEY UPDATE " +
                 "environment = VALUES(environment), " +
                 "type = VALUES(type), " +
@@ -100,7 +104,10 @@ public class Database implements DataHandler {
                 "time = VALUES(time), " +
                 "defaultGamemode = VALUES(defaultGamemode), " +
                 "gameMode = VALUES(gameMode), " +
-                "difficulty = VALUES(difficulty)");
+                "difficulty = VALUES(difficulty), " +
+                "`load` = VALUES(`load`), " +
+                "randomTickSpeed = VALUES(randomTickSpeed), " +
+                "announceAdvancements = VALUES(announceAdvancements)");
     }
 
     @Override
