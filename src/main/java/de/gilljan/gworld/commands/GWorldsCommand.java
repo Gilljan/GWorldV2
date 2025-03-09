@@ -1,6 +1,7 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.bukkit.command.CommandSender;
@@ -23,6 +24,11 @@ public class GWorldsCommand extends ArgsCommand {
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
         sendMessages(console);
         return true;
+    }
+
+    @Override
+    protected CompletionNode createCompletions() {
+        return new CompletionNode("gworlds");
     }
 
     private void sendMessages(CommandSender sender) {

@@ -1,16 +1,19 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.data.properties.WorldProperty;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.enums.Settings;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GSetCommand extends ArgsCommand {
@@ -32,6 +35,31 @@ public class GSetCommand extends ArgsCommand {
     @Override
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
         return false;
+    }
+
+    @Override
+    protected CompletionNode createCompletions() {
+        CompletionNode root = new CompletionNode("gset");
+
+        for(World world : GWorld.getInstance().getServer().getWorlds()) {
+            CompletionNode worldNode = new CompletionNode(world.getName());
+
+            root.addChild(worldNode);
+        }
+
+        List<CompletionNode> settingsNodes = new ArrayList<>();
+
+        for (Settings setting : Settings.values()) {
+            CompletionNode settingNode = new CompletionNode(setting.toString());
+
+            setting.getValues().forEach((item) -> settingNode.addChild(new CompletionNode(item.toLowerCase())));
+
+            settingsNodes.add(settingNode);
+        }
+
+        root.addForAllChildren(settingsNodes);
+
+        return root;
     }
 
     private void setFlag(CommandSender sender, WorldData worldData, String[] args) {
@@ -59,6 +87,11 @@ public class GSetCommand extends ArgsCommand {
     private void handleSpecificEntities(CommandSender sender, WorldData worldData, WorldProperty<List<String>> property, String[] args, Settings setting) {
         List<String> disabledEntities = WorldProperty.getValue(property, worldData);
         String entity = args[2];
+/*
+        if(!setting.getValues().contains(entity)) {
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
+            return;
+        }*/
 
         if (args[2].equalsIgnoreCase("list")) {
             sender.sendMessage(SendMessageUtil.sendMessage("Set.list").replaceAll("%world%", worldData.getGeneralInformation().worldName()).replaceAll("%setting%", setting.toString()).replaceAll("%value%", disabledEntities.toString()));

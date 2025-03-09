@@ -1,10 +1,14 @@
 package de.gilljan.gworld.commands;
 
+import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GTpCommand extends ArgsCommand {
 
@@ -48,5 +52,19 @@ public class GTpCommand extends ArgsCommand {
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
         console.sendMessage(SendMessageUtil.sendMessage("Teleport.failed_console"));
         return false;
+    }
+
+    @Override
+    protected CompletionNode createCompletions() {
+        CompletionNode root = new CompletionNode("gtp");
+        List<CompletionNode> players = Bukkit.getOnlinePlayers().stream().map(player -> new CompletionNode(player.getName())).toList();
+
+        for(World world : Bukkit.getWorlds()) {
+            CompletionNode worldNode = new CompletionNode(world.getName());
+            worldNode.addChildren(players);
+            root.addChild(worldNode);
+        }
+
+        return root;
     }
 }

@@ -1,6 +1,8 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
+import de.gilljan.gworld.commands.tabcompletion.TabCompleter;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.enums.WorldTypeMapping;
 import de.gilljan.gworld.utils.SecureWorldNameUtil;
@@ -10,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Random;
 
 public class GCreateCommand extends ArgsCommand {
@@ -29,6 +32,24 @@ public class GCreateCommand extends ArgsCommand {
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
         createWorld(console, args);
         return true;
+    }
+
+    @Override
+    protected CompletionNode createCompletions() {
+        CompletionNode rootNode = new CompletionNode("gcreate");
+        CompletionNode worldName = new CompletionNode("*");
+        CompletionNode seed = new CompletionNode("*");
+
+        seed.addChildren(TabCompleter.GENERATORS);
+
+        worldName.addChildren(TabCompleter.WORLD_TYPES);
+
+        worldName.addForAllChildren(List.of(seed));
+        worldName.addForAllChildren(TabCompleter.GENERATORS);
+
+        rootNode.addChild(worldName);
+
+        return rootNode;
     }
 
     private void createWorld(CommandSender sender, String[] args) {

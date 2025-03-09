@@ -1,6 +1,7 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -24,6 +25,17 @@ public class GUnloadCommand extends ArgsCommand {
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
         unloadWorld(console, args[0]);
         return true;
+    }
+
+    @Override
+    protected CompletionNode createCompletions() {
+        CompletionNode root = new CompletionNode("gunload");
+
+        for(World world : Bukkit.getWorlds()) {
+            root.addChild(new CompletionNode(world.getName()));
+        }
+
+        return root;
     }
 
     private void unloadWorld(CommandSender sender, String worldName) {

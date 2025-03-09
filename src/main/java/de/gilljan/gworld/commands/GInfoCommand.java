@@ -1,6 +1,7 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.data.properties.WorldProperty;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.SendMessageUtil;
@@ -55,6 +56,17 @@ public class GInfoCommand extends ArgsCommand {
         //Send messages
         sendInfo(console, world.get());
         return true;
+    }
+
+    @Override
+    protected CompletionNode createCompletions() {
+        CompletionNode root = new CompletionNode("ginfo");
+
+        for (WorldData world : GWorld.getInstance().getDataHandler().getWorlds().values()) {
+            root.addChild(new CompletionNode(world.getGeneralInformation().worldName()));
+        }
+
+        return root;
     }
 
     private void sendInfo(CommandSender sender, WorldData world) {

@@ -1,6 +1,7 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -22,6 +23,17 @@ public class GLoadCommand extends ArgsCommand {
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
         loadWorld(console, args[0]);
         return true;
+    }
+
+    @Override
+    protected CompletionNode createCompletions() {
+        CompletionNode root = new CompletionNode("gload");
+
+        for(String world : GWorld.getInstance().getDataHandler().getWorlds().keySet()) {
+            root.addChild(new CompletionNode(world));
+        }
+
+        return root;
     }
 
     private void loadWorld(CommandSender sender, String worldName) {

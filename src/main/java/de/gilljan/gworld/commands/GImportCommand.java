@@ -1,6 +1,8 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
+import de.gilljan.gworld.commands.tabcompletion.TabCompleter;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.enums.WorldTypeMapping;
 import de.gilljan.gworld.utils.SecureWorldNameUtil;
@@ -9,6 +11,8 @@ import de.gilljan.gworld.world.ManageableWorld;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class GImportCommand extends ArgsCommand {
 
     public GImportCommand() {
@@ -16,7 +20,7 @@ public class GImportCommand extends ArgsCommand {
     }
 
     @Override
-    public boolean executeCommandForPlayer(Player player, String[] args) {
+    public boolean executeCommandForPlayer(Player player, String[] args) { //todo check if world directory exists!
         String worldName = args[0];
         String worldType = args[1];
         String generator = null;
@@ -61,5 +65,17 @@ public class GImportCommand extends ArgsCommand {
     @Override
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
         return false;
+    }
+
+    @Override
+    protected CompletionNode createCompletions() {
+        CompletionNode root = new CompletionNode("gimport");
+        CompletionNode worldName = new CompletionNode("*");
+        root.addChild(worldName);
+
+        worldName.addChildren(TabCompleter.WORLD_TYPES);
+        worldName.addForAllChildren(TabCompleter.GENERATORS);
+
+        return root;
     }
 }

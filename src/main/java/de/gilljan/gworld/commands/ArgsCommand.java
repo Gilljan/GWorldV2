@@ -1,16 +1,16 @@
 package de.gilljan.gworld.commands;
 
+import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
+import de.gilljan.gworld.commands.tabcompletion.TabCompleter;
 import de.gilljan.gworld.utils.SendMessageUtil;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
-public abstract class ArgsCommand implements CommandExecutor {
+public abstract class ArgsCommand implements CommandExecutor, org.bukkit.command.TabCompleter {
     private final String commandName;
     private final int expectedArgs;
     private final String usageMessageKey;
@@ -50,7 +50,14 @@ public abstract class ArgsCommand implements CommandExecutor {
         return false;
     }
 
+    @Override
+    public @org.jetbrains.annotations.Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        return new TabCompleter(createCompletions()).onTabComplete(sender, command, label, args);
+    }
+
     public abstract boolean executeCommandForPlayer(Player player, String[] args);
 
     public abstract boolean executeConsoleCommand(ConsoleCommandSender console, String[] args);
+
+    protected abstract CompletionNode createCompletions();
 }

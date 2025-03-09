@@ -1,6 +1,7 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.utils.SecureWorldNameUtil;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.bukkit.command.CommandSender;
@@ -10,7 +11,7 @@ import org.bukkit.entity.Player;
 public class GCloneCommand extends ArgsCommand {
 
     public GCloneCommand() {
-        super("gclone", 2, "", "");
+        super("gclone", 2, "Clone.use", "gworld.commands.clone");
     }
 
     @Override
@@ -23,6 +24,17 @@ public class GCloneCommand extends ArgsCommand {
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
         startClone(console, args[0], args[1]);
         return true;
+    }
+
+    @Override
+    protected CompletionNode createCompletions() {
+        CompletionNode rootNode = new CompletionNode("gclone");
+
+        for(String world : GWorld.getInstance().getDataHandler().getWorlds().keySet()) {
+            rootNode.addChild(new CompletionNode(world));
+        }
+
+        return rootNode;
     }
 
     private void startClone(CommandSender sender, String worldName, String targetName) {
@@ -39,7 +51,5 @@ public class GCloneCommand extends ArgsCommand {
                 },
                 () -> sender.sendMessage(SendMessageUtil.sendMessage("Clone.failed").replaceAll("%world%", worldName))
         );
-
-
     }
 }
