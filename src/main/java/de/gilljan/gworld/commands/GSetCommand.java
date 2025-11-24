@@ -25,6 +25,7 @@ public class GSetCommand extends ArgsCommand {
     public boolean executeCommandForPlayer(Player player, String[] args) {
         GWorld.getInstance().getDataHandler().getWorld(args[0]).ifPresent(worldData -> {
             setFlag(player, worldData, args);
+            GWorld.getInstance().getDataHandler().saveWorld(worldData);
         });
 
         System.out.println("No WorldData found for world: " + args[0]);
