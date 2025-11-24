@@ -71,7 +71,6 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
 
         //System.out.println("return current.getChildren().keySet().stream().toList()");
 
-
         return List.of(current.getValue());
     }
 }

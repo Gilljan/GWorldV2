@@ -56,4 +56,15 @@ public class CompletionNode {
         return children.isEmpty();
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(value).append(" -> ");
+        for (CompletionNode child : children.values()) {
+            builder.append(child.toString()).append(", ");
+        }
+
+        return builder.toString();
+    }
 }
