@@ -89,6 +89,8 @@ public class ManageableWorld implements IGWorldApi {
     public boolean createMap() {
         WorldCreator worldCreator = WorldCreator.name(worldData.getGeneralInformation().worldName());
 
+        System.out.println(worldData.getGeneralInformation());
+
         if (worldData.getGeneralInformation().environment() != null) {
             worldCreator.environment(worldData.getGeneralInformation().environment());
         }
@@ -179,10 +181,12 @@ public class ManageableWorld implements IGWorldApi {
     @Override
     public boolean reCreate(boolean saveWorldToFile) {
         if (!isMapLoaded()) {
+            System.out.println("World " + worldData.getGeneralInformation().worldName() + " is not loaded, cannot recreate.");
             return false;
         }
 
         if(!unloadMap()) {
+            System.out.println("Could not unload world " + worldData.getGeneralInformation().worldName() + " for recreation.");
             return false;
         }
 
@@ -190,8 +194,8 @@ public class ManageableWorld implements IGWorldApi {
 
 
         if (saveWorldToFile) {
-            File destinationDir = new File("old_maps//");
-            File destination = new File(destinationDir, worldData.getGeneralInformation().worldName() + " - " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
+            File destinationDir = new File(Bukkit.getWorldContainer(), "old_maps");
+            File destination = new File(destinationDir, worldData.getGeneralInformation().worldName() + " - " + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(System.currentTimeMillis()));
 
             try {
                 if (!destinationDir.exists()) {
@@ -200,9 +204,12 @@ public class ManageableWorld implements IGWorldApi {
 
                 FileUtils.moveDirectory(world, destination);
             } catch (IOException ignored) {
+                ignored.printStackTrace();
                 return false;
             }
         } else deleteMap();
+
+        System.out.println("#222");
 
         return createMap();
     }

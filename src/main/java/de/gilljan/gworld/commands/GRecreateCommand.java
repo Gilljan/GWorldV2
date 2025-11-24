@@ -14,7 +14,7 @@ import java.util.List;
 public class GRecreateCommand extends ArgsCommand {
 
     public GRecreateCommand() {
-        super("grecreate", 2, "Create.use", "gworld.commands.grecreate");
+        super("grecreate", 2, "Recreate.use", "gworld.commands.grecreate");
     }
 
     @Override
@@ -56,14 +56,17 @@ public class GRecreateCommand extends ArgsCommand {
         GWorld.getInstance().getWorldManager().getWorld(worldName).ifPresentOrElse(
                 world -> {
                     if (!world.isMapLoaded()) {
-                        sender.sendMessage(SendMessageUtil.sendMessage("ReCreate.failed").replace("%world%", worldName));
+                        sender.sendMessage(SendMessageUtil.sendMessage("Recreate.failed").replace("%world%", worldName));
+                        System.out.println("World " + worldName + " is not loaded, cannot recreate.");
                         return;
                     }
 
-                    String messageKey = world.reCreate(saveOldWorld) ? "ReCreate.success" : "ReCreate.failed";
+                    System.out.println("#1");
+
+                    String messageKey = world.reCreate(saveOldWorld) ? "Recreate.success" : "Recreate.failed";
                     sender.sendMessage(SendMessageUtil.sendMessage(messageKey).replace("%world%", world.getWorldName()));
                 },
-                () -> sender.sendMessage(SendMessageUtil.sendMessage("ReCreate.failed").replace("%world%", worldName))
+                () -> /*sender.sendMessage(SendMessageUtil.sendMessage("Recreate.failed").replace("%world%", worldName)*/ System.out.println("No ManageableWorld found for world: " + worldName + "  " + Bukkit.getWorlds())
         );
     }
 }
