@@ -213,6 +213,6 @@ public class Database implements DataHandler {
 
     @Override
     public HashMap<String, WorldData> getWorlds() {
-        return worlds;
+        return new HashMap<>(worlds);
     }
 }
