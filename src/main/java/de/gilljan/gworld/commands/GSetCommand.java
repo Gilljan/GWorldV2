@@ -23,12 +23,10 @@ public class GSetCommand extends ArgsCommand {
 
     @Override
     public boolean executeCommandForPlayer(Player player, String[] args) {
-        GWorld.getInstance().getDataHandler().getWorld(args[0]).ifPresent(worldData -> {
+        GWorld.getInstance().getDataHandler().getWorld(args[0]).ifPresentOrElse(worldData -> {
             setFlag(player, worldData, args);
             GWorld.getInstance().getDataHandler().saveWorld(worldData);
-        });
-
-        System.out.println("No WorldData found for world: " + args[0]);
+        }, () -> System.out.println("No WorldData found for world: " + args[0]));
 
         return true;
     }
@@ -88,6 +86,11 @@ public class GSetCommand extends ArgsCommand {
     private void handleSpecificEntities(CommandSender sender, WorldData worldData, WorldProperty<List<String>> property, String[] args, Settings setting) {
         List<String> disabledEntities = WorldProperty.getValue(property, worldData);
         String entity = args[2];
+
+        if(!GWorld.MONSTER.contains(entity) && !GWorld.ANIMALS.contains(entity)) {
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
+            return;
+        }
 /*
         if(!setting.getValues().contains(entity)) {
             sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
