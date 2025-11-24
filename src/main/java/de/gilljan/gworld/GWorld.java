@@ -37,6 +37,22 @@ public final class GWorld extends JavaPlugin {
 
     //Debuggin: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
 
+    /* todo
+    try {
+    // Ein Feature testen, das es erst ab Java 16/17 gibt
+    Class.forName("java.lang.Record");
+} catch (ClassNotFoundException e) {
+    getLogger().severe("==============================================");
+    getLogger().severe(" FEHLER: FALSCHE JAVA VERSION!");
+    getLogger().severe(" Dieses Plugin benoetigt JAVA 17 oder JAVA 21.");
+    getLogger().severe(" Dein Server laeuft auf: " + System.getProperty("java.version"));
+    getLogger().severe(" Bitte update dein Start-Skript.");
+    getLogger().severe("==============================================");
+    Bukkit.getPluginManager().disablePlugin(this);
+    return;
+}
+     */
+
     @Override
     public void onEnable() {
         init();
@@ -46,16 +62,12 @@ public final class GWorld extends JavaPlugin {
         registerCommands();
         GeneratorUtil.getGenerators();
 
-//        for(String entity : ANIMALS) {
-//            getLogger().info("Animal: " + entity);
-//        }
-//
-//        for(String entity : MONSTER) {
-//            getLogger().info("Monster: " + entity);
-//        }
-
         System.out.println(MONSTER);
         System.out.println(ANIMALS);
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+            dataHandler.saveAllWorlds();
+        }, 6000L, 6000L); // Save every 5 minutes
 
     }
 
