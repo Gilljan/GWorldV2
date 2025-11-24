@@ -1,7 +1,9 @@
 package de.gilljan.gworld.world;
 
+import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.api.IGWorldApi;
 import de.gilljan.gworld.data.world.WorldData;
+import de.gilljan.gworld.utils.DirectoryUtil;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -36,8 +38,11 @@ public class ManageableWorld implements IGWorldApi {
             worldCreator.generator(worldData.getGeneralInformation().worldGenerator());
         }
 
-        Bukkit.createWorld(worldCreator);
-        Bukkit.getWorlds().add(Bukkit.getWorld(worldData.getGeneralInformation().worldName()));
+        World created = Bukkit.createWorld(worldCreator);
+        //Bukkit.getWorlds().add(Bukkit.getWorld(worldData.getGeneralInformation().worldName()));
+        if(created == null) {
+            return false;
+        }
 
         worldData.setLoaded(true);
 
@@ -50,12 +55,17 @@ public class ManageableWorld implements IGWorldApi {
     public boolean unloadMap() {
         //potential teleport of players
 
-        Bukkit.unloadWorld(worldData.getGeneralInformation().worldName(), true);
+        boolean success = Bukkit.unloadWorld(worldData.getGeneralInformation().worldName(), true);
 
-        Bukkit.getWorlds().remove(Bukkit.getWorld(worldData.getGeneralInformation().worldName()));
+        if(!success) {
+            GWorld.getInstance().getLogger().warning("Could not unload world " + worldData.getGeneralInformation().worldName());
+            return false;
+        }
+
+        //Bukkit.getWorlds().remove(Bukkit.getWorld(worldData.getGeneralInformation().worldName()));
 
         worldData.setLoaded(false);
-        return false;
+        return true;
     }
 
     @Override
@@ -67,7 +77,9 @@ public class ManageableWorld implements IGWorldApi {
         try {
             //delete directory
             FileUtils.deleteDirectory(world);
+            return true;
         } catch (IOException ignored) {
+            GWorld.getInstance().getLogger().severe("Could not delete world " + worldData.getGeneralInformation().worldName());
         }
 
         return false;
@@ -93,8 +105,13 @@ public class ManageableWorld implements IGWorldApi {
             worldCreator.generator(worldData.getGeneralInformation().worldGenerator());
         }
 
-        Bukkit.createWorld(worldCreator);
-        Bukkit.getWorlds().add(Bukkit.getWorld(worldData.getGeneralInformation().worldName()));
+        World world = Bukkit.createWorld(worldCreator);
+        //Bukkit.getWorlds().add(Bukkit.getWorld(worldData.getGeneralInformation().worldName()));
+
+        if(world == null) {
+            GWorld.getInstance().getLogger().warning("Could not create world " + worldData.getGeneralInformation().worldName());
+            return false;
+        }
 
         worldData.setLoaded(true);
 
@@ -107,17 +124,31 @@ public class ManageableWorld implements IGWorldApi {
     @Override
     public boolean importExisting() {
         File target = new File(Bukkit.getWorldContainer(), worldData.getGeneralInformation().worldName());
+
+        if(!target.exists()) { //todo maybe exception?
+            return false;
+        }
+
         try {
             new File(target, "uid.dat").delete();
         } catch (Exception ignored) {}
 
         boolean success = loadMap();
+        if (!success) {
+            GWorld.getInstance().getLogger().warning("Could not import existing world. Loading failed: " + worldData.getGeneralInformation().worldName());
+            return false;
+        }
 
         World world = Bukkit.getWorld(worldData.getGeneralInformation().worldName());
 
+        if(world == null) {
+            GWorld.getInstance().getLogger().warning("Could not import existing world. World is null: " + worldData.getGeneralInformation().worldName());
+            return false;
+        }
+
         worldData.updateGeneralInformation(new WorldData.GeneralInformation(world.getName(), world.getEnvironment(), world.getWorldType(), world.getSeed(), world.getGenerator() == null ? null : world.getGenerator().toString()));
 
-        return success;
+        return true;
     }
 
     @Override
@@ -127,15 +158,22 @@ public class ManageableWorld implements IGWorldApi {
 
     @Override
     public Optional<IGWorldApi> clone(String newWorldName) {
-        ManageableWorld manageableWorld = new ManageableWorld(new WorldData(newWorldName));
+        this.saveWorld();
 
-        manageableWorld.worldData.updateGeneralInformation(new WorldData.GeneralInformation(newWorldName, worldData.getGeneralInformation().environment(), worldData.getGeneralInformation().worldType(), worldData.getGeneralInformation().seed(), worldData.getGeneralInformation().worldGenerator()));
+        if(!DirectoryUtil.copyMapDirectory(this.getWorldName(), newWorldName))
+            return Optional.empty();
 
-        if (manageableWorld.createMap()) {
-            return Optional.of(manageableWorld);
+
+        ManageableWorld clonedWorld = new ManageableWorld(new WorldData(newWorldName));
+
+        clonedWorld.worldData.updateGeneralInformation(new WorldData.GeneralInformation(newWorldName, worldData.getGeneralInformation().environment(), worldData.getGeneralInformation().worldType(), worldData.getGeneralInformation().seed(), worldData.getGeneralInformation().worldGenerator()));
+
+        if (!clonedWorld.importExisting()) {
+            return Optional.empty();
         }
 
-        return Optional.empty();
+        GWorld.getInstance().getWorldManager().addWorld(clonedWorld.worldData);
+        return Optional.of(clonedWorld);
     }
 
     @Override
@@ -144,7 +182,9 @@ public class ManageableWorld implements IGWorldApi {
             return false;
         }
 
-        unloadMap();
+        if(!unloadMap()) {
+            return false;
+        }
 
         File world = new File(Bukkit.getWorldContainer(), worldData.getGeneralInformation().worldName());
 
@@ -164,9 +204,7 @@ public class ManageableWorld implements IGWorldApi {
             }
         } else deleteMap();
 
-        createMap();
-
-        return true;
+        return createMap();
     }
 
     @Override
@@ -176,7 +214,7 @@ public class ManageableWorld implements IGWorldApi {
         }
 
         Bukkit.getWorld(worldData.getGeneralInformation().worldName()).save();
-        return false;
+        return true;
     }
 
     @Override
@@ -188,6 +226,11 @@ public class ManageableWorld implements IGWorldApi {
         worldData.setDifficulty(worldData.getDifficulty());
         worldData.setAllowPvP(worldData.isAllowPvP());
         worldData.setDefaultGamemode(worldData.isDefaultGamemode());
+        worldData.setAnimalSpawning(worldData.isAnimalSpawning());
+        worldData.setMonsterSpawning(worldData.isMonsterSpawning());
+        worldData.setRandomTickSpeed(worldData.getRandomTickSpeed());
+        worldData.setAnnounceAdvancements(worldData.isAnnounceAdvancements());
+        worldData.setKeepSpawnInMemory(worldData.isKeepSpawnInMemory());
     }
 
     @Override
