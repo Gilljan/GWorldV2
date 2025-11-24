@@ -2,10 +2,7 @@ package de.gilljan.gworld.data.mysql;
 
 import de.gilljan.gworld.GWorld;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class MySQL {
     private Connection con;
@@ -77,6 +74,20 @@ public class MySQL {
             } catch (SQLException ignored) {}
             try {
                 return con.createStatement().executeQuery(query);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public PreparedStatement prepareStatement(String query) {
+        if (isConnected()) {
+            try {
+                con.createStatement().executeQuery("SELECT 1");
+            } catch (SQLException ignored) {}
+            try {
+                return con.prepareStatement(query);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

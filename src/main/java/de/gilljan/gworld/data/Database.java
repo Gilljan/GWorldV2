@@ -4,6 +4,7 @@ import de.gilljan.gworld.data.mysql.MySQL;
 import de.gilljan.gworld.data.world.WorldData;
 import org.bukkit.WorldType;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,12 +51,12 @@ public class Database implements DataHandler {
                 "  mapName varchar(32) NOT NULL," +
                 "  monster varchar(32) NOT NULL," +
                 "  FOREIGN KEY (mapName) REFERENCES maps(mapName) ON DELETE CASCADE," +
-                "PRIMARY KEY (mapName))");
+                "PRIMARY KEY (mapName, monster))");
         mySQL.update("CREATE TABLE if not exists disabledAnimals (" +
                 "  mapName varchar(32) NOT NULL," +
                 "  animal varchar(32) NOT NULL," +
                 "  FOREIGN KEY (mapName) REFERENCES maps(mapName) ON DELETE CASCADE," +
-                "PRIMARY KEY (mapName))");
+                "PRIMARY KEY (mapName, animal))");
     }
 
     @Override
@@ -120,7 +121,7 @@ public class Database implements DataHandler {
     @Override
     public void loadAllWorlds() {
         worlds.clear();
-        ResultSet rs = mySQL.getResult("SELECT * FROM maps");
+        ResultSet rs = mySQL.getResult("SELECT * FROM maps;");
         try {
             while(rs.next()) {
                 fetchWorld(rs.getString("mapName"))
@@ -139,19 +140,22 @@ public class Database implements DataHandler {
 
     @Override
     public Optional<WorldData> fetchWorld(String name) {
-        ResultSet rs = mySQL.getResult("SELECT * FROM maps WHERE mapName = '" + name + "'");
-        try {
+        try (PreparedStatement statement = mySQL.prepareStatement("SELECT * FROM maps WHERE mapName = ?")) {
+            statement.setString(1, name);
+            ResultSet rs = statement.executeQuery();
             if(rs.next()) {
-                ResultSet rsMonsters = mySQL.getResult("SELECT * FROM disabledMonsters WHERE mapName = '" + rs.getString("mapName") + "'");
-                ResultSet rsAnimals = mySQL.getResult("SELECT * FROM disabledAnimals WHERE mapName = '" + rs.getString("mapName") + "'");
+                ResultSet rsMonsters = mySQL.getResult("SELECT * FROM disabledMonsters WHERE mapName = '" + rs.getString("mapName") + "';");
+                ResultSet rsAnimals = mySQL.getResult("SELECT * FROM disabledAnimals WHERE mapName = '" + rs.getString("mapName") + "';");
                 List<String> disabledMonsters = new ArrayList<>();
                 List<String> disabledAnimals = new ArrayList<>();
-                while(rsMonsters.next()) {
+                while (rsMonsters.next()) {
                     disabledMonsters.add(rsMonsters.getString("monster"));
                 }
-                while(rsAnimals.next()) {
+                while (rsAnimals.next()) {
                     disabledAnimals.add(rsAnimals.getString("animal"));
                 }
+                rsAnimals.close();
+                rsMonsters.close();
                 return Optional.of(new WorldData(
                         new WorldData.GeneralInformation(
                                 rs.getString("mapName"),
@@ -181,7 +185,7 @@ public class Database implements DataHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -193,9 +197,13 @@ public class Database implements DataHandler {
     @Override
     public void removeWorld(WorldData worldData) {
         worlds.remove(worldData.getGeneralInformation().worldName());
-        mySQL.update("DELETE FROM maps WHERE mapName = '" + worldData.getGeneralInformation().worldName() + "'");
-        mySQL.update("DELETE FROM disabledMonsters WHERE mapName = '" + worldData.getGeneralInformation().worldName() + "'");
-        mySQL.update("DELETE FROM disabledAnimals WHERE mapName = '" + worldData.getGeneralInformation().worldName() + "'");
+        try (PreparedStatement statement = mySQL.prepareStatement("DELETE FROM maps WHERE mapName = ?;")) {
+            statement.setString(1, worldData.getGeneralInformation().worldName());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
