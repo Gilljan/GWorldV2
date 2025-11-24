@@ -35,6 +35,8 @@ public final class GWorld extends JavaPlugin {
 
     private YamlConfiguration languageFile;
 
+    //Debuggin: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+
     @Override
     public void onEnable() {
         init();
@@ -52,11 +54,15 @@ public final class GWorld extends JavaPlugin {
 //            getLogger().info("Monster: " + entity);
 //        }
 
+        System.out.println(MONSTER);
+        System.out.println(ANIMALS);
+
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        getDataHandler().saveAllWorlds();
     }
 
     public static GWorld getInstance() {
