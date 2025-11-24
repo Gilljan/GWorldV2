@@ -40,6 +40,8 @@ public class LoadWorldListener implements Listener {
 
         WorldData data = new WorldData(event.getWorld().getName(), event.getWorld().getEnvironment(), event.getWorld().getWorldType(), event.getWorld().getSeed(), generator);
 
+        data.setLoaded(true);
+
         GWorld.getInstance().getWorldManager().addWorld(data).setAllProperties();
 
         //todo inform players when permission is given
