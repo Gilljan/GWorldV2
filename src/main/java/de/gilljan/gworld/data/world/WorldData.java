@@ -117,7 +117,7 @@ public class WorldData {
 
         //Remove all animals
         for(Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
-            if(GWorld.ANIMALS.contains(entity.getType().name())) {
+            if(GWorld.ANIMALS.contains(entity.getClass().getSimpleName())) {
                 entity.remove();
             }
         }
@@ -132,7 +132,7 @@ public class WorldData {
 
         if(isLoaded()) {
             for(Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
-                if(disabledAnimals.contains(entity.getType().name())) {
+                if(disabledAnimals.contains(entity.getClass().getSimpleName())) {
                     entity.remove();
                 }
             }
@@ -147,9 +147,11 @@ public class WorldData {
     public void setMonsterSpawning(boolean monsterSpawning) {
         this.monsterSpawning = monsterSpawning;
 
+        System.out.println("Monsters:" + GWorld.MONSTER);
+
         //Remove all monsters
         for(Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
-            if(GWorld.MONSTER.contains(entity.getType().name())) {
+            if(GWorld.MONSTER.contains(entity.getClass().getSimpleName())) {
                 entity.remove();
             }
         }
@@ -164,8 +166,8 @@ public class WorldData {
 
         if(isLoaded()) {
             for(Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
-                GWorld.getInstance().getLogger().info(entity.getType().name());
-                if(disabledMonsters.contains(entity.getType().name())) {
+                GWorld.getInstance().getLogger().info(entity.getClass().getName());
+                if(disabledMonsters.contains(entity.getClass().getSimpleName())) {
                     entity.remove();
                 }
             }

@@ -21,7 +21,7 @@ public class EntityUtil {
                         || Class.forName("org.bukkit.entity.Shulker").isAssignableFrom(entity)
                         || Class.forName("org.bukkit.entity.Phantom").isAssignableFrom(entity)
                         || Class.forName("org.bukkit.entity.Hoglin").isAssignableFrom(entity)) {
-                    GWorld.MONSTER.add(entity.getSimpleName());
+                    GWorld.MONSTER.add("Craft" + entity.getSimpleName());
                     continue;
                 }
 
@@ -29,7 +29,7 @@ public class EntityUtil {
                 //ignored
             }
 
-            GWorld.ANIMALS.add(entity.getSimpleName());
+            GWorld.ANIMALS.add("Craft" + entity.getSimpleName());
         }
 
         GWorld.ANIMALS.remove("Player");
