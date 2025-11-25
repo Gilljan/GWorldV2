@@ -62,7 +62,12 @@ public class GSetCommand extends ArgsCommand {
     }
 
     private void setFlag(CommandSender sender, WorldData worldData, String[] args) {
-        Settings setting = Settings.valueOf(args[1].toUpperCase());
+        Settings setting = Settings.mapFromString(args[1]);
+
+        if (setting == null || !validateArgument(setting, args[2])) {
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.use").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
+            return;
+        }
 
         switch (setting) {
             case ANIMAL_SPECIFIC -> handleSpecificEntities(sender, worldData, WorldProperty.DISABLED_ANIMALS, args, setting);
@@ -167,5 +172,11 @@ public class GSetCommand extends ArgsCommand {
         } catch (IllegalArgumentException e) {
             sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
         }
+    }
+
+    private boolean validateArgument(Settings settings, String arg) {
+        return settings.getValues().stream()
+                .map(String::toLowerCase)
+                .anyMatch(arg::equalsIgnoreCase);
     }
 }
