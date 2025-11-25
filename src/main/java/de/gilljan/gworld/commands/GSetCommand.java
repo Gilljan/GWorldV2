@@ -65,7 +65,7 @@ public class GSetCommand extends ArgsCommand {
         Settings setting = Settings.mapFromString(args[1]);
 
         if (setting == null || !validateArgument(setting, args[2])) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.use").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.use").replace("%world%", worldData.getGeneralInformation().worldName()));
             return;
         }
 
@@ -93,7 +93,7 @@ public class GSetCommand extends ArgsCommand {
         String entity = args[2];
 
         if(!GWorld.MONSTER.contains(entity) && !GWorld.ANIMALS.contains(entity)) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
             return;
         }
 /*
@@ -103,16 +103,16 @@ public class GSetCommand extends ArgsCommand {
         }*/
 
         if (args[2].equalsIgnoreCase("list")) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.list").replaceAll("%world%", worldData.getGeneralInformation().worldName()).replaceAll("%setting%", setting.toString()).replaceAll("%value%", disabledEntities.toString()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.list").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", disabledEntities.toString()));
             return;
         }
 
         if (disabledEntities.contains(entity)) {
             disabledEntities.remove(entity);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replaceAll("%world%", worldData.getGeneralInformation().worldName()).replaceAll("%setting%", setting.toString()).replaceAll("%value%", entity));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", entity));
         } else {
             disabledEntities.add(entity);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replaceAll("%world%", worldData.getGeneralInformation().worldName()).replaceAll("%setting%", setting.toString()).replaceAll("%value%", entity));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", entity));
         }
 
         WorldProperty.setValue(property, worldData, disabledEntities);
@@ -122,9 +122,9 @@ public class GSetCommand extends ArgsCommand {
         try {
             int value = Integer.parseInt(args[2]);
             WorldProperty.setValue(property, worldData, value);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replaceAll("%world%", worldData.getGeneralInformation().worldName()).replaceAll("%setting%", setting.toString()).replaceAll("%value%", String.valueOf(value)));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", String.valueOf(value)));
         } catch (NumberFormatException e) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
         }
     }
 
@@ -132,25 +132,25 @@ public class GSetCommand extends ArgsCommand {
         try {
             long value = Long.parseLong(args[2]);
             WorldProperty.setValue(WorldProperty.TIME, worldData, value);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replaceAll("%world%", worldData.getGeneralInformation().worldName()).replaceAll("%setting%", setting.toString()).replaceAll("%value%", String.valueOf(value)));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", String.valueOf(value)));
         } catch (NumberFormatException e) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
         }
     }
 
     private void handleBooleanFlags(CommandSender sender, WorldData worldData, WorldProperty<Boolean> property, String[] args, Settings setting) {
         boolean value = Boolean.parseBoolean(args[2]);
         WorldProperty.setValue(property, worldData, value);
-        sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replaceAll("%world%", worldData.getGeneralInformation().worldName()).replaceAll("%setting%", setting.toString()).replaceAll("%value%", String.valueOf(value)));
+        sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", String.valueOf(value)));
     }
 
     private void handleGameModeFlags(CommandSender sender, WorldData worldData, String[] args, Settings setting) {
         try {
             GameMode value = GameMode.valueOf(args[2].toUpperCase());
             WorldProperty.setValue(WorldProperty.GAMEMODE, worldData, value);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replaceAll("%world%", worldData.getGeneralInformation().worldName()).replaceAll("%setting%", setting.toString()).replaceAll("%value%", value.toString()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", value.toString()));
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
         }
     }
 
@@ -158,9 +158,9 @@ public class GSetCommand extends ArgsCommand {
         try {
             Difficulty value = Difficulty.valueOf(args[2].toUpperCase());
             WorldProperty.setValue(WorldProperty.DIFFICULTY, worldData, value);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replaceAll("%world%", worldData.getGeneralInformation().worldName()).replaceAll("%setting%", setting.toString()).replaceAll("%value%", value.toString()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", value.toString()));
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
         }
     }
 
@@ -168,9 +168,9 @@ public class GSetCommand extends ArgsCommand {
         try {
             WorldData.WeatherType value = WorldData.WeatherType.valueOf(args[2].toUpperCase());
             WorldProperty.setValue(WorldProperty.WEATHER_TYPE, worldData, value);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replaceAll("%world%", worldData.getGeneralInformation().worldName()).replaceAll("%setting%", setting.toString()).replaceAll("%value%", value.toString()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", value.toString()));
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
         }
     }
 

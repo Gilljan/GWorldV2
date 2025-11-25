@@ -42,26 +42,26 @@ public class GUnloadCommand extends ArgsCommand {
         GWorld.getInstance().getWorldManager().getWorld(worldName).ifPresentOrElse(
                 manageableWorld -> {
                     if(!manageableWorld.isMapLoaded()) {
-                        sender.sendMessage(SendMessageUtil.sendMessage("Unload.alreadyUnloaded").replaceAll("%world%", worldName));
+                        sender.sendMessage(SendMessageUtil.sendMessage("Unload.alreadyUnloaded").replace("%world%", worldName));
                         return;
                     }
 
-                    sender.sendMessage(SendMessageUtil.sendMessage("Unload.unloading").replaceAll("%world%", worldName));
+                    sender.sendMessage(SendMessageUtil.sendMessage("Unload.unloading").replace("%world%", worldName));
 
                     World mainWorld = Bukkit.getWorld(GWorld.getInstance().getConfig().getString("MainWorld"));
                     for(Player player : mainWorld.getPlayers()) {
                         player.teleport(mainWorld.getSpawnLocation());
-                        player.sendMessage(SendMessageUtil.sendMessage("Unload.teleport_players").replaceAll("%world%", worldName));
+                        player.sendMessage(SendMessageUtil.sendMessage("Unload.teleport_players").replace("%world%", worldName));
                     }
 
                     if (manageableWorld.unloadMap()) {
-                        sender.sendMessage(SendMessageUtil.sendMessage("Unload.success").replaceAll("%world%", worldName));
+                        sender.sendMessage(SendMessageUtil.sendMessage("Unload.success").replace("%world%", worldName));
                         return;
                     }
 
-                    sender.sendMessage(SendMessageUtil.sendMessage("Unload.failed").replaceAll("%world%", worldName));
+                    sender.sendMessage(SendMessageUtil.sendMessage("Unload.failed").replace("%world%", worldName));
                 },
-                () -> sender.sendMessage(SendMessageUtil.sendMessage("Unload.failed").replaceAll("%world%", worldName))
+                () -> sender.sendMessage(SendMessageUtil.sendMessage("Unload.failed").replace("%world%", worldName))
         );
 
     }

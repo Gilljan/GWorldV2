@@ -35,15 +35,15 @@ public class GTpCommand extends ArgsCommand {
 
             target.teleport(world.getSpawnLocation());
 
-            player.sendMessage(SendMessageUtil.sendMessage("Teleport.sender_target_success").replaceAll("%world%", world.getName()).replaceAll("%player%", target.getDisplayName()));
-            target.sendMessage(SendMessageUtil.sendMessage("Teleport.player_target_success").replaceAll("%world%", world.getName()).replaceAll("%player%", player.getName()));
+            player.sendMessage(SendMessageUtil.sendMessage("Teleport.sender_target_success").replace("%world%", world.getName()).replace("%player%", target.getDisplayName()));
+            target.sendMessage(SendMessageUtil.sendMessage("Teleport.player_target_success").replace("%world%", world.getName()).replace("%player%", player.getName()));
 
             return true;
         }
 
         player.teleport(world.getSpawnLocation());
 
-        player.sendMessage(SendMessageUtil.sendMessage("Teleport.success").replaceAll("%world%", world.getName()));
+        player.sendMessage(SendMessageUtil.sendMessage("Teleport.success").replace("%world%", world.getName()));
 
         return true;
     }
