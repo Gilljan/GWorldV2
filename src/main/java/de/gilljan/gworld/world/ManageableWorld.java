@@ -77,6 +77,7 @@ public class ManageableWorld implements IGWorldApi {
         try {
             //delete directory
             FileUtils.deleteDirectory(world);
+            GWorld.getInstance().getWorldManager().removeWorld(this.worldData);
             return true;
         } catch (IOException ignored) {
             GWorld.getInstance().getLogger().severe("Could not delete world " + worldData.getGeneralInformation().worldName());
@@ -170,11 +171,20 @@ public class ManageableWorld implements IGWorldApi {
 
         clonedWorld.worldData.updateGeneralInformation(new WorldData.GeneralInformation(newWorldName, worldData.getGeneralInformation().environment(), worldData.getGeneralInformation().worldType(), worldData.getGeneralInformation().seed(), worldData.getGeneralInformation().worldGenerator()));
 
+        clonedWorld.worldData.setImporting(true);
+        GWorld.getInstance().getWorldManager().addWorld(clonedWorld.worldData);
+
+        System.out.println(clonedWorld.getWorldName());
+        System.out.println(clonedWorld.worldData);
+
         if (!clonedWorld.importExisting()) {
+            GWorld.getInstance().getLogger().warning("Could not clone world " + newWorldName);
+            GWorld.getInstance().getWorldManager().removeWorld(clonedWorld.worldData);
             return Optional.empty();
         }
 
-        GWorld.getInstance().getWorldManager().addWorld(clonedWorld.worldData);
+        clonedWorld.worldData.setImporting(false);
+
         return Optional.of(clonedWorld);
     }
 

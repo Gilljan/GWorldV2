@@ -44,6 +44,8 @@ public class FileConfiguration implements DataHandler {
             return Optional.of(worlds.get(name));
         }
 
+        GWorld.getInstance().getLogger().info("Load world " + name + " from file. Not found in hashmap");
+
         if(worldData.contains(WORLD_PATH + name)) {
             WorldData world = new WorldData(new WorldData.GeneralInformation(
                     name,

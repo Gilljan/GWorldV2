@@ -22,8 +22,16 @@ public class WorldManager {
         return GWorld.getInstance().getDataHandler().getWorld(name).map(ManageableWorld::new);
     }
 
+
+    /**
+     * Remove a world from the data handler. <br>
+     *
+     * Important: This does NOT delete the world files!
+     * Use for that: GWorld.getInstance().getWorldManager().getWorld(worldName).ifPresent(world -> world.deleteMap());
+     * @param data the world data to remove
+     * @see ManageableWorld#deleteMap()
+     */
     public void removeWorld(WorldData data) {
-        getWorld(data.getGeneralInformation().worldName()).ifPresent(ManageableWorld::deleteMap);
         GWorld.getInstance().getDataHandler().removeWorld(data);
     }
 

@@ -18,6 +18,8 @@ public class WorldData {
     private GeneralInformation generalInformation;
     private boolean loaded = false;
 
+    private transient boolean importing = false;
+
     //World properties
     private boolean allowPvP;
     private boolean keepSpawnInMemory;
@@ -323,6 +325,14 @@ public class WorldData {
 
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
+    }
+
+    public void setImporting(boolean importing) {
+        this.importing = importing;
+    }
+
+    public boolean isImporting() {
+        return importing;
     }
 
     public void updateGeneralInformation(GeneralInformation generalInformation) {

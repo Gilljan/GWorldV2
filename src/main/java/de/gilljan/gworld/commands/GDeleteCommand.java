@@ -46,7 +46,14 @@ public class GDeleteCommand extends ArgsCommand {
         }
 
         World mainWorld = Bukkit.getWorld(GWorld.getInstance().getConfig().getString("MainWorld"));
-        for(Player player : mainWorld.getPlayers()) {
+        World deleteWorld = Bukkit.getWorld(worldName);
+
+        if(deleteWorld == null) {
+            sender.sendMessage(SendMessageUtil.sendMessage("Delete.failed").replace("%world%", worldName));
+            return;
+        }
+
+        for(Player player : deleteWorld.getPlayers()) {
             player.teleport(mainWorld.getSpawnLocation());
             player.sendMessage(SendMessageUtil.sendMessage("Delete.teleport_players").replace("%world%", worldName));
         }
