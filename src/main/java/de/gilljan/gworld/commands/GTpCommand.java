@@ -28,6 +28,7 @@ public class GTpCommand extends ArgsCommand {
             return false;
         }
 
+        World world = Bukkit.getWorld(worldData.getGeneralInformation().worldName());
 
         if(args.length == 2) {
             Player target = Bukkit.getPlayer(args[1]);
@@ -43,6 +44,8 @@ public class GTpCommand extends ArgsCommand {
 
             return true;
         }
+
+        System.out.println("Location: " + world.getSpawnLocation());
 
         player.teleport(world.getSpawnLocation());
 
