@@ -38,7 +38,6 @@ Delete:
  # confirm_console: '%prefix% &cBitte bestätige den Command indem du &econfirm &chinter den Command schreibst.'
   success: '%prefix% &aDie Welt &e%world% &awurde erfolgreich gelöscht.'
   failed: '%prefix% &cDie Welt &e%world% &ckonnte nicht gelöscht werden.'
-  teleport_players: '%prefix% &cDa die Welt &e%world% &cgelöscht wurde, wurdest du auf die Standard-Welt teleportiert!'
   use: '%prefix% &cBenutze: /gdelete <Weltname>'
 Worlds:
   loadedMaps: '%prefix% &aEs sind folgende Maps geladen:'
@@ -104,7 +103,6 @@ Recreate:
   creating: '%prefix% &aDie Welt wird basierend auf der &e%world% &aneu erstellt und geladen.'
   success: '%prefix% &aDie Welt &e%world% &awurde neu erstellt und geladen.'
   failed: '%prefix% &cDie Welt &e%world% &ckonnte nicht neu erstellt werden.'
-  teleport_players: '%prefix% &cDa die Welt &e%world% &cneu erstellt wurde, wurdest du auf die Standart Welt teleportiert!'
   use: '%prefix% &cBenutze: /grecreate <Weltenname> <speichern (true:false)>'
 Unload:
  # confirm_player: '%prefix% &cBitte bestätige den Command durch das Klicken unten oder schreibe direkt &econfirm &chinter den Command.'

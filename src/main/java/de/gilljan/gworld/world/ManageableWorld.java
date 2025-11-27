@@ -4,6 +4,7 @@ import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.api.IGWorldApi;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.DirectoryUtil;
+import de.gilljan.gworld.utils.SendMessageUtil;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -82,6 +83,7 @@ public class ManageableWorld implements IGWorldApi {
 
             for(Player player : unloadWorld.getPlayers()) {
                 player.teleport(mainWorld.getSpawnLocation());
+                player.sendMessage(GWorld.getInstance().getConfig().getString("Unload.teleport_players"));
             }
         }
 

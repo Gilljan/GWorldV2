@@ -38,7 +38,6 @@ Delete:
  # confirm_console: '&cPlease confirm the command by typing &econfirm &cafter the command.'
   success: '%prefix% &aThe world &e%world% &awas successfully deleted.'
   failed: '%prefix% &cThe world &e%world% &ccould not be deleted.'
-  teleport_players: '%prefix% &cSince the world &e%world% &chas been deleted, you have been teleported to the default world!'
   use: '%prefix% &cUse: /gdelete <world name>'
 Worlds:
   loadedMaps: '%prefix% &aThe following maps are loaded:'
@@ -103,7 +102,6 @@ Recreate:
   creating: '%prefix% &aThe world is newly created and loaded based on the &e%world%&a.'
   success: '%prefix% &aThe world &e%world% &awas newly created and loaded.'
   failed: '%prefix% &cThe world &e%world% &ccould not be recreated.'
-  teleport_players: '%prefix% &cSince the world &e%world% &cwas recreated, you were teleported to the default world!'
   use: '%prefix% &cUse: /grecreate <worldname> <keepSaved (true:false)>'
 Unload:
  # confirm_player: '&cPlease confirm the command by clicking below or write &econfirm &cdirectly behind the command.'
