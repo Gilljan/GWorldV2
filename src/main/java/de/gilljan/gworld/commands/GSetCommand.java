@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class GSetCommand extends ArgsCommand {
     public GSetCommand() {
@@ -62,16 +63,23 @@ public class GSetCommand extends ArgsCommand {
     }
 
     private void setFlag(CommandSender sender, WorldData worldData, String[] args) {
-        Settings setting = Settings.mapFromString(args[1]);
+        Optional<Settings> optionalSetting = Settings.fromString(args[1]);
 
-        if (setting == null || !validateArgument(setting, args[2])) {
+        if(optionalSetting.isEmpty()) {
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.use").replace("%world%", worldData.getGeneralInformation().worldName()));
+            return;
+        }
+
+        Settings setting = optionalSetting.get();
+
+        if (!validateArgument(setting, args[2])) {
             sender.sendMessage(SendMessageUtil.sendMessage("Set.use").replace("%world%", worldData.getGeneralInformation().worldName()));
             return;
         }
 
         switch (setting) {
-            case ANIMAL_SPECIFIC -> handleSpecificEntities(sender, worldData, WorldProperty.DISABLED_ANIMALS, args, setting);
-            case MONSTER_SPECIFIC -> handleSpecificEntities(sender, worldData, WorldProperty.DISABLED_MONSTERS, args, setting);
+            case DISABLED_ANIMALS -> handleSpecificEntities(sender, worldData, WorldProperty.DISABLED_ANIMALS, args, setting);
+            case DISABLED_MONSTERS -> handleSpecificEntities(sender, worldData, WorldProperty.DISABLED_MONSTERS, args, setting);
             case TIME -> handleLongFlags(sender, worldData, args, setting);
             case RANDOM_TICK_SPEED -> handleIntegerFlags(sender, worldData, WorldProperty.RANDOM_TICK_SPEED, args, setting);
             case DEFAULT_GAMEMODE -> handleGameModeFlags(sender, worldData, args, setting);
