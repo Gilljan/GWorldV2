@@ -48,12 +48,6 @@ public class GUnloadCommand extends ArgsCommand {
 
                     sender.sendMessage(SendMessageUtil.sendMessage("Unload.unloading").replace("%world%", worldName));
 
-                    World mainWorld = Bukkit.getWorld(GWorld.getInstance().getConfig().getString("MainWorld"));
-                    for(Player player : mainWorld.getPlayers()) {
-                        player.teleport(mainWorld.getSpawnLocation());
-                        player.sendMessage(SendMessageUtil.sendMessage("Unload.teleport_players").replace("%world%", worldName));
-                    }
-
                     if (manageableWorld.unloadMap()) {
                         sender.sendMessage(SendMessageUtil.sendMessage("Unload.success").replace("%world%", worldName));
                         return;
