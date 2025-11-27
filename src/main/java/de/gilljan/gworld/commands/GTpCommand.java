@@ -1,6 +1,8 @@
 package de.gilljan.gworld.commands;
 
+import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
+import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -19,12 +21,13 @@ public class GTpCommand extends ArgsCommand {
 
     @Override
     public boolean executeCommandForPlayer(Player player, String[] args) {
-        World world = Bukkit.getWorld(args[0]);
+        WorldData worldData = GWorld.getInstance().getDataHandler().getWorld(args[0]).orElse(null);
 
-        if(world == null) {
+        if(worldData == null || !worldData.isLoaded()) {
             player.sendMessage(SendMessageUtil.sendMessage("Teleport.failed"));
             return false;
         }
+
 
         if(args.length == 2) {
             Player target = Bukkit.getPlayer(args[1]);
@@ -59,11 +62,11 @@ public class GTpCommand extends ArgsCommand {
         CompletionNode root = new CompletionNode("gtp");
         List<CompletionNode> players = Bukkit.getOnlinePlayers().stream().map(player -> new CompletionNode(player.getName())).toList();
 
-        for(World world : Bukkit.getWorlds()) {
-            CompletionNode worldNode = new CompletionNode(world.getName());
+        GWorld.getInstance().getDataHandler().getWorlds().values().stream().filter(WorldData::isLoaded).forEach(world -> {
+            CompletionNode worldNode = new CompletionNode(world.getGeneralInformation().worldName());
             worldNode.addChildren(players);
             root.addChild(worldNode);
-        }
+        });
 
         return root;
     }
