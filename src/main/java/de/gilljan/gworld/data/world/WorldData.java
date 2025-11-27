@@ -8,6 +8,7 @@ import org.bukkit.GameMode;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -341,6 +342,17 @@ public class WorldData {
 
     public record GeneralInformation(String worldName, org.bukkit.World.Environment environment, WorldType worldType,
                                      long seed, @Nullable String worldGenerator) {
+
+        @Override
+        public @NotNull String toString() {
+            return "GeneralInformation{" +
+                    "worldName='" + worldName + '\'' +
+                    ", environment=" + environment +
+                    ", worldType=" + worldType +
+                    ", seed=" + seed +
+                    ", worldGenerator='" + worldGenerator + '\'' +
+                    '}';
+        }
     }
 
     public enum WeatherType {
