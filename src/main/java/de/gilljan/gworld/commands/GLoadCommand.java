@@ -40,20 +40,20 @@ public class GLoadCommand extends ArgsCommand {
         GWorld.getInstance().getWorldManager().getWorld(worldName).ifPresentOrElse(
                 manageableWorld -> {
                     if(manageableWorld.isMapLoaded()) {
-                        sender.sendMessage(SendMessageUtil.sendMessage("Load.alreadyLoaded").replaceAll("%world%", worldName));
+                        sender.sendMessage(SendMessageUtil.sendMessage("Load.alreadyLoaded").replace("%world%", worldName));
                         return;
                     }
 
-                    sender.sendMessage(SendMessageUtil.sendMessage("Load.loading").replaceAll("%world%", worldName));
+                    sender.sendMessage(SendMessageUtil.sendMessage("Load.loading").replace("%world%", worldName));
 
                     if (manageableWorld.loadMap()) {
-                        sender.sendMessage(SendMessageUtil.sendMessage("Load.success").replaceAll("%world%", worldName));
+                        sender.sendMessage(SendMessageUtil.sendMessage("Load.success").replace("%world%", worldName));
                         return;
                     }
 
-                    sender.sendMessage(SendMessageUtil.sendMessage("Load.failed").replaceAll("%world%", worldName));
+                    sender.sendMessage(SendMessageUtil.sendMessage("Load.failed").replace("%world%", worldName));
                 },
-                () -> sender.sendMessage(SendMessageUtil.sendMessage("Load.failed").replaceAll("%world%", worldName))
+                () -> sender.sendMessage(SendMessageUtil.sendMessage("Load.failed").replace("%world%", worldName))
         );
     }
 

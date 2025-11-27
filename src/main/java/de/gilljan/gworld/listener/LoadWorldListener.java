@@ -49,7 +49,7 @@ public class LoadWorldListener implements Listener {
         //todo inform players when permission is given
         for(Player player : Bukkit.getOnlinePlayers()) {
             if(player.hasPermission("gworld.notify")) {
-                player.sendMessage(SendMessageUtil.sendMessage("AutoImport").replaceAll("%world%", event.getWorld().getName()));
+                player.sendMessage(SendMessageUtil.sendMessage("AutoImport").replace("%world%", event.getWorld().getName()));
             }
         }
 

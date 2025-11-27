@@ -46,10 +46,10 @@ public class GCloneCommand extends ArgsCommand {
         GWorld.getInstance().getWorldManager().getWorld(worldName).ifPresentOrElse(
                 world -> {
                     sender.sendMessage(world.clone(targetName)
-                            .map(api -> SendMessageUtil.sendMessage("Clone.success").replaceAll("%world%", worldName).replaceAll("%targetworld%", targetName))
-                            .orElse(SendMessageUtil.sendMessage("Clone.failed").replaceAll("%world%", targetName)));
+                            .map(api -> SendMessageUtil.sendMessage("Clone.success").replace("%world%", worldName).replace("%targetworld%", targetName))
+                            .orElse(SendMessageUtil.sendMessage("Clone.failed").replace("%world%", targetName)));
                 },
-                () -> sender.sendMessage(SendMessageUtil.sendMessage("Clone.failed").replaceAll("%world%", worldName))
+                () -> sender.sendMessage(SendMessageUtil.sendMessage("Clone.failed").replace("%world%", worldName))
         );
     }
 }

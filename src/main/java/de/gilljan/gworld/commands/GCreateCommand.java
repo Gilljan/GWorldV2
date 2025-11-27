@@ -64,7 +64,7 @@ public class GCreateCommand extends ArgsCommand {
         }
 
         if(GWorld.getInstance().getDataHandler().containsWorld(worldName)) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Create.failed").replaceAll("%world%", worldName));
+            sender.sendMessage(SendMessageUtil.sendMessage("Create.failed").replace("%world%", worldName));
             return;
         }
 
@@ -97,15 +97,15 @@ public class GCreateCommand extends ArgsCommand {
         }
 
         if(world == null) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Create.failed").replaceAll("%world%", worldName));
+            sender.sendMessage(SendMessageUtil.sendMessage("Create.failed").replace("%world%", worldName));
         }
 
         ManageableWorld manageableWorld = GWorld.getInstance().getWorldManager().addWorld(world);
 
-        sender.sendMessage(SendMessageUtil.sendMessage("Create.creating").replaceAll("%world%", worldName));
+        sender.sendMessage(SendMessageUtil.sendMessage("Create.creating").replace("%world%", worldName));
 
         manageableWorld.createMap();
 
-        sender.sendMessage(SendMessageUtil.sendMessage("Create.success").replaceAll("%world%", worldName));
+        sender.sendMessage(SendMessageUtil.sendMessage("Create.success").replace("%world%", worldName));
     }
 }

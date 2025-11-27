@@ -31,7 +31,7 @@ public class GImportCommand extends ArgsCommand {
         }
 
         if(GWorld.getInstance().getDataHandler().containsWorld(worldName)) {
-            player.sendMessage(SendMessageUtil.sendMessage("Import.failed").replaceAll("%world%", worldName));
+            player.sendMessage(SendMessageUtil.sendMessage("Import.failed").replace("%world%", worldName));
             return false;
         }
 
@@ -48,16 +48,16 @@ public class GImportCommand extends ArgsCommand {
 
         WorldData worldData = new WorldData(worldName, mapping.getEnvironment(), mapping.getWorldType(),0, generator);
 
-        player.sendMessage(SendMessageUtil.sendMessage("Import.creating").replaceAll("%world%", worldName));
+        player.sendMessage(SendMessageUtil.sendMessage("Import.creating").replace("%world%", worldName));
 
         ManageableWorld mWorld = GWorld.getInstance().getWorldManager().addWorld(worldData);
 
         if(!mWorld.importExisting()) {
-            player.sendMessage(SendMessageUtil.sendMessage("Import.failed").replaceAll("%world%", worldName));
+            player.sendMessage(SendMessageUtil.sendMessage("Import.failed").replace("%world%", worldName));
             return false;
         }
 
-        player.sendMessage(SendMessageUtil.sendMessage("Import.success").replaceAll("%world%", worldName));
+        player.sendMessage(SendMessageUtil.sendMessage("Import.success").replace("%world%", worldName));
 
         return true;
     }
