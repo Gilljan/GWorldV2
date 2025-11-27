@@ -25,11 +25,6 @@ public class LoadWorldListener implements Listener {
             return;
         }
 
-        if(GWorld.getInstance().getDataHandler().getWorld(event.getWorld().getName()).get().isImporting()) {
-            GWorld.getInstance().getLogger().info(event.getWorld().getName() + " is currently importing, skipping auto import.");
-            return;
-        }
-
         //Welt aufnehmen und laden
 
         String generator = null;
