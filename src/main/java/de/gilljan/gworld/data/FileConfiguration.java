@@ -15,6 +15,8 @@ public class FileConfiguration implements DataHandler {
     private final YamlConfiguration worldData = YamlConfiguration.loadConfiguration(worldFile);
     private static final String WORLD_PATH = "Worlds.";
 
+    //todo maybe Loadingcache Google
+
     public FileConfiguration() {
         if(!worldFile.exists()) {
             try {
@@ -138,6 +140,11 @@ public class FileConfiguration implements DataHandler {
 
     @Override
     public void loadAllWorlds() {
+        if(worldData.getConfigurationSection(WORLD_PATH) == null) {
+            GWorld.getInstance().getLogger().severe("World config file could not be loaded!");
+            return;
+        }
+
         worlds.clear();
         for(String key : worldData.getConfigurationSection(WORLD_PATH).getKeys(false)) {
             Optional<WorldData> world = getWorld(key);
