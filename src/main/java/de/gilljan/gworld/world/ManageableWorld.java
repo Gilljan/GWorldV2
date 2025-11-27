@@ -6,8 +6,10 @@ import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.DirectoryUtil;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +56,34 @@ public class ManageableWorld implements IGWorldApi {
     @Override
     public boolean unloadMap() {
         //potential teleport of players
+        if(!isMapLoaded()) {
+            return true;
+        }
+
+        World unloadWorld = Bukkit.getWorld(worldData.getGeneralInformation().worldName());
+
+        if(unloadWorld == null) {
+            worldData.setLoaded(false);
+            return true;
+        }
+
+        if (!unloadWorld.getPlayers().isEmpty()) {
+            String mainWorldName = GWorld.getInstance().getConfig().getString("MainWorld");
+
+            if(mainWorldName == null || mainWorldName.isEmpty()) {
+                mainWorldName = Bukkit.getWorlds().get(0).getName();
+            }
+
+            World mainWorld = Bukkit.getWorld(mainWorldName);
+
+            if(mainWorld == null) {
+                mainWorld = Bukkit.getWorlds().get(0);
+            }
+
+            for(Player player : unloadWorld.getPlayers()) {
+                player.teleport(mainWorld.getSpawnLocation());
+            }
+        }
 
         boolean success = Bukkit.unloadWorld(worldData.getGeneralInformation().worldName(), true);
 
@@ -61,8 +91,6 @@ public class ManageableWorld implements IGWorldApi {
             GWorld.getInstance().getLogger().warning("Could not unload world " + worldData.getGeneralInformation().worldName());
             return false;
         }
-
-        //Bukkit.getWorlds().remove(Bukkit.getWorld(worldData.getGeneralInformation().worldName()));
 
         worldData.setLoaded(false);
         return true;
@@ -78,6 +106,23 @@ public class ManageableWorld implements IGWorldApi {
             //delete directory
             FileUtils.deleteDirectory(world);
             GWorld.getInstance().getWorldManager().removeWorld(this.worldData);
+            return true;
+        } catch (IOException ignored) {
+            GWorld.getInstance().getLogger().severe("Could not delete world " + worldData.getGeneralInformation().worldName());
+        }
+
+        return false;
+    }
+
+    public boolean deleteMap(boolean removeFromManager) {
+        unloadMap();
+
+        File world = new File(Bukkit.getWorldContainer(), worldData.getGeneralInformation().worldName());
+
+        try {
+            //delete directory
+            FileUtils.deleteDirectory(world);
+            if(removeFromManager) GWorld.getInstance().getWorldManager().removeWorld(this.worldData);
             return true;
         } catch (IOException ignored) {
             GWorld.getInstance().getLogger().severe("Could not delete world " + worldData.getGeneralInformation().worldName());
@@ -185,6 +230,8 @@ public class ManageableWorld implements IGWorldApi {
 
         clonedWorld.worldData.setImporting(false);
 
+        updateWorldSpawnLocation(clonedWorld);
+
         return Optional.of(clonedWorld);
     }
 
@@ -217,7 +264,7 @@ public class ManageableWorld implements IGWorldApi {
                 ignored.printStackTrace();
                 return false;
             }
-        } else deleteMap();
+        } else deleteMap(false);
 
         System.out.println("#222");
 
@@ -253,5 +300,27 @@ public class ManageableWorld implements IGWorldApi {
     @Override
     public String getWorldName() {
         return worldData.getGeneralInformation().worldName();
+    }
+
+    private void updateWorldSpawnLocation(ManageableWorld newWorld) {
+        if(newWorld== null) {
+            return;
+        }
+
+        if (!newWorld.isMapLoaded()) {
+            System.out.println("World " + newWorld.worldData.getGeneralInformation().worldName() + " is not loaded, cannot update spawn location.");
+            return;
+        }
+
+        World world = Bukkit.getWorld(newWorld.worldData.getGeneralInformation().worldName());
+        if (world == null) {
+            System.out.println("World " + newWorld.worldData.getGeneralInformation().worldName() + " is null, cannot update spawn location.");
+            return;
+        }
+
+        Location location = world.getSpawnLocation();
+        System.out.println("spawn location: " + location);
+        world.setSpawnLocation(new Location(world, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch()));
+        System.out.println("To: " + world.getSpawnLocation());
     }
 }
