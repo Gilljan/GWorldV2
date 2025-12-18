@@ -2,10 +2,7 @@ package de.gilljan.gworld.data.world;
 
 import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.data.DataHandler;
-import org.bukkit.Bukkit;
-import org.bukkit.Difficulty;
-import org.bukkit.GameMode;
-import org.bukkit.WorldType;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -194,7 +191,7 @@ public class WorldData {
         this.weatherCycle = weatherCycle;
 
         if (isLoaded())
-            Bukkit.getWorld(generalInformation.worldName()).setGameRuleValue("doWeatherCycle", String.valueOf(weatherCycle));
+            Bukkit.getWorld(generalInformation.worldName()).setGameRule(GameRule.ADVANCE_WEATHER, weatherCycle);
 
         setWeatherType(weatherType);
     }
@@ -227,7 +224,7 @@ public class WorldData {
         this.timeCycle = timeCycle;
 
         if (isLoaded())
-            Bukkit.getWorld(generalInformation.worldName()).setGameRuleValue("doDaylightCycle", String.valueOf(timeCycle));
+            Bukkit.getWorld(generalInformation.worldName()).setGameRule(GameRule.ADVANCE_TIME, timeCycle);
 
         setTime(time);
     }
@@ -294,7 +291,7 @@ public class WorldData {
         this.randomTickSpeed = randomTickSpeed;
 
         if (isLoaded())
-            Bukkit.getWorld(generalInformation.worldName()).setGameRuleValue("randomTickSpeed", String.valueOf(randomTickSpeed));
+            Bukkit.getWorld(generalInformation.worldName()).setGameRule(GameRule.RANDOM_TICK_SPEED, randomTickSpeed);
     }
 
     public boolean isAnnounceAdvancements() {
@@ -305,7 +302,7 @@ public class WorldData {
         this.announceAdvancements = announceAdvancements;
 
         if (isLoaded())
-            Bukkit.getWorld(generalInformation.worldName()).setGameRuleValue("announceAdvancements", String.valueOf(announceAdvancements));
+            Bukkit.getWorld(generalInformation.worldName()).setGameRule(GameRule.SHOW_ADVANCEMENT_MESSAGES, announceAdvancements);
     }
 
     public GeneralInformation getGeneralInformation() {
