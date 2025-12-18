@@ -7,7 +7,7 @@ import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public abstract class ArgsCommand implements CommandExecutor, org.bukkit.command.TabCompleter {
