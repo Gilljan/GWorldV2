@@ -16,7 +16,7 @@ public abstract class ArgsCommand implements CommandExecutor, org.bukkit.command
     private final String usageMessageKey;
     private final String permission;
 
-    public ArgsCommand(String commandName, int expectedArgs, @NotNull String usageMessageKey, @Nullable String permission) {
+    protected ArgsCommand(String commandName, int expectedArgs, @NotNull String usageMessageKey, @Nullable String permission) {
         this.commandName = commandName;
         this.expectedArgs = expectedArgs;
         this.usageMessageKey = usageMessageKey;

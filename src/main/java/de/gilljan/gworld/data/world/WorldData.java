@@ -16,7 +16,7 @@ public class WorldData {
     private GeneralInformation generalInformation;
     private boolean loaded = false;
 
-    private transient boolean importing = false;
+    private boolean importing = false;
 
     //World properties
     private boolean allowPvP;

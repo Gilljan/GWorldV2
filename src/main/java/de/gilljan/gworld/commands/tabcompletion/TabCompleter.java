@@ -60,7 +60,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
 
             return possibleChildren.stream()
                     .map(CompletionNode::getValue)
-                    .filter((value) -> !value.equals("*"))
+                    .filter(value -> !value.equals("*"))
                     .toList();
         }
 

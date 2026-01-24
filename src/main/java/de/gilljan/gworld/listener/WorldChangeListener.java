@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 public class WorldChangeListener implements Listener {
 
     @EventHandler
-    public void WorldChange(PlayerChangedWorldEvent event) {
+    public void onWorldChange(PlayerChangedWorldEvent event) {
         Player p = event.getPlayer();
         String worldName = p.getWorld().getName();
 

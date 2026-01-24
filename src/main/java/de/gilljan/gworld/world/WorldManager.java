@@ -7,9 +7,6 @@ import java.util.Optional;
 
 public class WorldManager {
 
-    public WorldManager() {
-    }
-
     public ManageableWorld addWorld(WorldData world) {
         ManageableWorld manageableWorld = new ManageableWorld(world);
         GWorld.getInstance().getDataHandler().addWorld(world);

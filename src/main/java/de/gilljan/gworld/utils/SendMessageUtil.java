@@ -4,6 +4,10 @@ import de.gilljan.gworld.GWorld;
 
 public class SendMessageUtil {
 
+    private SendMessageUtil() {
+        throw new UnsupportedOperationException("Utility class");
+    }
+
     public static String sendMessage(String key) {
         return GWorld.getInstance().getLanguageFile().getString(key)
                 .replace("&0", "§0")
