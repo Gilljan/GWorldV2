@@ -14,6 +14,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -183,6 +184,9 @@ public class GSetCommand extends ArgsCommand {
     }
 
     private boolean validateArgument(Settings settings, String arg) {
+        if (settings.equals(Settings.TIME) || settings.equals(Settings.RANDOM_TICK_SPEED)) {
+            return true; //Check in handler
+        }
         return settings.getValues().stream()
                 .map(String::toLowerCase)
                 .anyMatch(arg::equalsIgnoreCase);
