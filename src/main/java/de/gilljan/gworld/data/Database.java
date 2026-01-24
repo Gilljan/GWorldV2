@@ -109,6 +109,50 @@ public class Database implements DataHandler {
                 "`load` = VALUES(`load`), " +
                 "randomTickSpeed = VALUES(randomTickSpeed), " +
                 "announceAdvancements = VALUES(announceAdvancements)");
+
+        // monsters
+        try (PreparedStatement delMon = mySQL.prepareStatement("DELETE FROM disabledMonsters WHERE mapName = ?")) {
+            delMon.setString(1, world.getGeneralInformation().worldName());
+            delMon.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        List<String> disabledMonsters = world.getDisabledMonsters();
+        if (!disabledMonsters.isEmpty()) {
+            try (PreparedStatement insMon = mySQL.prepareStatement("INSERT INTO disabledMonsters (mapName, monster) VALUES (?, ?)")) {
+                for (String monster : disabledMonsters) {
+                    insMon.setString(1, world.getGeneralInformation().worldName());
+                    insMon.setString(2, monster);
+                    insMon.addBatch();
+                }
+                insMon.executeBatch();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // animals
+        try (PreparedStatement delAni = mySQL.prepareStatement("DELETE FROM disabledAnimals WHERE mapName = ?")) {
+            delAni.setString(1, world.getGeneralInformation().worldName());
+            delAni.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        List<String> disabledAnimals = world.getDisabledAnimals();
+        if (!disabledAnimals.isEmpty()) {
+            try (PreparedStatement insAni = mySQL.prepareStatement("INSERT INTO disabledAnimals (mapName, animal) VALUES (?, ?)")) {
+                for (String animal : disabledAnimals) {
+                    insAni.setString(1, world.getGeneralInformation().worldName());
+                    insAni.setString(2, animal);
+                    insAni.addBatch();
+                }
+                insAni.executeBatch();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
