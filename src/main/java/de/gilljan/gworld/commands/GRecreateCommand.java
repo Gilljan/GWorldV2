@@ -66,7 +66,7 @@ public class GRecreateCommand extends ArgsCommand {
                     String messageKey = world.reCreate(saveOldWorld) ? "Recreate.success" : "Recreate.failed";
                     sender.sendMessage(SendMessageUtil.sendMessage(messageKey).replace("%world%", world.getWorldName()));
                 },
-                () -> /*sender.sendMessage(SendMessageUtil.sendMessage("Recreate.failed").replace("%world%", worldName)*/ System.out.println("No ManageableWorld found for world: " + worldName + "  " + Bukkit.getWorlds())
+                () -> sender.sendMessage(SendMessageUtil.sendMessage("Recreate.failed").replace("%world%", worldName))// System.out.println("No ManageableWorld found for world: " + worldName + "  " + Bukkit.getWorlds())
         );
     }
 }

@@ -43,6 +43,7 @@ public class GImportCommand extends ArgsCommand {
 
         if(mapping == null) {
             player.sendMessage(SendMessageUtil.sendMessage("Import.failed"));
+            player.sendMessage(SendMessageUtil.sendMessage("Import.use"));
             return false;
         }
 
