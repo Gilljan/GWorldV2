@@ -12,6 +12,7 @@ import de.gilljan.gworld.listener.PlayerJoinListener;
 import de.gilljan.gworld.listener.WorldChangeListener;
 import de.gilljan.gworld.utils.EntityUtil;
 import de.gilljan.gworld.utils.GeneratorUtil;
+import de.gilljan.gworld.utils.SendMessageUtil;
 import de.gilljan.gworld.world.ManageableWorld;
 import de.gilljan.gworld.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -22,6 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public final class GWorld extends JavaPlugin {
     private static GWorld instance;
@@ -126,7 +128,7 @@ public final class GWorld extends JavaPlugin {
                     ));
         }
 
-        prefix = getConfig().getString("Prefix");
+        prefix = SendMessageUtil.sendRawMessage(Objects.requireNonNull(getConfig().getString("Prefix")));
         autoImport = getConfig().getBoolean("AutoImport");
     }
 
