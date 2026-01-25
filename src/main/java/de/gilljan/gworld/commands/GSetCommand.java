@@ -28,7 +28,7 @@ public class GSetCommand extends ArgsCommand {
         GWorld.getInstance().getDataHandler().getWorld(args[0]).ifPresentOrElse(worldData -> {
             setFlag(player, worldData, args);
             GWorld.getInstance().getDataHandler().saveWorld(worldData);
-        }, () -> System.out.println("No WorldData found for world: " + args[0]));
+        }, () -> GWorld.getInstance().getLogger().warning("No WorldData found for world: " + args[0]));
 
         return true;
     }
@@ -98,30 +98,26 @@ public class GSetCommand extends ArgsCommand {
     }
 
     private void handleSpecificEntities(CommandSender sender, WorldData worldData, WorldProperty<List<String>> property, String[] args, Settings setting) {
-        List<String> disabledEntities = WorldProperty.getValue(property, worldData);
+        List<String> disabledEntities = new ArrayList<>(WorldProperty.getValue(property, worldData));
         String entity = args[2];
-
-        if(!GWorld.MONSTER.contains(entity) && !GWorld.ANIMALS.contains(entity)) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
-            return;
-        }
-/*
-        if(!setting.getValues().contains(entity)) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replaceAll("%world%", worldData.getGeneralInformation().worldName()));
-            return;
-        }*/
+        String flagName = SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()));
 
         if (args[2].equalsIgnoreCase("list")) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.list").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", disabledEntities.toString()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.list").replace("%flag%", flagName).replace("%value%", disabledEntities.toString()));
+            return;
+        }
+
+        if (!GWorld.MONSTER.contains(entity) && !GWorld.ANIMALS.contains(entity)) {
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.invalidEntity").replace("%value%", entity));
             return;
         }
 
         if (disabledEntities.contains(entity)) {
             disabledEntities.remove(entity);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", entity));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.remove").replace("%flag%", flagName).replace("%value%", entity));
         } else {
             disabledEntities.add(entity);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", entity));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.add").replace("%flag%", flagName).replace("%value%", entity));
         }
 
         WorldProperty.setValue(property, worldData, disabledEntities);
@@ -130,57 +126,74 @@ public class GSetCommand extends ArgsCommand {
     private void handleIntegerFlags(CommandSender sender, WorldData worldData, WorldProperty<Integer> property, String[] args, Settings setting) {
         try {
             int value = Integer.parseInt(args[2]);
+            Integer oldValue = WorldProperty.getValue(property, worldData);
             WorldProperty.setValue(property, worldData, value);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", String.valueOf(value)));
+            sendSuccessMessage(sender, worldData, setting, String.valueOf(oldValue), String.valueOf(value));
         } catch (NumberFormatException e) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
+            sendFailureMessage(sender, worldData, setting, args[2]);
         }
     }
 
     private void handleLongFlags(CommandSender sender, WorldData worldData, String[] args, Settings setting) {
         try {
             long value = Long.parseLong(args[2]);
+            Long oldValue = WorldProperty.getValue(WorldProperty.TIME, worldData);
             WorldProperty.setValue(WorldProperty.TIME, worldData, value);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", String.valueOf(value)));
+            sendSuccessMessage(sender, worldData, setting, String.valueOf(oldValue), String.valueOf(value));
         } catch (NumberFormatException e) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
+            sendFailureMessage(sender, worldData, setting, args[2]);
         }
     }
 
     private void handleBooleanFlags(CommandSender sender, WorldData worldData, WorldProperty<Boolean> property, String[] args, Settings setting) {
         boolean value = Boolean.parseBoolean(args[2]);
+        Boolean oldValue = WorldProperty.getValue(property, worldData);
         WorldProperty.setValue(property, worldData, value);
-        sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", String.valueOf(value)));
+        String oldState = SendMessageUtil.sendMessage(oldValue ? "Set.flags.enabled" : "Set.flags.disabled");
+        String newState = SendMessageUtil.sendMessage(value ? "Set.flags.enabled" : "Set.flags.disabled");
+        sendSuccessMessage(sender, worldData, setting, oldState, newState);
     }
 
     private void handleGameModeFlags(CommandSender sender, WorldData worldData, String[] args, Settings setting) {
         try {
             GameMode value = GameMode.valueOf(args[2].toUpperCase());
+            GameMode oldValue = WorldProperty.getValue(WorldProperty.GAMEMODE, worldData);
             WorldProperty.setValue(WorldProperty.GAMEMODE, worldData, value);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", value.toString()));
+            sendSuccessMessage(sender, worldData, setting, oldValue.toString(), value.toString());
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
+            sendFailureMessage(sender, worldData, setting, args[2]);
         }
     }
 
     private void handleDifficultyFlags(CommandSender sender, WorldData worldData, String[] args, Settings setting) {
         try {
             Difficulty value = Difficulty.valueOf(args[2].toUpperCase());
+            Difficulty oldValue = WorldProperty.getValue(WorldProperty.DIFFICULTY, worldData);
             WorldProperty.setValue(WorldProperty.DIFFICULTY, worldData, value);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", value.toString()));
+            sendSuccessMessage(sender, worldData, setting, oldValue.toString(), value.toString());
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
+            sendFailureMessage(sender, worldData, setting, args[2]);
         }
     }
 
     private void handleWeatherFlags(CommandSender sender, WorldData worldData, String[] args, Settings setting) {
         try {
             WorldData.WeatherType value = WorldData.WeatherType.valueOf(args[2].toUpperCase());
+            WorldData.WeatherType oldValue = WorldProperty.getValue(WorldProperty.WEATHER_TYPE, worldData);
             WorldProperty.setValue(WorldProperty.WEATHER_TYPE, worldData, value);
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%setting%", setting.toString()).replace("%value%", value.toString()));
+            sendSuccessMessage(sender, worldData, setting, oldValue.toString(), value.toString());
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()));
+            sendFailureMessage(sender, worldData, setting, args[2]);
         }
+    }
+
+    private void sendSuccessMessage(CommandSender sender, WorldData worldData, Settings setting, String oldValue, String newValue) {
+        sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()));
+        sender.sendMessage(SendMessageUtil.sendMessage("Set.changes").replace("%flag%", SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()))).replace("%oldValue%", oldValue).replace("%newValue%", newValue));
+    }
+
+    private void sendFailureMessage(CommandSender sender, WorldData worldData, Settings setting, String attemptedValue) {
+        sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%flag%", SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()))).replace("%value%", attemptedValue));
     }
 
     private boolean validateArgument(Settings settings, String arg) {
@@ -190,5 +203,14 @@ public class GSetCommand extends ArgsCommand {
         return settings.getValues().stream()
                 .map(String::toLowerCase)
                 .anyMatch(arg::equalsIgnoreCase);
+    }
+
+    private String toCamelCase(String s) {
+        String[] parts = s.split("_");
+        StringBuilder camelCaseString = new StringBuilder(parts[0].toLowerCase());
+        for (int i = 1; i < parts.length; i++) {
+            camelCaseString.append(parts[i].substring(0, 1).toUpperCase()).append(parts[i].substring(1).toLowerCase());
+        }
+        return camelCaseString.toString();
     }
 }
