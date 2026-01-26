@@ -2,6 +2,7 @@ package de.gilljan.gworld.data.world;
 
 import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.data.DataHandler;
+import de.gilljan.gworld.utils.MainWorldUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -280,6 +281,11 @@ public class WorldData {
     }
 
     public void setLoadOnStartup(boolean loadOnStartup) {
+        if(MainWorldUtil.isMainWorld(this.getGeneralInformation().worldName)) {
+            this.loadOnStartup = true;
+            return;
+        }
+
         this.loadOnStartup = loadOnStartup;
     }
 
