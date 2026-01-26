@@ -1,4 +1,4 @@
-#Copyright (c) Gilljan 2020-2024. All rights reserved.
+#Copyright (c) Gilljan 2020-2026. All rights reserved.
 #Plugin written by Gilljan
 # %prefix% is a global placeholder for the prefix of the plugin, defined in the config.yml
 NoPerm: '&cYou do not have the permission for that!'
@@ -98,16 +98,13 @@ Info:
     true: '&atrue'
     false: '&cfalse'
     values: '&e%value%'
+    none: '&cnone'
 Recreate:
- # confirm_player: '&cPlease confirm the command by clicking below or write &econfirm &cdirectly behind the command.'
- # confirm_console: '&cPlease confirm the command by typing &econfirm &cafter the command.'
   creating: '%prefix% &aThe world is newly created and loaded based on the &e%world%&a.'
   success: '%prefix% &aThe world &e%world% &awas newly created and loaded.'
   failed: '%prefix% &cThe world &e%world% &ccould not be recreated.'
   use: '%prefix% &cUse: /grecreate <worldname> <keepSaved (true:false)>'
 Unload:
- # confirm_player: '&cPlease confirm the command by clicking below or write &econfirm &cdirectly behind the command.'
- # confirm_console: '&cPlease confirm the command by typing &econfirm &cafter the command.'
   unloading: '%prefix% &aThe world &e%world% &ais now unloading.'
   success: '%prefix% &aThe world &e%world% &awas successfully unloaded.'
   alreadyUnloaded: '%prefix% &cThe world &e%world% &cis not loaded.'
@@ -115,8 +112,6 @@ Unload:
   teleport_players: '%prefix% &cAs the world &e%world% &chas been unloaded, you have been teleported to the default world!'
   use: '%prefix% &cUse: /gunload <worldname>'
 Load:
- # confirm_player: '&cPlease confirm the command by clicking below or write &econfirm &cdirectly behind the command.'
- # confirm_console: '&cPlease confirm the command by typing &econfirm &cafter the command.'
   loading: '%prefix% &aThe world &e%world% &ais now loading.'
   success: '%prefix% &aThe world &e%world% &awas successfully loaded.'
   alreadyLoaded: '%prefix% &cThe world &e%world% &cis already loaded.'
@@ -139,6 +134,7 @@ Help:
   gset: '&8/&egset <worldname> <flag> <value/value> &8- &7Sets the flags for a given world. As a player, it is possible to, 
   omit the world name (then the current world is selected).'
   gtp: '&8/&egtp <worldname> {playername} &8- &7Teleports you or another player to a world.'
-  gunload: '&8/&egunload <worldname> &8- &7Unload an imported world without deleting it.'
+  gunload: '&8/&egunload <worldname> &8- &7Unload an imported world without deleting it. As a player it is possible to omit the
+  world name (then the current world is selected).'
   gworlds: '&8/&egworlds &8- &7List all loaded worlds. Click to teleport to the selected world.'
   gwreload: '&8/&egwreload &8- &7Reload all configurations.'

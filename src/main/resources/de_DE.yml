@@ -1,4 +1,4 @@
-#Copyright (c) Gilljan 2020-2024. All rights reserved.
+#Copyright (c) Gilljan 2020-2026. All rights reserved.
 #Plugin written by Gilljan
 # %prefix% is a global placeholder for the prefix of the plugin, defined in the config.yml
 NoPerm: '%prefix% &cDazu hast du keine Rechte!'
@@ -135,6 +135,7 @@ Help:
   gset: '&8/&egset <Weltname> <Flag> <Value/Wert> &8- &7Setzt die Flags für eine bestimmte Welt. Als Spieler ist es möglich, 
   den Weltenname wegzulassen (dann wird die aktuelle Welt gewählt).'
   gtp: '&8/&egtp <Weltenname> {Spielername} &8- &7Teleportiert dich oder einen anderen Spieler auf eine Welt.'
-  gunload: '&8/&egunload <Weltenname> &8- &7Entlade eine importierte Welt, ohne diese zu löschen'
+  gunload: '&8/&egunload <Weltenname> &8- &7Entlade eine importierte Welt, ohne diese zu löschen. Als Spieler ist es möglich,
+  den Weltenname wegzulassen (dann wird die aktuelle Welt gewählt).'
   gworlds: '&8/&egworlds &8- &7Liste alle geladenen Welten. Per Klick teleportierst du dich auf die gewählte Welt.'
   gwreload: '&8/&egwreload &8- &7Lade alle Konfigurationen neu.'
