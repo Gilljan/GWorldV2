@@ -44,7 +44,17 @@ public class GSetCommand extends ArgsCommand {
 
     @Override
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
-        return false;
+        if(args.length < 3) {
+            console.sendMessage(SendMessageUtil.sendMessage("Set.use"));
+            return false;
+        }
+
+        GWorld.getInstance().getDataHandler().getWorld(args[0]).ifPresentOrElse(worldData -> {
+            setFlag(console, worldData, args);
+            GWorld.getInstance().getDataHandler().saveWorld(worldData);
+        }, () -> GWorld.getInstance().getLogger().warning("No WorldData found for world: " + args[0]));
+
+        return true;
     }
 
     @Override
