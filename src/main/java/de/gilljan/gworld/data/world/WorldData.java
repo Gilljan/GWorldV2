@@ -1,6 +1,9 @@
 package de.gilljan.gworld.data.world;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.api.gamerule.GGameRule;
+import de.gilljan.gworld.api.gamerule.GameRuleAdapter;
+import de.gilljan.gworld.api.gamerule.GameRuleAdapterFactory;
 import de.gilljan.gworld.data.DataHandler;
 import de.gilljan.gworld.utils.MainWorldUtil;
 import org.bukkit.*;
@@ -14,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class WorldData {
+    private static final GameRuleAdapter gameRuleAdapter = GameRuleAdapterFactory.createAdapter();
+
     private GeneralInformation generalInformation;
     private boolean loaded = false;
 
@@ -192,7 +197,7 @@ public class WorldData {
         this.weatherCycle = weatherCycle;
 
         if (isLoaded())
-            Bukkit.getWorld(generalInformation.worldName()).setGameRule(GameRule.ADVANCE_WEATHER, weatherCycle);
+            gameRuleAdapter.setGameRule(Bukkit.getWorld(generalInformation.worldName), GGameRule.ADVANCE_WEATHER, weatherCycle);
 
         setWeatherType(weatherType);
     }
@@ -225,7 +230,7 @@ public class WorldData {
         this.timeCycle = timeCycle;
 
         if (isLoaded())
-            Bukkit.getWorld(generalInformation.worldName()).setGameRule(GameRule.ADVANCE_TIME, timeCycle);
+            gameRuleAdapter.setGameRule(Bukkit.getWorld(generalInformation.worldName), GGameRule.ADVANCE_TIME, timeCycle);
 
         setTime(time);
     }
@@ -297,7 +302,7 @@ public class WorldData {
         this.randomTickSpeed = randomTickSpeed;
 
         if (isLoaded())
-            Bukkit.getWorld(generalInformation.worldName()).setGameRule(GameRule.RANDOM_TICK_SPEED, randomTickSpeed);
+            gameRuleAdapter.setGameRule(Bukkit.getWorld(generalInformation.worldName), GGameRule.RANDOM_TICK_SPEED, randomTickSpeed);
     }
 
     public boolean isAnnounceAdvancements() {
@@ -308,7 +313,7 @@ public class WorldData {
         this.announceAdvancements = announceAdvancements;
 
         if (isLoaded())
-            Bukkit.getWorld(generalInformation.worldName()).setGameRule(GameRule.SHOW_ADVANCEMENT_MESSAGES, announceAdvancements);
+            gameRuleAdapter.setGameRule(Bukkit.getWorld(generalInformation.worldName), GGameRule.SHOW_ADVANCEMENT_MESSAGES, announceAdvancements);
     }
 
     public GeneralInformation getGeneralInformation() {
