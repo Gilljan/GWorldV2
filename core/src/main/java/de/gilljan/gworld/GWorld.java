@@ -15,6 +15,7 @@ import de.gilljan.gworld.utils.GeneratorUtil;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import de.gilljan.gworld.world.ManageableWorld;
 import de.gilljan.gworld.world.WorldManager;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
@@ -66,6 +67,9 @@ public final class GWorld extends JavaPlugin {
 
         System.out.println(MONSTER);
         System.out.println(ANIMALS);
+
+        //bstats metrics
+        new Metrics(this, 11160);
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
             dataHandler.saveAllWorlds();
