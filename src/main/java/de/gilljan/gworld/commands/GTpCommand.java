@@ -31,6 +31,18 @@ public class GTpCommand extends ArgsCommand {
         World world = Bukkit.getWorld(worldData.getGeneralInformation().worldName());
 
         if(args.length == 2) {
+            if(args[1].equalsIgnoreCase("@all")) {
+                List<Player> players = Bukkit.getOnlinePlayers().stream().filter(p -> !p.getName().equalsIgnoreCase(player.getName())).collect(Collectors.toList());
+
+                for(Player p : players) {
+                    p.teleport(world.getSpawnLocation());
+                    p.sendMessage(SendMessageUtil.sendMessage("Teleport.player_target_success").replace("%world%", world.getName()).replace("%player%", player.getName()));
+                }
+
+                player.sendMessage(SendMessageUtil.sendMessage("Teleport.sender_target_all_success").replace("%world%", world.getName()).replace("%count%", String.valueOf(players.size())));
+                return true;
+            }
+
             Player target = Bukkit.getPlayer(args[1]);
             if(target == null || !target.isOnline()) {
                 player.sendMessage(SendMessageUtil.sendMessage("Teleport.failed"));
@@ -64,10 +76,12 @@ public class GTpCommand extends ArgsCommand {
     protected CompletionNode createCompletions() {
         CompletionNode root = new CompletionNode("gtp");
         List<CompletionNode> players = Bukkit.getOnlinePlayers().stream().map(player -> new CompletionNode(player.getName())).toList();
+        CompletionNode allNode = new CompletionNode("@all");
 
         GWorld.getInstance().getDataHandler().getWorlds().values().stream().filter(WorldData::isLoaded).forEach(world -> {
             CompletionNode worldNode = new CompletionNode(world.getGeneralInformation().worldName());
             worldNode.addChildren(players);
+            worldNode.addChild(allNode);
             root.addChild(worldNode);
         });
 
