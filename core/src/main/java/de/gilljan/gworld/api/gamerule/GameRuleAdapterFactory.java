@@ -13,7 +13,7 @@ public class GameRuleAdapterFactory {
             String className = adapterPath
                     .replace("%version%", is1_21_11OrNewer ? "v1_21_11" : "v1_20")
                     .replace("%adapter%", ((isPaper ? "Paper" : "Spigot") + (is1_21_11OrNewer ? "1_21_11" : "1_20Up") + "GameRuleAdapter"));
-            System.out.println(className);
+            //System.out.println(className);
             Class<?> adapterClass = Class.forName(className);
             return (GameRuleAdapter) adapterClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
