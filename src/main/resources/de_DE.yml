@@ -99,6 +99,7 @@ Info:
     true: '&atrue'
     false: '&cfalse'
     values: '&e%value%'
+    none: '&ckeine'
 Recreate:
   creating: '%prefix% &aDie Welt wird basierend auf der &e%world% &aneu erstellt und geladen.'
   success: '%prefix% &aDie Welt &e%world% &awurde neu erstellt und geladen.'

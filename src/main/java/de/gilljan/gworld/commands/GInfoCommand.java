@@ -84,14 +84,23 @@ public class GInfoCommand extends ArgsCommand {
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.mobs") + SendMessageUtil.sendMessage("Info.flags." + String.valueOf(WorldProperty.getValue(WorldProperty.MONSTER_SPAWNING, world))));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.disabledMobs"));
 
-        for (String mob : WorldProperty.getValue(WorldProperty.DISABLED_MONSTERS, world)) {
-            sender.sendMessage(" §7- " + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", mob));
+        if(WorldProperty.getValue(WorldProperty.DISABLED_MONSTERS, world).isEmpty()) {
+            sender.sendMessage(" §7- " + SendMessageUtil.sendMessage("Info.flags.none"));
+        } else {
+            for (String mob : WorldProperty.getValue(WorldProperty.DISABLED_MONSTERS, world)) {
+                sender.sendMessage(" §7- " + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", mob));
+            }
         }
 
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.animals") + SendMessageUtil.sendMessage("Info.flags." + String.valueOf(WorldProperty.getValue(WorldProperty.ANIMAL_SPAWNING, world))));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.disabledAnimals"));
-        for (String animal : WorldProperty.getValue(WorldProperty.DISABLED_ANIMALS, world)) {
-            sender.sendMessage(" §7- " + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", animal));
+
+        if(WorldProperty.getValue(WorldProperty.DISABLED_ANIMALS, world).isEmpty()) {
+            sender.sendMessage(" §7- " + SendMessageUtil.sendMessage("Info.flags.none"));
+        } else {
+            for (String animal : WorldProperty.getValue(WorldProperty.DISABLED_ANIMALS, world)) {
+                sender.sendMessage(" §7- " + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", animal));
+            }
         }
         //System.out.println(WorldProperty.getValue(WorldProperty.KEEP_SPAWN_IN_MEMORY, world));
 

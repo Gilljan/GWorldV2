@@ -68,6 +68,7 @@ Set:
     true: '&atrue'
     false: '&cfalse'
     values: '&e'
+    none: '&cnone'
 Info:
   failed: '%prefix% &cThe world &e%world% &ccould not be found.'
   use: '%prefix% &cUse: /ginfo <world name>'
