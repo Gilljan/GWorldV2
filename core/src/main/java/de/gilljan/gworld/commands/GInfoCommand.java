@@ -5,6 +5,7 @@ import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.data.properties.WorldProperty;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.SendMessageUtil;
+import de.gilljan.gworld.world.ManageableWorld;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ public class GInfoCommand extends ArgsCommand {
 
         String worldName = (args.length > 0) ? args[0] : player.getWorld().getName();
 
-        return GWorld.getInstance().getDataHandler().getWorld(worldName)
+        return GWorld.getInstance().getWorldManager().getWorld(worldName)
                 .map(world -> {
                     sendInfo(player, world);
 
@@ -46,7 +47,7 @@ public class GInfoCommand extends ArgsCommand {
             return false;
         }
 
-        Optional<WorldData> world = GWorld.getInstance().getDataHandler().getWorld(args[0]);
+        Optional<ManageableWorld> world = GWorld.getInstance().getWorldManager().getWorld(args[0]);
 
         if (world.isEmpty()) {
             console.sendMessage(SendMessageUtil.sendMessage("Info.failed").replace("%world%", args[0]));
@@ -69,13 +70,13 @@ public class GInfoCommand extends ArgsCommand {
         return root;
     }
 
-    private void sendInfo(CommandSender sender, WorldData world) {
+    private void sendInfo(CommandSender sender, ManageableWorld world) {
         //Send messages
         sender.sendMessage(SendMessageUtil.sendMessage("Info.header"));
-        sender.sendMessage(SendMessageUtil.sendMessage("Info.name") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getGeneralInformation().worldName()));
-        sender.sendMessage(SendMessageUtil.sendMessage("Info.generator") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getGeneralInformation().worldGenerator() == null ? "Minecraft" : world.getGeneralInformation().worldGenerator()));
-        sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.environment") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getGeneralInformation().environment().name()));
-        sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.type") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getGeneralInformation().worldType().name()));
+        sender.sendMessage(SendMessageUtil.sendMessage("Info.name") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getWorldName()));
+        sender.sendMessage(SendMessageUtil.sendMessage("Info.generator") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getGenerator() == null ? "Minecraft" : world.getGenerator()));
+        sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.environment") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getEnvironment().name()));
+        sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.type") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getWorldType().name()));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.timeCycle") + SendMessageUtil.sendMessage("Info.flags." + String.valueOf(WorldProperty.getValue(WorldProperty.TIME_CYCLE, world))));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.time") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", WorldProperty.getValue(WorldProperty.TIME, world).toString()));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.weatherCycle") + SendMessageUtil.sendMessage("Info.flags." + String.valueOf(WorldProperty.getValue(WorldProperty.WEATHER_CYCLE, world))));

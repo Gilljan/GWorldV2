@@ -3,6 +3,8 @@ package de.gilljan.gworld.api;
 import de.gilljan.gworld.data.world.WorldData;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
+import org.bukkit.World;
+import org.bukkit.WorldType;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,8 @@ public interface IGWorldApi {
 
     String getWorldName();
 
+    void saveProperties();
+
     boolean isAllowPvP();
     boolean isKeepSpawnInMemory();
     boolean isAnimalSpawning();
@@ -46,6 +50,11 @@ public interface IGWorldApi {
     Difficulty getDifficulty();
     int getRandomTickSpeed();
     boolean isAnnounceAdvancements();
+    boolean isLoadOnStartup();
+    String getGenerator();
+    WorldType getWorldType();
+    World.Environment getEnvironment();
+    long getSeed();
 
     void setAllowPvP(boolean allowPvP);
     void setKeepSpawnInMemory(boolean keepSpawnInMemory);
@@ -62,4 +71,5 @@ public interface IGWorldApi {
     void setDifficulty(Difficulty difficulty);
     void setRandomTickSpeed(int randomTickSpeed);
     void setAnnounceAdvancements(boolean announceAdvancements);
+    void setLoadOnStartup(boolean loadOnStartup);
 }

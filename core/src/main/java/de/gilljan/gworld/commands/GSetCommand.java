@@ -6,6 +6,7 @@ import de.gilljan.gworld.data.properties.WorldProperty;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.enums.Settings;
 import de.gilljan.gworld.utils.SendMessageUtil;
+import de.gilljan.gworld.world.ManageableWorld;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -14,7 +15,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,16 +27,16 @@ public class GSetCommand extends ArgsCommand {
     public boolean executeCommandForPlayer(Player player, String[] args) {
         if(args.length == 2) {
             World world = player.getWorld();
-            GWorld.getInstance().getDataHandler().getWorld(world.getName()).ifPresentOrElse(worldData -> {
-                setFlag(player, worldData, new String[]{world.getName(), args[0], args[1]});
-                GWorld.getInstance().getDataHandler().saveWorld(worldData);
+            GWorld.getInstance().getWorldManager().getWorld(world.getName()).ifPresentOrElse(manageableWorld -> {
+                setFlag(player, manageableWorld, new String[]{world.getName(), args[0], args[1]});
+                manageableWorld.saveProperties();
             }, () -> GWorld.getInstance().getLogger().warning("No WorldData found for world: " + world.getName()));
             return true;
         }
 
-        GWorld.getInstance().getDataHandler().getWorld(args[0]).ifPresentOrElse(worldData -> {
-            setFlag(player, worldData, args);
-            GWorld.getInstance().getDataHandler().saveWorld(worldData);
+        GWorld.getInstance().getWorldManager().getWorld(args[0]).ifPresentOrElse(manageableWorld -> {
+            setFlag(player, manageableWorld, args);
+            manageableWorld.saveProperties();
         }, () -> GWorld.getInstance().getLogger().warning("No WorldData found for world: " + args[0]));
 
         return true;
@@ -49,9 +49,9 @@ public class GSetCommand extends ArgsCommand {
             return false;
         }
 
-        GWorld.getInstance().getDataHandler().getWorld(args[0]).ifPresentOrElse(worldData -> {
-            setFlag(console, worldData, args);
-            GWorld.getInstance().getDataHandler().saveWorld(worldData);
+        GWorld.getInstance().getWorldManager().getWorld(args[0]).ifPresentOrElse(manageableWorld -> {
+            setFlag(console, manageableWorld, args);
+            manageableWorld.saveProperties();
         }, () -> GWorld.getInstance().getLogger().warning("No WorldData found for world: " + args[0]));
 
         return true;
@@ -83,42 +83,42 @@ public class GSetCommand extends ArgsCommand {
         return root;
     }
 
-    private void setFlag(CommandSender sender, WorldData worldData, String[] args) {
+    private void setFlag(CommandSender sender, ManageableWorld world, String[] args) {
         Optional<Settings> optionalSetting = Settings.fromString(args[1]);
 
         if(optionalSetting.isEmpty()) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.use").replace("%world%", worldData.getGeneralInformation().worldName()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.use").replace("%world%", world.getWorldName()));
             return;
         }
 
         Settings setting = optionalSetting.get();
 
         if (!validateArgument(setting, args[2])) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.use").replace("%world%", worldData.getGeneralInformation().worldName()));
+            sender.sendMessage(SendMessageUtil.sendMessage("Set.use").replace("%world%", world.getWorldName()));
             return;
         }
 
         switch (setting) {
-            case DISABLED_ANIMALS -> handleSpecificEntities(sender, worldData, WorldProperty.DISABLED_ANIMALS, args, setting);
-            case DISABLED_MONSTERS -> handleSpecificEntities(sender, worldData, WorldProperty.DISABLED_MONSTERS, args, setting);
-            case TIME -> handleLongFlags(sender, worldData, args, setting);
-            case RANDOM_TICK_SPEED -> handleIntegerFlags(sender, worldData, WorldProperty.RANDOM_TICK_SPEED, args, setting);
-            case DEFAULT_GAMEMODE -> handleGameModeFlags(sender, worldData, args, setting);
-            case DIFFICULTY -> handleDifficultyFlags(sender, worldData, args, setting);
-            case WEATHER -> handleWeatherFlags(sender, worldData, args, setting);
-            case WEATHER_CYCLE -> handleBooleanFlags(sender, worldData, WorldProperty.WEATHER_CYCLE, args, setting);
-            case TIME_CYCLE -> handleBooleanFlags(sender, worldData, WorldProperty.TIME_CYCLE, args, setting);
-            case PVP -> handleBooleanFlags(sender, worldData, WorldProperty.ALLOW_PVP, args, setting);
-            case MONSTERS -> handleBooleanFlags(sender, worldData, WorldProperty.MONSTER_SPAWNING, args, setting);
-            case ANIMALS -> handleBooleanFlags(sender, worldData, WorldProperty.ANIMAL_SPAWNING, args, setting);
-            case FORCED_GAMEMODE -> handleBooleanFlags(sender, worldData, WorldProperty.DEFAULT_GAMEMODE, args, setting);
-            case ANNOUNCE_ADVANCEMENTS -> handleBooleanFlags(sender, worldData, WorldProperty.ANNOUNCE_ADVANCEMENTS, args, setting);
-            case LOAD_ON_STARTUP -> handleBooleanFlags(sender, worldData, WorldProperty.LOAD_ON_STARTUP, args, setting);
+            case DISABLED_ANIMALS -> handleSpecificEntities(sender, world, WorldProperty.DISABLED_ANIMALS, args, setting);
+            case DISABLED_MONSTERS -> handleSpecificEntities(sender, world, WorldProperty.DISABLED_MONSTERS, args, setting);
+            case TIME -> handleLongFlags(sender, world, args, setting);
+            case RANDOM_TICK_SPEED -> handleIntegerFlags(sender, world, WorldProperty.RANDOM_TICK_SPEED, args, setting);
+            case DEFAULT_GAMEMODE -> handleGameModeFlags(sender, world, args, setting);
+            case DIFFICULTY -> handleDifficultyFlags(sender, world, args, setting);
+            case WEATHER -> handleWeatherFlags(sender, world, args, setting);
+            case WEATHER_CYCLE -> handleBooleanFlags(sender, world, WorldProperty.WEATHER_CYCLE, args, setting);
+            case TIME_CYCLE -> handleBooleanFlags(sender, world, WorldProperty.TIME_CYCLE, args, setting);
+            case PVP -> handleBooleanFlags(sender, world, WorldProperty.ALLOW_PVP, args, setting);
+            case MONSTERS -> handleBooleanFlags(sender, world, WorldProperty.MONSTER_SPAWNING, args, setting);
+            case ANIMALS -> handleBooleanFlags(sender, world, WorldProperty.ANIMAL_SPAWNING, args, setting);
+            case FORCED_GAMEMODE -> handleBooleanFlags(sender, world, WorldProperty.DEFAULT_GAMEMODE, args, setting);
+            case ANNOUNCE_ADVANCEMENTS -> handleBooleanFlags(sender, world, WorldProperty.ANNOUNCE_ADVANCEMENTS, args, setting);
+            case LOAD_ON_STARTUP -> handleBooleanFlags(sender, world, WorldProperty.LOAD_ON_STARTUP, args, setting);
         }
     }
 
-    private void handleSpecificEntities(CommandSender sender, WorldData worldData, WorldProperty<List<String>> property, String[] args, Settings setting) {
-        List<String> disabledEntities = new ArrayList<>(WorldProperty.getValue(property, worldData));
+    private void handleSpecificEntities(CommandSender sender, ManageableWorld world, WorldProperty<List<String>> property, String[] args, Settings setting) {
+        List<String> disabledEntities = new ArrayList<>(WorldProperty.getValue(property, world));
         String entity = args[2];
         String flagName = SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()));
 
@@ -135,80 +135,80 @@ public class GSetCommand extends ArgsCommand {
             sender.sendMessage(SendMessageUtil.sendMessage("Set.add").replace("%flag%", flagName).replace("%value%", entity));
         }
 
-        WorldProperty.setValue(property, worldData, disabledEntities);
+        WorldProperty.setValue(property, world, disabledEntities);
     }
 
-    private void handleIntegerFlags(CommandSender sender, WorldData worldData, WorldProperty<Integer> property, String[] args, Settings setting) {
+    private void handleIntegerFlags(CommandSender sender, ManageableWorld world, WorldProperty<Integer> property, String[] args, Settings setting) {
         try {
             int value = Integer.parseInt(args[2]);
-            Integer oldValue = WorldProperty.getValue(property, worldData);
-            WorldProperty.setValue(property, worldData, value);
-            sendSuccessMessage(sender, worldData, setting, String.valueOf(oldValue), String.valueOf(value));
+            Integer oldValue = WorldProperty.getValue(property, world);
+            WorldProperty.setValue(property, world, value);
+            sendSuccessMessage(sender, world, setting, String.valueOf(oldValue), String.valueOf(value));
         } catch (NumberFormatException e) {
-            sendFailureMessage(sender, worldData, setting, args[2]);
+            sendFailureMessage(sender, world, setting, args[2]);
         }
     }
 
-    private void handleLongFlags(CommandSender sender, WorldData worldData, String[] args, Settings setting) {
+    private void handleLongFlags(CommandSender sender, ManageableWorld world, String[] args, Settings setting) {
         try {
             long value = Long.parseLong(args[2]);
-            Long oldValue = WorldProperty.getValue(WorldProperty.TIME, worldData);
-            WorldProperty.setValue(WorldProperty.TIME, worldData, value);
-            sendSuccessMessage(sender, worldData, setting, String.valueOf(oldValue), String.valueOf(value));
+            Long oldValue = WorldProperty.getValue(WorldProperty.TIME, world);
+            WorldProperty.setValue(WorldProperty.TIME, world, value);
+            sendSuccessMessage(sender, world, setting, String.valueOf(oldValue), String.valueOf(value));
         } catch (NumberFormatException e) {
-            sendFailureMessage(sender, worldData, setting, args[2]);
+            sendFailureMessage(sender, world, setting, args[2]);
         }
     }
 
-    private void handleBooleanFlags(CommandSender sender, WorldData worldData, WorldProperty<Boolean> property, String[] args, Settings setting) {
+    private void handleBooleanFlags(CommandSender sender, ManageableWorld world, WorldProperty<Boolean> property, String[] args, Settings setting) {
         boolean value = Boolean.parseBoolean(args[2]);
-        Boolean oldValue = WorldProperty.getValue(property, worldData);
-        WorldProperty.setValue(property, worldData, value);
+        Boolean oldValue = WorldProperty.getValue(property, world);
+        WorldProperty.setValue(property, world, value);
         String oldState = SendMessageUtil.sendMessage(oldValue ? "Set.flags.enabled" : "Set.flags.disabled");
         String newState = SendMessageUtil.sendMessage(value ? "Set.flags.enabled" : "Set.flags.disabled");
-        sendSuccessMessage(sender, worldData, setting, oldState, newState);
+        sendSuccessMessage(sender, world, setting, oldState, newState);
     }
 
-    private void handleGameModeFlags(CommandSender sender, WorldData worldData, String[] args, Settings setting) {
+    private void handleGameModeFlags(CommandSender sender, ManageableWorld world, String[] args, Settings setting) {
         try {
             GameMode value = GameMode.valueOf(args[2].toUpperCase());
-            GameMode oldValue = WorldProperty.getValue(WorldProperty.GAMEMODE, worldData);
-            WorldProperty.setValue(WorldProperty.GAMEMODE, worldData, value);
-            sendSuccessMessage(sender, worldData, setting, oldValue.toString(), value.toString());
+            GameMode oldValue = WorldProperty.getValue(WorldProperty.GAMEMODE, world);
+            WorldProperty.setValue(WorldProperty.GAMEMODE, world, value);
+            sendSuccessMessage(sender, world, setting, oldValue.toString(), value.toString());
         } catch (IllegalArgumentException e) {
-            sendFailureMessage(sender, worldData, setting, args[2]);
+            sendFailureMessage(sender, world, setting, args[2]);
         }
     }
 
-    private void handleDifficultyFlags(CommandSender sender, WorldData worldData, String[] args, Settings setting) {
+    private void handleDifficultyFlags(CommandSender sender, ManageableWorld world, String[] args, Settings setting) {
         try {
             Difficulty value = Difficulty.valueOf(args[2].toUpperCase());
-            Difficulty oldValue = WorldProperty.getValue(WorldProperty.DIFFICULTY, worldData);
-            WorldProperty.setValue(WorldProperty.DIFFICULTY, worldData, value);
-            sendSuccessMessage(sender, worldData, setting, oldValue.toString(), value.toString());
+            Difficulty oldValue = WorldProperty.getValue(WorldProperty.DIFFICULTY, world);
+            WorldProperty.setValue(WorldProperty.DIFFICULTY, world, value);
+            sendSuccessMessage(sender, world, setting, oldValue.toString(), value.toString());
         } catch (IllegalArgumentException e) {
-            sendFailureMessage(sender, worldData, setting, args[2]);
+            sendFailureMessage(sender, world, setting, args[2]);
         }
     }
 
-    private void handleWeatherFlags(CommandSender sender, WorldData worldData, String[] args, Settings setting) {
+    private void handleWeatherFlags(CommandSender sender, ManageableWorld world, String[] args, Settings setting) {
         try {
             WorldData.WeatherType value = WorldData.WeatherType.valueOf(args[2].toUpperCase());
-            WorldData.WeatherType oldValue = WorldProperty.getValue(WorldProperty.WEATHER_TYPE, worldData);
-            WorldProperty.setValue(WorldProperty.WEATHER_TYPE, worldData, value);
-            sendSuccessMessage(sender, worldData, setting, oldValue.toString(), value.toString());
+            WorldData.WeatherType oldValue = WorldProperty.getValue(WorldProperty.WEATHER_TYPE, world);
+            WorldProperty.setValue(WorldProperty.WEATHER_TYPE, world, value);
+            sendSuccessMessage(sender, world, setting, oldValue.toString(), value.toString());
         } catch (IllegalArgumentException e) {
-            sendFailureMessage(sender, worldData, setting, args[2]);
+            sendFailureMessage(sender, world, setting, args[2]);
         }
     }
 
-    private void sendSuccessMessage(CommandSender sender, WorldData worldData, Settings setting, String oldValue, String newValue) {
-        sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", worldData.getGeneralInformation().worldName()));
+    private void sendSuccessMessage(CommandSender sender, ManageableWorld world, Settings setting, String oldValue, String newValue) {
+        sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", world.getWorldName()));
         sender.sendMessage(SendMessageUtil.sendMessage("Set.changes").replace("%flag%", SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()))).replace("%oldValue%", oldValue).replace("%newValue%", newValue));
     }
 
-    private void sendFailureMessage(CommandSender sender, WorldData worldData, Settings setting, String attemptedValue) {
-        sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", worldData.getGeneralInformation().worldName()).replace("%flag%", SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()))).replace("%value%", attemptedValue));
+    private void sendFailureMessage(CommandSender sender, ManageableWorld world, Settings setting, String attemptedValue) {
+        sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", world.getWorldName()).replace("%flag%", SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()))).replace("%value%", attemptedValue));
     }
 
     private boolean validateArgument(Settings settings, String arg) {

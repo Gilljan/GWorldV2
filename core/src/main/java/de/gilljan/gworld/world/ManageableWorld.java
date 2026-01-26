@@ -22,7 +22,7 @@ import java.util.Optional;
 
 public class ManageableWorld implements IGWorldApi {
     private final WorldData worldData;
-    private final GameRuleAdapter gameRuleAdapter = GameRuleAdapterFactory.createAdapter();
+    private static final GameRuleAdapter GAME_RULE_ADAPTER = GameRuleAdapterFactory.createAdapter();
 
     public ManageableWorld(WorldData worldData) {
         this.worldData = worldData;
@@ -385,7 +385,7 @@ public class ManageableWorld implements IGWorldApi {
     public void setWeatherCycle(boolean weatherCycle) {
         worldData.setWeatherCycle(weatherCycle);
         if (isMapLoaded()) {
-            gameRuleAdapter.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.ADVANCE_WEATHER, weatherCycle);
+            GAME_RULE_ADAPTER.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.ADVANCE_WEATHER, weatherCycle);
         }
         setWeatherType(worldData.getWeatherType());
     }
@@ -402,7 +402,7 @@ public class ManageableWorld implements IGWorldApi {
     public void setTimeCycle(boolean timeCycle) {
         worldData.setTimeCycle(timeCycle);
         if (isMapLoaded()) {
-            gameRuleAdapter.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.ADVANCE_TIME, timeCycle);
+            GAME_RULE_ADAPTER.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.ADVANCE_TIME, timeCycle);
         }
         setTime(worldData.getTime());
     }
@@ -443,7 +443,7 @@ public class ManageableWorld implements IGWorldApi {
     public void setRandomTickSpeed(int randomTickSpeed) {
         worldData.setRandomTickSpeed(randomTickSpeed);
         if (isMapLoaded()) {
-            gameRuleAdapter.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.RANDOM_TICK_SPEED, randomTickSpeed);
+            GAME_RULE_ADAPTER.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.RANDOM_TICK_SPEED, randomTickSpeed);
         }
     }
 
@@ -451,8 +451,18 @@ public class ManageableWorld implements IGWorldApi {
     public void setAnnounceAdvancements(boolean announceAdvancements) {
         worldData.setAnnounceAdvancements(announceAdvancements);
         if (isMapLoaded()) {
-            gameRuleAdapter.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.SHOW_ADVANCEMENT_MESSAGES, announceAdvancements);
+            GAME_RULE_ADAPTER.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.SHOW_ADVANCEMENT_MESSAGES, announceAdvancements);
         }
+    }
+
+    @Override
+    public void setLoadOnStartup(boolean loadOnStartup) {
+        if(MainWorldUtil.isMainWorld(this.getWorldName())) {
+            worldData.setLoadOnStartup(true);
+            return;
+        }
+
+        worldData.setLoadOnStartup(loadOnStartup);
     }
 
     @Override
@@ -528,6 +538,36 @@ public class ManageableWorld implements IGWorldApi {
     @Override
     public boolean isAnnounceAdvancements() {
         return worldData.isAnnounceAdvancements();
+    }
+
+    @Override
+    public boolean isLoadOnStartup() {
+        return worldData.isLoadOnStartup();
+    }
+
+    @Override
+    public String getGenerator() {
+        return this.worldData.getWorldGenerator();
+    }
+
+    @Override
+    public WorldType getWorldType() {
+        return worldData.getGeneralInformation().worldType();
+    }
+
+    @Override
+    public long getSeed() {
+        return worldData.getGeneralInformation().seed();
+    }
+
+    @Override
+    public World.Environment getEnvironment() {
+        return worldData.getGeneralInformation().environment();
+    }
+
+    @Override
+    public void saveProperties() {
+        GWorld.getInstance().getDataHandler().saveWorld(this.worldData);
     }
 
     private void updateWorldSpawnLocation(ManageableWorld newWorld) {

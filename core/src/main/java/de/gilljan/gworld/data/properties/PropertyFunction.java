@@ -1,8 +1,8 @@
 package de.gilljan.gworld.data.properties;
 
-import de.gilljan.gworld.data.world.WorldData;
+import de.gilljan.gworld.world.ManageableWorld;
 
 @FunctionalInterface
 public interface PropertyFunction<T> {
-    T get(WorldData data);
+    T get(ManageableWorld world);
 }

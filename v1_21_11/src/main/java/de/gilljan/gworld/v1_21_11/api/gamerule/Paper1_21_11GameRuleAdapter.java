@@ -2,7 +2,10 @@ package de.gilljan.gworld.v1_21_11.api.gamerule;
 
 import de.gilljan.gworld.api.gamerule.GGameRule;
 import de.gilljan.gworld.api.gamerule.GameRuleAdapter;
-import org.bukkit.*;
+import org.bukkit.GameRule;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
+import org.bukkit.World;
 
 public class Paper1_21_11GameRuleAdapter implements GameRuleAdapter {
     @Override

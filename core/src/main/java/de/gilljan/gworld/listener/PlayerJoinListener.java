@@ -13,9 +13,9 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        GWorld.getInstance().getDataHandler().getWorld(player.getWorld().getName()).ifPresent(worldData -> {
-            if(WorldProperty.getValue(WorldProperty.DEFAULT_GAMEMODE, worldData)) {
-                player.setGameMode(WorldProperty.getValue(WorldProperty.GAMEMODE, worldData));
+        GWorld.getInstance().getWorldManager().getWorld(player.getWorld().getName()).ifPresent(manageableWorld -> {
+            if(WorldProperty.getValue(WorldProperty.DEFAULT_GAMEMODE, manageableWorld)) {
+                player.setGameMode(WorldProperty.getValue(WorldProperty.GAMEMODE, manageableWorld));
             }
         });
 

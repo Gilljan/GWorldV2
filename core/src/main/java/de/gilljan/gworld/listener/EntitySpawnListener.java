@@ -2,7 +2,7 @@ package de.gilljan.gworld.listener;
 
 import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.data.properties.WorldProperty;
-import de.gilljan.gworld.data.world.WorldData;
+import de.gilljan.gworld.world.ManageableWorld;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -25,27 +25,27 @@ public class EntitySpawnListener implements Listener {
             return;
         }
 
-        WorldData worldData = GWorld.getInstance().getDataHandler().getWorld(world.getName()).get();
+        ManageableWorld manageableWorld = GWorld.getInstance().getWorldManager().getWorld(world.getName()).get();
 
         EntityType spawnedType = event.getEntity().getType();
         String spawnedTypeName = spawnedType.name().toLowerCase();
 
-        if(!WorldProperty.getValue(WorldProperty.ANIMAL_SPAWNING, worldData)) {
+        if(!WorldProperty.getValue(WorldProperty.ANIMAL_SPAWNING, manageableWorld)) {
             if(GWorld.ANIMALS.contains(spawnedTypeName)) {
                 event.setCancelled(true);
                 return;
             }
         }
 
-        if(!WorldProperty.getValue(WorldProperty.MONSTER_SPAWNING, worldData)) {
+        if(!WorldProperty.getValue(WorldProperty.MONSTER_SPAWNING, manageableWorld)) {
             if(GWorld.MONSTER.contains(spawnedTypeName)) {
                 event.setCancelled(true);
                 return;
             }
         }
 
-        if(WorldProperty.getValue(WorldProperty.DISABLED_ANIMALS, worldData).contains(spawnedTypeName)
-                || WorldProperty.getValue(WorldProperty.DISABLED_MONSTERS, worldData).contains(spawnedTypeName)) {
+        if(WorldProperty.getValue(WorldProperty.DISABLED_ANIMALS, manageableWorld).contains(spawnedTypeName)
+                || WorldProperty.getValue(WorldProperty.DISABLED_MONSTERS, manageableWorld).contains(spawnedTypeName)) {
             event.setCancelled(true);
             return;
         }
