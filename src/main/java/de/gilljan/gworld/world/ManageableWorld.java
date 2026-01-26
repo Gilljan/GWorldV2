@@ -4,6 +4,7 @@ import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.api.IGWorldApi;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.DirectoryUtil;
+import de.gilljan.gworld.utils.MainWorldUtil;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -56,6 +57,11 @@ public class ManageableWorld implements IGWorldApi {
 
     @Override
     public boolean unloadMap() {
+        if(MainWorldUtil.isMainWorld(this.getWorldName())) {
+            System.out.println("Cannot unload main world: " + this.getWorldName());
+            return false;
+        }
+
         //potential teleport of players
         if(!isMapLoaded()) {
             return true;
@@ -83,7 +89,7 @@ public class ManageableWorld implements IGWorldApi {
 
             for(Player player : unloadWorld.getPlayers()) {
                 player.teleport(mainWorld.getSpawnLocation());
-                player.sendMessage(GWorld.getInstance().getConfig().getString("Unload.teleport_players"));
+                player.sendMessage(SendMessageUtil.sendMessage("Unload.teleport_players").replace("%world%", this.getWorldName()));
             }
         }
 
@@ -100,7 +106,9 @@ public class ManageableWorld implements IGWorldApi {
 
     @Override
     public boolean deleteMap() {
-        unloadMap();
+        if(!unloadMap()) {
+            return false;
+        }
 
         File world = new File(Bukkit.getWorldContainer(), worldData.getGeneralInformation().worldName());
 
@@ -117,7 +125,9 @@ public class ManageableWorld implements IGWorldApi {
     }
 
     public boolean deleteMap(boolean removeFromManager) {
-        unloadMap();
+        if(!unloadMap()) {
+            return false;
+        }
 
         File world = new File(Bukkit.getWorldContainer(), worldData.getGeneralInformation().worldName());
 
@@ -198,6 +208,8 @@ public class ManageableWorld implements IGWorldApi {
 
         worldData.updateGeneralInformation(new WorldData.GeneralInformation(world.getName(), world.getEnvironment(), world.getWorldType(), world.getSeed(), world.getGenerator() == null ? null : world.getGenerator().toString()));
 
+        updateWorldSpawnLocation(this);
+
         return true;
     }
 
@@ -267,8 +279,6 @@ public class ManageableWorld implements IGWorldApi {
                 return false;
             }
         } else deleteMap(false);
-
-        System.out.println("#222");
 
         return createMap();
     }
