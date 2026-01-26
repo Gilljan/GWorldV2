@@ -1,6 +1,5 @@
 package de.gilljan.gworld.commands;
 
-import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.bukkit.command.ConsoleCommandSender;
