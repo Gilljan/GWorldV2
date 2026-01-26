@@ -29,6 +29,11 @@ public class GUnloadCommand extends ArgsCommand {
 
     @Override
     public boolean executeConsoleCommand(ConsoleCommandSender console, String[] args) {
+        if(args.length == 0) {
+            console.sendMessage(SendMessageUtil.sendMessage("Unload.use"));
+            return false;
+        }
+
         unloadWorld(console, args[0]);
         return true;
     }
