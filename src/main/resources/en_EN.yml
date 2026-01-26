@@ -6,15 +6,11 @@ SecurityMessage: '&cFor security reasons, a world name may not contains dots (.)
 UpdateNotification: '&aThere is a new version of GWorld available: &e%version%&a. Link to the update: &e%link%&a.'
 AutoImport: '&aThe world &e%world% &awas automatically imported from GWorld.'
 Create:
- # confirm_player: '&cPlease confirm the command by clicking below or write &econfirm &cdirectly behind the command.'
- # confirm_console: '&cPlease confirm the command by typing &econfirm &cafter the command.'
   creating: '%prefix% &aThe world &e%world% &awill now be created and loaded...'
   success: '%prefix% &aThe world &e%world% &awas successfully created!'
   failed: '%prefix% &cThe world &e%world% &ccould not be created!'
   use: '%prefix% &cUse: /gcreate <world name> <normal|nether|end|large_biomes|amplified|flat> {seed} {world generator}'
 Import:
- # confirm_player: '&cPlease confirm the command by clicking below or write &econfirm &cdirectly behind the command.'
- # confirm_console: '&cPlease confirm the command by typing &econfirm &cafter the command.'
   creating: '%prefix% &aThe world &e%world% &awill now be imported and loaded...'
   success: '%prefix% &aThe world &e%world% &awas successfully imported!'
   failed: '%prefix% &cThe world &e%world% &ccould not be imported.'
@@ -25,30 +21,31 @@ Teleport:
   failed_console: '%prefix% &cOnly players can execute this command.'
   player_target_success: '%prefix% &aYou have been successfully &e%world% &ateleported to the world by someone else.' #Variable %player% is possible
   sender_target_success: '%prefix% &aYou have successfully teleported the player &e%player% &ato the world &e%world%&a.'
+  sender_target_all_success: '%prefix% &aYou have successfully teleported all players to the world &e%world%&a.' #%count% for number of teleported players is possible
   use: '%prefix% &cUse: /gtp <world name> {playername}'
 Clone:
- # confirm_player: '&cPlease confirm the command by clicking below or write &econfirm &cdirectly behind the command.'
- # confirm_console: '&cPlease confirm the command by typing &econfirm &cafter the command.'
   creating: '%prefix% &aThe world &e%world% &ais now cloned and loaded to &e%targetworld%&a...'
   success: '%prefix% &aThe world &e%world% &awas cloned to &e%targetworld%&a.'
   failed: '%prefix% &cThe world could not be cloned.'
   use: '%prefix% &cUse: /gclone <world name> <target world name>'
 Delete:
- # confirm_player: '&cPlease confirm the command by clicking below or write &econfirm &cdirectly behind the command.'
- # confirm_console: '&cPlease confirm the command by typing &econfirm &cafter the command.'
   success: '%prefix% &aThe world &e%world% &awas successfully deleted.'
   failed: '%prefix% &cThe world &e%world% &ccould not be deleted.'
   use: '%prefix% &cUse: /gdelete <world name>'
 Worlds:
   loadedMaps: '%prefix% &aThe following maps are loaded:'
   noMapsloaded: '%prefix% &cThere are no maps loaded currently.'
+  hoverTeleport: '&aClick to teleport to &e%world%&a.'
   use: '%prefix% &cUse: /gworlds'
 Reload:
   info: '%prefix% &aIt is not recommended to change the configurations during operation. Please restart the server to do this.'
   use: '%prefix% &cUse: /gwreload'
 Set:
   success: '%prefix% &aThe world configuration of the world &e%world% &awas successfully changed:'
-  changes: '%prefix% &6%flag% &ahas been set to %value%.'
+  changes: '%prefix% &6%flag% &ahas been set from &6%oldValue% &ato &e%newValue%&a.'
+  add: '%prefix% &aThe entity &e%value% &ahas been added to the list &6%flag%&a.'
+  remove: '%prefix% &aThe entity &e%value% &ahas been removed from the list &6%flag%&a.'
+  invalidEntity: '%prefix% &cThe entity &e%value% &cis invalid.'
   failed: '%prefix% &cThe world configuration of the world &e%world% &ccould not be changed.'
   use: '%prefix% &cUse: /gset <world name> <flag> <value>'
   flags:
@@ -58,12 +55,16 @@ Set:
     weather: 'weather'
     pvp: 'pvp'
     mobs: 'mobSpawning'
+    disabledMonsters: 'disabledMonsters'
     animals: 'animalSpawning'
+    disabledAnimals: 'disabledAnimals'
     forcedGamemode: 'forcedGamemode'
     defaultGamemode: 'defaultGamemode'
     difficulty: 'difficulty'
     randomTickSpeed: 'randomTickSpeed'
     announceAdvancements: 'announceAdvancements'
+    enabled: 'enabled'
+    disabled: 'disabled'
     true: '&atrue'
     false: '&cfalse'
     values: '&e'
@@ -73,7 +74,7 @@ Info:
   header: '&8---- &eGINFO&8 ----'
   footer: '&8---- &eGINFO&8 ----'
   name: '&6World name &8: '
-  generator: '&6generator: &8 '
+  generator: '&6generator &8: '
   flags:
     type: '&6type &8: '
     environment: '&6environment &8: '

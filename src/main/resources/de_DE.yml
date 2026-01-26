@@ -21,10 +21,9 @@ Teleport:
   failed_console: '%prefix% &cNur Spieler können diesen Befehl ausführen.'
   player_target_success: '%prefix% &aDu wurdest von jemand anderem erfolgreich auf die Welt &e%world% &ateleportiert.' #Variable %player% ist möglich
   sender_target_success: '%prefix% &aDu hast den Spieler &e%player% &aerfolgreich auf die Welt &e%world% &ateleportiert.'
+  sender_target_all_success: '%prefix% &aDu hast alle Spieler erfolgreich auf die Welt &e%world% &ateleportiert.' #%count% for number of teleported players is possible
   use: '%prefix% &cBenutze: /gtp <Weltname> {Spielername}'
 Clone:
-  confirm_player: '%prefix% &cBitte bestätige den Command durch das Klicken unten oder schreibe direkt &econfirm &chinter den Command.'
-  confirm_console: '%prefix% &cBitte bestätige den Command indem du &econfirm &chinter den Command schreibst.'
   creating: '%prefix% &aDie Welt &e%world% &awird nun zu &e%targetworld% &ageklont und geladen...'
   success: '%prefix% &aDie Welt &e%world% &awurde zu &e%targetworld% &ageklont.'
   failed: '%prefix% &cDie Welt konnte nicht geklont werden.'
@@ -36,17 +35,17 @@ Delete:
 Worlds:
   loadedMaps: '%prefix% &aEs sind folgende Maps geladen:'
   noMapsloaded: '%prefix% &cEs sind gerade keine Maps geladen.'
+  hoverTeleport: '&aKlicke, um dich auf &e%world% &azuteleportieren.'
   use: '%prefix% &cBenutze: /gworlds'
 Reload:
   info: '%prefix% &aEs ist nicht empfohlen, die Konfigurationen während des laufenden Betriebs zu ändern. Bitte starte den Server dafür neu.'
   use: '%prefix% &cBenutze: /gwreload'
 Set:
   success: '%prefix% &aDie Weltenkonfiguration der Welt &e%world% &awurde erfolgreich geändert:'
-  changes: '%prefix% &6%flag% &awurde von %oldValue% auf %newValue% &agesetzt.'
+  changes: '%prefix% &6%flag% &awurde von &6%oldValue% &aauf &e%newValue% &agesetzt.'
   add: '%prefix% &aDas Entity &e%value% &awurde zur Liste &6%flag% &ahinzugefügt.'
   remove: '%prefix% &aDas Entity &e%value% &awurde von der Liste &6%flag% &aentfernt.'
-  list: '%prefix% &aListe für &6%flag%&a: &e%value%'
-  failed: '%prefix% &cDie Weltenkonfiguration der Welt &e%world% &ckonnte nicht geändert werden. Flag: %flag% konnte nicht auf %value% gesetzt werden.'
+  failed: '%prefix% &cDie Weltenkonfiguration der Welt &e%world% &ckonnte nicht geändert werden. Flag: &e%flag% &ckonnte nicht auf &e%value% &cgesetzt werden.'
   invalidEntity: '%prefix% &cDas Entity &e%value% &cist ungültig.'
   use: '%prefix% &cBenutze: /gset <Weltname> <flag> <value>'
   flags:
