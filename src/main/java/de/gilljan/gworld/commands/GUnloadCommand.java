@@ -12,11 +12,17 @@ import org.bukkit.entity.Player;
 public class GUnloadCommand extends ArgsCommand {
 
     public GUnloadCommand() {
-        super("gunload", 1, "Unload.use", "gworld.commands.gunload");
+        super("gunload", 0, "Unload.use", "gworld.commands.gunload");
     }
 
     @Override
     public boolean executeCommandForPlayer(Player player, String[] args) {
+        if(args.length == 0) {
+            World currentWorld = player.getWorld();
+            unloadWorld(player, currentWorld.getName());
+            return true;
+        }
+
         unloadWorld(player, args[0]);
         return true;
     }
