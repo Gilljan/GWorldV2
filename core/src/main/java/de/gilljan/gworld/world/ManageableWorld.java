@@ -255,12 +255,12 @@ public class ManageableWorld implements IGWorldApi {
     @Override
     public boolean reCreate(boolean saveWorldToFile) {
         if (!isMapLoaded()) {
-            System.out.println("World " + worldData.getGeneralInformation().worldName() + " is not loaded, cannot recreate.");
+            //System.out.println("World " + worldData.getGeneralInformation().worldName() + " is not loaded, cannot recreate.");
             return false;
         }
 
         if(!unloadMap()) {
-            System.out.println("Could not unload world " + worldData.getGeneralInformation().worldName() + " for recreation.");
+            //System.out.println("Could not unload world " + worldData.getGeneralInformation().worldName() + " for recreation.");
             return false;
         }
 
@@ -576,19 +576,19 @@ public class ManageableWorld implements IGWorldApi {
         }
 
         if (!newWorld.isMapLoaded()) {
-            System.out.println("World " + newWorld.worldData.getGeneralInformation().worldName() + " is not loaded, cannot update spawn location.");
+            //System.out.println("World " + newWorld.worldData.getGeneralInformation().worldName() + " is not loaded, cannot update spawn location.");
             return;
         }
 
         World world = Bukkit.getWorld(newWorld.worldData.getGeneralInformation().worldName());
         if (world == null) {
-            System.out.println("World " + newWorld.worldData.getGeneralInformation().worldName() + " is null, cannot update spawn location.");
+            //System.out.println("World " + newWorld.worldData.getGeneralInformation().worldName() + " is null, cannot update spawn location.");
             return;
         }
 
         Location location = world.getSpawnLocation();
-        System.out.println("spawn location: " + location);
+        //System.out.println("spawn location: " + location);
         world.setSpawnLocation(new Location(world, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch()));
-        System.out.println("To: " + world.getSpawnLocation());
+        //System.out.println("To: " + world.getSpawnLocation());
     }
 }

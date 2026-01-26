@@ -57,7 +57,7 @@ public class GTpCommand extends ArgsCommand {
             return true;
         }
 
-        System.out.println("Location: " + world.getSpawnLocation());
+        //System.out.println("Location: " + world.getSpawnLocation());
 
         player.teleport(world.getSpawnLocation());
 

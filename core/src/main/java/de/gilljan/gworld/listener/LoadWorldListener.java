@@ -44,7 +44,7 @@ public class LoadWorldListener implements Listener {
 
         GWorld.getInstance().getWorldManager().addWorld(data).setAllProperties();
 
-        System.out.println("Auto imported world: " + event.getWorld().getName());
+        //System.out.println("Auto imported world: " + event.getWorld().getName());
 
         //todo inform players when permission is given
         for(Player player : Bukkit.getOnlinePlayers()) {

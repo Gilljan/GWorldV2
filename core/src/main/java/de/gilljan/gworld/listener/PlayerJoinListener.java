@@ -49,7 +49,7 @@ public class PlayerJoinListener implements Listener {
                         return;
                     }
 
-                    System.out.println("Latest version: " + latestVersionStr);
+                    //System.out.println("Latest version: " + latestVersionStr);
 
                     String currentVersionStr = GWorld.getInstance().getDescription().getVersion();
                     if (isNewerVersion(latestVersionStr.trim(), currentVersionStr)) {

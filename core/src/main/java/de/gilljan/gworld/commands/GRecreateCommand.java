@@ -57,11 +57,11 @@ public class GRecreateCommand extends ArgsCommand {
                 world -> {
                     if (!world.isMapLoaded()) {
                         sender.sendMessage(SendMessageUtil.sendMessage("Recreate.failed").replace("%world%", worldName));
-                        System.out.println("World " + worldName + " is not loaded, cannot recreate.");
+                        //System.out.println("World " + worldName + " is not loaded, cannot recreate.");
                         return;
                     }
 
-                    System.out.println("#1");
+                    //System.out.println("#1");
 
                     String messageKey = world.reCreate(saveOldWorld) ? "Recreate.success" : "Recreate.failed";
                     sender.sendMessage(SendMessageUtil.sendMessage(messageKey).replace("%world%", world.getWorldName()));

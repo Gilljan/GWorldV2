@@ -65,8 +65,8 @@ public final class GWorld extends JavaPlugin {
         registerCommands();
         GeneratorUtil.getGenerators();
 
-        System.out.println(MONSTER);
-        System.out.println(ANIMALS);
+//        System.out.println(MONSTER);
+//        System.out.println(ANIMALS);
 
         //bstats metrics
         new Metrics(this, 11160);
