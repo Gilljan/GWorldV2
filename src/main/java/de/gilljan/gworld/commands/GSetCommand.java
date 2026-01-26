@@ -20,11 +20,20 @@ import java.util.Optional;
 
 public class GSetCommand extends ArgsCommand {
     public GSetCommand() {
-        super("gset", 3, "Set.use", "gworld.commands.gset");
+        super("gset", 2, "Set.use", "gworld.commands.gset");
     }
 
     @Override
     public boolean executeCommandForPlayer(Player player, String[] args) {
+        if(args.length == 2) {
+            World world = player.getWorld();
+            GWorld.getInstance().getDataHandler().getWorld(world.getName()).ifPresentOrElse(worldData -> {
+                setFlag(player, worldData, new String[]{world.getName(), args[0], args[1]});
+                GWorld.getInstance().getDataHandler().saveWorld(worldData);
+            }, () -> GWorld.getInstance().getLogger().warning("No WorldData found for world: " + world.getName()));
+            return true;
+        }
+
         GWorld.getInstance().getDataHandler().getWorld(args[0]).ifPresentOrElse(worldData -> {
             setFlag(player, worldData, args);
             GWorld.getInstance().getDataHandler().saveWorld(worldData);
@@ -59,6 +68,7 @@ public class GSetCommand extends ArgsCommand {
         }
 
         root.addForAllChildren(settingsNodes);
+        root.addChildren(settingsNodes);
 
         return root;
     }
@@ -101,11 +111,6 @@ public class GSetCommand extends ArgsCommand {
         List<String> disabledEntities = new ArrayList<>(WorldProperty.getValue(property, worldData));
         String entity = args[2];
         String flagName = SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()));
-
-        if (args[2].equalsIgnoreCase("list")) {
-            sender.sendMessage(SendMessageUtil.sendMessage("Set.list").replace("%flag%", flagName).replace("%value%", disabledEntities.toString()));
-            return;
-        }
 
         if (!GWorld.MONSTER.contains(entity) && !GWorld.ANIMALS.contains(entity)) {
             sender.sendMessage(SendMessageUtil.sendMessage("Set.invalidEntity").replace("%value%", entity));
