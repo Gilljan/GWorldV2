@@ -54,7 +54,7 @@ Set:
     weatherCycle: 'weatherCycle'
     weather: 'weather'
     pvp: 'pvp'
-    mobs: 'mobSpawning'
+    monsters: 'mobSpawning'
     disabledMonsters: 'disabledMonsters'
     animals: 'animalSpawning'
     disabledAnimals: 'disabledAnimals'
