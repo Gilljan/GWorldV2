@@ -1,14 +1,8 @@
 package de.gilljan.gworld.data.world;
 
-import de.gilljan.gworld.GWorld;
-import de.gilljan.gworld.api.gamerule.GGameRule;
-import de.gilljan.gworld.api.gamerule.GameRuleAdapter;
-import de.gilljan.gworld.api.gamerule.GameRuleAdapterFactory;
 import de.gilljan.gworld.data.DataHandler;
 import de.gilljan.gworld.utils.MainWorldUtil;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import org.jetbrains.annotations.Nullable;
@@ -17,8 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class WorldData {
-    private static final GameRuleAdapter gameRuleAdapter = GameRuleAdapterFactory.createAdapter();
-
     private GeneralInformation generalInformation;
     private boolean loaded = false;
 
@@ -98,9 +90,6 @@ public class WorldData {
 
     public void setAllowPvP(boolean allowPvP) {
         this.allowPvP = allowPvP;
-
-        if (isLoaded())
-            Bukkit.getWorld(generalInformation.worldName()).setPVP(allowPvP);
     }
 
     public boolean isKeepSpawnInMemory() {
@@ -109,9 +98,6 @@ public class WorldData {
 
     public void setKeepSpawnInMemory(boolean keepSpawnInMemory) {
         this.keepSpawnInMemory = keepSpawnInMemory;
-
-        if (isLoaded())
-            Bukkit.getWorld(generalInformation.worldName()).setKeepSpawnInMemory(keepSpawnInMemory);
     }
 
     public boolean isAnimalSpawning() {
@@ -120,17 +106,6 @@ public class WorldData {
 
     public void setAnimalSpawning(boolean animalSpawning) {
         this.animalSpawning = animalSpawning;
-
-        //Remove all animals
-        if (!isLoaded())
-            return;
-
-        for (Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
-            String spawnedTypeName = entity.getType().name().toLowerCase();
-            if (GWorld.ANIMALS.contains(spawnedTypeName)) {
-                entity.remove();
-            }
-        }
     }
 
     public List<String> getDisabledAnimals() {
@@ -139,16 +114,6 @@ public class WorldData {
 
     public void setDisabledAnimals(List<String> disabledAnimals) {
         this.disabledAnimals = disabledAnimals;
-
-        if (!isLoaded())
-            return;
-
-        for (Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
-            String spawnedTypeName = entity.getType().name().toLowerCase();
-            if (disabledAnimals.contains(spawnedTypeName)) {
-                entity.remove();
-            }
-        }
     }
 
     public boolean isMonsterSpawning() {
@@ -157,17 +122,6 @@ public class WorldData {
 
     public void setMonsterSpawning(boolean monsterSpawning) {
         this.monsterSpawning = monsterSpawning;
-
-        if (!isLoaded())
-            return;
-
-        //Remove all monsters
-        for (Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
-            String spawnedTypeName = entity.getType().name().toLowerCase();
-            if (GWorld.MONSTER.contains(spawnedTypeName)) {
-                entity.remove();
-            }
-        }
     }
 
     public List<String> getDisabledMonsters() {
@@ -177,16 +131,6 @@ public class WorldData {
     public void setDisabledMonsters(List<String> disabledMonsters) {
         this.disabledMonsters = disabledMonsters;
 
-        if (!isLoaded())
-            return;
-
-        for (Entity entity : Bukkit.getWorld(generalInformation.worldName()).getEntities()) {
-            String spawnedTypeName = entity.getType().name().toLowerCase();
-            if (disabledMonsters.contains(spawnedTypeName)) {
-                entity.remove();
-            }
-        }
-
     }
 
     public boolean isWeatherCycle() {
@@ -195,11 +139,6 @@ public class WorldData {
 
     public void setWeatherCycle(boolean weatherCycle) {
         this.weatherCycle = weatherCycle;
-
-        if (isLoaded())
-            gameRuleAdapter.setGameRule(Bukkit.getWorld(generalInformation.worldName), GGameRule.ADVANCE_WEATHER, weatherCycle);
-
-        setWeatherType(weatherType);
     }
 
     public WeatherType getWeatherType() {
@@ -209,17 +148,6 @@ public class WorldData {
     public void setWeatherType(WeatherType weatherType) {
         this.weatherType = weatherType;
 
-        if (!isLoaded()) {
-            return;
-        }
-
-        if (weatherCycle) {
-            return;
-        }
-
-        Bukkit.getWorld(generalInformation.worldName()).setStorm(weatherType == WeatherType.RAIN || weatherType == WeatherType.THUNDER);
-        Bukkit.getWorld(generalInformation.worldName()).setThundering(weatherType == WeatherType.THUNDER);
-
     }
 
     public boolean isTimeCycle() {
@@ -228,11 +156,6 @@ public class WorldData {
 
     public void setTimeCycle(boolean timeCycle) {
         this.timeCycle = timeCycle;
-
-        if (isLoaded())
-            gameRuleAdapter.setGameRule(Bukkit.getWorld(generalInformation.worldName), GGameRule.ADVANCE_TIME, timeCycle);
-
-        setTime(time);
     }
 
     public long getTime() {
@@ -241,9 +164,6 @@ public class WorldData {
 
     public void setTime(long time) {
         this.time = time;
-
-        if (isLoaded() && !timeCycle)
-            Bukkit.getWorld(generalInformation.worldName()).setTime(time);
     }
 
     public boolean isDefaultGamemode() {
@@ -252,8 +172,6 @@ public class WorldData {
 
     public void setDefaultGamemode(boolean defaultGamemode) {
         this.defaultGamemode = defaultGamemode;
-
-        setGameMode(gameMode);
     }
 
     public GameMode getGameMode() {
@@ -262,12 +180,6 @@ public class WorldData {
 
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
-
-        if (isLoaded() && defaultGamemode) {
-            for (Player player : Bukkit.getWorld(generalInformation.worldName()).getPlayers()) {
-                player.setGameMode(gameMode);
-            }
-        }
     }
 
     public Difficulty getDifficulty() {
@@ -276,9 +188,6 @@ public class WorldData {
 
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
-
-        if (isLoaded())
-            Bukkit.getWorld(generalInformation.worldName()).setDifficulty(difficulty);
     }
 
     public boolean isLoadOnStartup() {
@@ -300,9 +209,6 @@ public class WorldData {
 
     public void setRandomTickSpeed(int randomTickSpeed) {
         this.randomTickSpeed = randomTickSpeed;
-
-        if (isLoaded())
-            gameRuleAdapter.setGameRule(Bukkit.getWorld(generalInformation.worldName), GGameRule.RANDOM_TICK_SPEED, randomTickSpeed);
     }
 
     public boolean isAnnounceAdvancements() {
@@ -311,9 +217,6 @@ public class WorldData {
 
     public void setAnnounceAdvancements(boolean announceAdvancements) {
         this.announceAdvancements = announceAdvancements;
-
-        if (isLoaded())
-            gameRuleAdapter.setGameRule(Bukkit.getWorld(generalInformation.worldName), GGameRule.SHOW_ADVANCEMENT_MESSAGES, announceAdvancements);
     }
 
     public GeneralInformation getGeneralInformation() {

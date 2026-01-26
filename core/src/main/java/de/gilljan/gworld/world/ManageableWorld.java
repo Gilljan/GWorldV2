@@ -2,24 +2,27 @@ package de.gilljan.gworld.world;
 
 import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.api.IGWorldApi;
+import de.gilljan.gworld.api.gamerule.GGameRule;
+import de.gilljan.gworld.api.gamerule.GameRuleAdapter;
+import de.gilljan.gworld.api.gamerule.GameRuleAdapterFactory;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.DirectoryUtil;
 import de.gilljan.gworld.utils.MainWorldUtil;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.apache.commons.io.FileUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Optional;
 
 public class ManageableWorld implements IGWorldApi {
     private final WorldData worldData;
+    private final GameRuleAdapter gameRuleAdapter = GameRuleAdapterFactory.createAdapter();
 
     public ManageableWorld(WorldData worldData) {
         this.worldData = worldData;
@@ -312,6 +315,219 @@ public class ManageableWorld implements IGWorldApi {
     @Override
     public String getWorldName() {
         return worldData.getGeneralInformation().worldName();
+    }
+
+    @Override
+    public void setAllowPvP(boolean allowPvP) {
+        worldData.setAllowPvP(allowPvP);
+        if (isMapLoaded()) {
+            Bukkit.getWorld(getWorldName()).setPVP(allowPvP);
+        }
+    }
+
+    @Override
+    public void setKeepSpawnInMemory(boolean keepSpawnInMemory) {
+        worldData.setKeepSpawnInMemory(keepSpawnInMemory);
+        if (isMapLoaded()) {
+            Bukkit.getWorld(getWorldName()).setKeepSpawnInMemory(keepSpawnInMemory);
+        }
+    }
+
+    @Override
+    public void setAnimalSpawning(boolean animalSpawning) {//genauer nachschauen
+        worldData.setAnimalSpawning(animalSpawning);
+        if (!isMapLoaded() || animalSpawning) return;
+        for (Entity entity : Bukkit.getWorld(getWorldName()).getEntities()) {
+            String spawnedTypeName = entity.getType().name().toLowerCase();
+            if (GWorld.ANIMALS.contains(spawnedTypeName)) {
+                entity.remove();
+            }
+        }
+    }
+
+    @Override
+    public void setDisabledAnimals(List<String> disabledAnimals) {
+        worldData.setDisabledAnimals(disabledAnimals);
+        if (!isMapLoaded()) return;
+        for (Entity entity : Bukkit.getWorld(getWorldName()).getEntities()) {
+            String spawnedTypeName = entity.getType().name().toLowerCase();
+            if (disabledAnimals.contains(spawnedTypeName)) {
+                entity.remove();
+            }
+        }
+    }
+
+    @Override
+    public void setMonsterSpawning(boolean monsterSpawning) {
+        worldData.setMonsterSpawning(monsterSpawning);
+        if (!isMapLoaded() || monsterSpawning) return;
+        for (Entity entity : Bukkit.getWorld(getWorldName()).getEntities()) {
+            String spawnedTypeName = entity.getType().name().toLowerCase();
+            if (GWorld.MONSTER.contains(spawnedTypeName)) {
+                entity.remove();
+            }
+        }
+    }
+
+    @Override
+    public void setDisabledMonsters(List<String> disabledMonsters) {
+        worldData.setDisabledMonsters(disabledMonsters);
+        if (!isMapLoaded()) return;
+        for (Entity entity : Bukkit.getWorld(getWorldName()).getEntities()) {
+            String spawnedTypeName = entity.getType().name().toLowerCase();
+            if (disabledMonsters.contains(spawnedTypeName)) {
+                entity.remove();
+            }
+        }
+    }
+
+    @Override
+    public void setWeatherCycle(boolean weatherCycle) {
+        worldData.setWeatherCycle(weatherCycle);
+        if (isMapLoaded()) {
+            gameRuleAdapter.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.ADVANCE_WEATHER, weatherCycle);
+        }
+        setWeatherType(worldData.getWeatherType());
+    }
+
+    @Override
+    public void setWeatherType(WorldData.WeatherType weatherType) {
+        worldData.setWeatherType(weatherType);
+        if (!isMapLoaded() || worldData.isWeatherCycle()) return;
+        Bukkit.getWorld(getWorldName()).setStorm(weatherType == WorldData.WeatherType.RAIN || weatherType == WorldData.WeatherType.THUNDER);
+        Bukkit.getWorld(getWorldName()).setThundering(weatherType == WorldData.WeatherType.THUNDER);
+    }
+
+    @Override
+    public void setTimeCycle(boolean timeCycle) {
+        worldData.setTimeCycle(timeCycle);
+        if (isMapLoaded()) {
+            gameRuleAdapter.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.ADVANCE_TIME, timeCycle);
+        }
+        setTime(worldData.getTime());
+    }
+
+    @Override
+    public void setTime(long time) {
+        worldData.setTime(time);
+        if (isMapLoaded() && !worldData.isTimeCycle()) {
+            Bukkit.getWorld(getWorldName()).setTime(time);
+        }
+    }
+
+    @Override
+    public void setDefaultGamemode(boolean defaultGamemode) {
+        worldData.setDefaultGamemode(defaultGamemode);
+        setGameMode(worldData.getGameMode());
+    }
+
+    @Override
+    public void setGameMode(GameMode gameMode) {
+        worldData.setGameMode(gameMode);
+        if (isMapLoaded() && worldData.isDefaultGamemode()) {
+            for (Player player : Bukkit.getWorld(getWorldName()).getPlayers()) {
+                player.setGameMode(gameMode);
+            }
+        }
+    }
+
+    @Override
+    public void setDifficulty(Difficulty difficulty) {
+        worldData.setDifficulty(difficulty);
+        if (isMapLoaded()) {
+            Bukkit.getWorld(getWorldName()).setDifficulty(difficulty);
+        }
+    }
+
+    @Override
+    public void setRandomTickSpeed(int randomTickSpeed) {
+        worldData.setRandomTickSpeed(randomTickSpeed);
+        if (isMapLoaded()) {
+            gameRuleAdapter.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.RANDOM_TICK_SPEED, randomTickSpeed);
+        }
+    }
+
+    @Override
+    public void setAnnounceAdvancements(boolean announceAdvancements) {
+        worldData.setAnnounceAdvancements(announceAdvancements);
+        if (isMapLoaded()) {
+            gameRuleAdapter.setGameRule(Bukkit.getWorld(getWorldName()), GGameRule.SHOW_ADVANCEMENT_MESSAGES, announceAdvancements);
+        }
+    }
+
+    @Override
+    public boolean isAllowPvP() {
+        return worldData.isAllowPvP();
+    }
+
+    @Override
+    public boolean isKeepSpawnInMemory() {
+        return worldData.isKeepSpawnInMemory();
+    }
+
+    @Override
+    public boolean isAnimalSpawning() {
+        return worldData.isAnimalSpawning();
+    }
+
+    @Override
+    public List<String> getDisabledAnimals() {
+        return worldData.getDisabledAnimals();
+    }
+
+    @Override
+    public boolean isMonsterSpawning() {
+        return worldData.isMonsterSpawning();
+    }
+
+    @Override
+    public List<String> getDisabledMonsters() {
+        return worldData.getDisabledMonsters();
+    }
+
+    @Override
+    public boolean isWeatherCycle() {
+        return worldData.isWeatherCycle();
+    }
+
+    @Override
+    public WorldData.WeatherType getWeatherType() {
+        return worldData.getWeatherType();
+    }
+
+    @Override
+    public boolean isTimeCycle() {
+        return worldData.isTimeCycle();
+    }
+
+    @Override
+    public long getTime() {
+        return worldData.getTime();
+    }
+
+    @Override
+    public boolean isDefaultGamemode() {
+        return worldData.isDefaultGamemode();
+    }
+
+    @Override
+    public GameMode getGameMode() {
+        return worldData.getGameMode();
+    }
+
+    @Override
+    public Difficulty getDifficulty() {
+        return worldData.getDifficulty();
+    }
+
+    @Override
+    public int getRandomTickSpeed() {
+        return worldData.getRandomTickSpeed();
+    }
+
+    @Override
+    public boolean isAnnounceAdvancements() {
+        return worldData.isAnnounceAdvancements();
     }
 
     private void updateWorldSpawnLocation(ManageableWorld newWorld) {
