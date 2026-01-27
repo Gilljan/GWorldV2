@@ -23,15 +23,26 @@ public class GTpCommand extends ArgsCommand {
     public boolean executeCommandForPlayer(Player player, String[] args) {
         WorldData worldData = GWorld.getInstance().getDataHandler().getWorld(args[0]).orElse(null);
 
-        if(worldData == null || !worldData.isLoaded()) {
+        if (worldData == null || !worldData.isLoaded()) {
             player.sendMessage(SendMessageUtil.sendMessage("Teleport.failed"));
+            return false;
+        }
+
+        String worldName = worldData.getGeneralInformation().worldName();
+        if (!player.hasPermission("gworld.tp.*") && !player.hasPermission("gworld.tp." + worldName)) {
+            player.sendMessage(SendMessageUtil.sendMessage("Teleport.no_perm_world").replace("%world%", worldName));
             return false;
         }
 
         World world = Bukkit.getWorld(worldData.getGeneralInformation().worldName());
 
-        if(args.length == 2) {
-            if(args[1].equalsIgnoreCase("@all")) {
+        if (args.length == 2) {
+            if (!player.hasPermission("gworld.tp.other")) {
+                player.sendMessage(SendMessageUtil.sendMessage("Teleport.no_perm_other"));
+                return false;
+            }
+
+            if (args[1].equalsIgnoreCase("@all")) {
                 List<Player> players = Bukkit.getOnlinePlayers().stream().filter(p -> !p.getName().equalsIgnoreCase(player.getName())).collect(Collectors.toList());
 
                 for(Player p : players) {
@@ -57,7 +68,10 @@ public class GTpCommand extends ArgsCommand {
             return true;
         }
 
-        //System.out.println("Location: " + world.getSpawnLocation());
+        if (world == null) {
+            player.sendMessage(SendMessageUtil.sendMessage("Teleport.failed"));
+            return false;
+        }
 
         player.teleport(world.getSpawnLocation());
 

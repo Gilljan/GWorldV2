@@ -18,6 +18,8 @@ Import:
 Teleport:
   success: '%prefix% &aYou have been successfully teleported to the world &e%world%&a.'
   failed: '%prefix% &cCould not teleport.'
+  no_perm_world: '%prefix% &cYou do not have permission to teleport to the world &e%world%&c.'
+  no_perm_other: '%prefix% &cYou do not have permission to teleport other players.'
   failed_console: '%prefix% &cOnly players can execute this command.'
   player_target_success: '%prefix% &aYou have been successfully &e%world% &ateleported to the world by someone else.' #Variable %player% is possible
   sender_target_success: '%prefix% &aYou have successfully teleported the player &e%player% &ato the world &e%world%&a.'
