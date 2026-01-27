@@ -27,7 +27,7 @@ public class GHelpCommand extends ArgsCommand {
     }
 
     @Override
-    protected CompletionNode createCompletions() {
+    protected CompletionNode createCompletions(CommandSender sender) {
         CompletionNode root = new CompletionNode("ghelp");
 
         root.addChild(new CompletionNode("1"));

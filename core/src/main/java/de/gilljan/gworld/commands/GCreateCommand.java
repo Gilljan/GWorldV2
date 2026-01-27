@@ -35,7 +35,7 @@ public class GCreateCommand extends ArgsCommand {
     }
 
     @Override
-    protected CompletionNode createCompletions() {
+    protected CompletionNode createCompletions(CommandSender sender) {
         CompletionNode rootNode = new CompletionNode("gcreate");
         CompletionNode worldName = new CompletionNode("*");
         CompletionNode seed = new CompletionNode("*");

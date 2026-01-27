@@ -6,6 +6,7 @@ import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,7 +30,7 @@ public class GTpCommand extends ArgsCommand {
         }
 
         String worldName = worldData.getGeneralInformation().worldName();
-        if (!player.hasPermission("gworld.tp.*") && !player.hasPermission("gworld.tp." + worldName)) {
+        if (!player.hasPermission("gworld.commands.tp.*") && !player.hasPermission("gworld.commands.tp." + worldName)) {
             player.sendMessage(SendMessageUtil.sendMessage("Teleport.no_perm_world").replace("%world%", worldName));
             return false;
         }
@@ -87,17 +88,22 @@ public class GTpCommand extends ArgsCommand {
     }
 
     @Override
-    protected CompletionNode createCompletions() {
+    protected CompletionNode createCompletions(CommandSender sender) {
         CompletionNode root = new CompletionNode("gtp");
-        List<CompletionNode> players = Bukkit.getOnlinePlayers().stream().map(player -> new CompletionNode(player.getName())).toList();
-        CompletionNode allNode = new CompletionNode("@all");
 
-        GWorld.getInstance().getDataHandler().getWorlds().values().stream().filter(WorldData::isLoaded).forEach(world -> {
-            CompletionNode worldNode = new CompletionNode(world.getGeneralInformation().worldName());
-            worldNode.addChildren(players);
-            worldNode.addChild(allNode);
-            root.addChild(worldNode);
-        });
+        GWorld.getInstance().getDataHandler().getWorlds().values().stream()
+                .filter(WorldData::isLoaded)
+                .filter(world -> sender.hasPermission("gworld.commands.tp.*") || sender.hasPermission("gworld.commands.tp." + world.getGeneralInformation().worldName()))
+                .forEach(world -> {
+                    CompletionNode worldNode = new CompletionNode(world.getGeneralInformation().worldName());
+                    if (sender.hasPermission("gworld.tp.other")) {
+                        List<CompletionNode> players = Bukkit.getOnlinePlayers().stream().map(player -> new CompletionNode(player.getName())).toList();
+                        CompletionNode allNode = new CompletionNode("@all");
+                        worldNode.addChildren(players);
+                        worldNode.addChild(allNode);
+                    }
+                    root.addChild(worldNode);
+                });
 
         return root;
     }

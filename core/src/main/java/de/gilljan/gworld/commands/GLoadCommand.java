@@ -26,7 +26,7 @@ public class GLoadCommand extends ArgsCommand {
     }
 
     @Override
-    protected CompletionNode createCompletions() {
+    protected CompletionNode createCompletions(CommandSender sender) {
         CompletionNode root = new CompletionNode("gload");
 
         for(String world : GWorld.getInstance().getDataHandler().getWorlds().keySet()) {

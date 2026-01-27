@@ -39,7 +39,7 @@ public class GUnloadCommand extends ArgsCommand {
     }
 
     @Override
-    protected CompletionNode createCompletions() {
+    protected CompletionNode createCompletions(CommandSender sender) {
         CompletionNode root = new CompletionNode("gunload");
 
         for(World world : Bukkit.getWorlds()) {

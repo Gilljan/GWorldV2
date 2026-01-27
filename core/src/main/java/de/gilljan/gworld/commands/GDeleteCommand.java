@@ -29,7 +29,7 @@ public class GDeleteCommand extends ArgsCommand {
     }
 
     @Override
-    protected CompletionNode createCompletions() {
+    protected CompletionNode createCompletions(CommandSender sender) {
         CompletionNode root = new CompletionNode("gdelete");
 
         for(World world : Bukkit.getWorlds()) {

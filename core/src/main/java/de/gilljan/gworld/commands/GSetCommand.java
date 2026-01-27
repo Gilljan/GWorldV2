@@ -58,7 +58,7 @@ public class GSetCommand extends ArgsCommand {
     }
 
     @Override
-    protected CompletionNode createCompletions() {
+    protected CompletionNode createCompletions(CommandSender sender) {
         CompletionNode root = new CompletionNode("gset");
 
         for(World world : GWorld.getInstance().getServer().getWorlds()) {

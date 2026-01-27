@@ -27,19 +27,19 @@ public abstract class ArgsCommand implements CommandExecutor, org.bukkit.command
     }
 
     @Override
-    public final boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public final boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
         if (!cmd.getName().equalsIgnoreCase(commandName)) {
-            return false;
-        }
-
-        if (args.length < expectedArgs) {
-            sender.sendMessage(SendMessageUtil.sendMessage(usageMessageKey));
-
             return false;
         }
 
         if (permission != null && !sender.hasPermission(permission)) {
             sender.sendMessage(SendMessageUtil.sendMessage("NoPerm"));
+
+            return false;
+        }
+
+        if (args.length < expectedArgs) {
+            sender.sendMessage(SendMessageUtil.sendMessage(usageMessageKey));
 
             return false;
         }
@@ -55,12 +55,16 @@ public abstract class ArgsCommand implements CommandExecutor, org.bukkit.command
 
     @Override
     public @org.jetbrains.annotations.Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return new TabCompleter(createCompletions()).onTabComplete(sender, command, label, args);
+        if(this.permission != null && !sender.hasPermission(this.permission)) {
+            return List.of();
+        }
+
+        return new TabCompleter(createCompletions(sender)).onTabComplete(sender, command, label, args);
     }
 
     public abstract boolean executeCommandForPlayer(Player player, String[] args);
 
     public abstract boolean executeConsoleCommand(ConsoleCommandSender console, String[] args);
 
-    protected abstract CompletionNode createCompletions();
+    protected abstract CompletionNode createCompletions(CommandSender sender);
 }

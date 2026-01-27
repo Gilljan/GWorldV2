@@ -27,7 +27,7 @@ public class GCloneCommand extends ArgsCommand {
     }
 
     @Override
-    protected CompletionNode createCompletions() {
+    protected CompletionNode createCompletions(CommandSender sender) {
         CompletionNode rootNode = new CompletionNode("gclone");
 
         for(String world : GWorld.getInstance().getDataHandler().getWorlds().keySet()) {

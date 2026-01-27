@@ -73,7 +73,7 @@ public class GImportCommand extends ArgsCommand {
 
 
     @Override
-    protected CompletionNode createCompletions() {
+    protected CompletionNode createCompletions(CommandSender sender) {
         CompletionNode root = new CompletionNode("gimport");
         CompletionNode worldName = new CompletionNode("*");
         root.addChild(worldName);

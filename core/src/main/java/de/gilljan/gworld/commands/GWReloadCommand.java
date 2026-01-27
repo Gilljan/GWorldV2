@@ -2,6 +2,7 @@ package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.utils.SendMessageUtil;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -23,7 +24,7 @@ public class GWReloadCommand extends ArgsCommand {
     }
 
     @Override
-    protected CompletionNode createCompletions() {
+    protected CompletionNode createCompletions(CommandSender sender) {
         return new CompletionNode("gwreload");
     }
 }

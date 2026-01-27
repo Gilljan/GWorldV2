@@ -39,7 +39,7 @@ public class GRecreateCommand extends ArgsCommand {
     }
 
     @Override
-    protected CompletionNode createCompletions() {
+    protected CompletionNode createCompletions(CommandSender sender) {
         CompletionNode root = new CompletionNode("grecreate");
         List<CompletionNode> booleans = List.of(new CompletionNode("true"), new CompletionNode("false"));
 
