@@ -28,7 +28,7 @@ public class PlayerJoinListener implements Listener {
         });
 
         // Update notification
-        if (!event.getPlayer().hasPermission("GWorld.updateNotification")) {
+        if (!event.getPlayer().hasPermission("gworld.updateNotification")) {
             return;
         }
 
