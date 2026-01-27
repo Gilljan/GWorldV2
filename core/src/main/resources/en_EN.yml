@@ -21,7 +21,7 @@ Teleport:
   no_perm_world: '%prefix% &cYou do not have permission to teleport to the world &e%world%&c.'
   no_perm_other: '%prefix% &cYou do not have permission to teleport other players.'
   failed_console: '%prefix% &cOnly players can execute this command.'
-  player_target_success: '%prefix% &aYou have been successfully &e%world% &ateleported to the world by someone else.' #Variable %player% is possible
+  player_target_success: '%prefix% &aYou have been successfully &ateleported to the world &e%world% &aby someone else.' #Variable %player% is possible
   sender_target_success: '%prefix% &aYou have successfully teleported the player &e%player% &ato the world &e%world%&a.'
   sender_target_all_success: '%prefix% &aYou have successfully teleported all players to the world &e%world%&a.' #%count% for number of teleported players is possible
   use: '%prefix% &cUse: /gtp <world name> {playername}'
