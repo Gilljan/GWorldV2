@@ -30,6 +30,8 @@ permissions:
       gworld.notify: true
       gworld.commands.info: true
       gworld.commands.tp: true
+      gworld.commands.tp.others: true
+      gworld.commands.tp.*: true
       gworld.commands.worlds: true
       gworld.commands.create: true
       gworld.commands.import: true
