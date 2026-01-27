@@ -13,6 +13,7 @@ import de.gilljan.gworld.listener.PlayerJoinListener;
 import de.gilljan.gworld.listener.WorldChangeListener;
 import de.gilljan.gworld.utils.EntityUtil;
 import de.gilljan.gworld.utils.GeneratorUtil;
+import de.gilljan.gworld.utils.LanguageManager;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import de.gilljan.gworld.world.ManageableWorld;
 import de.gilljan.gworld.world.WorldManager;
@@ -36,8 +37,7 @@ public final class GWorld extends JavaPlugin {
     public static boolean autoImport;
     private DataHandler dataHandler;
     private final WorldManager worldManager = new WorldManager();
-
-    private YamlConfiguration languageFile;
+    private LanguageManager languageManager;
 
     //Debuggin: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
 
@@ -65,6 +65,9 @@ public final class GWorld extends JavaPlugin {
         //Migrations
         MigrationManager migrationManager = new MigrationManager();
         migrationManager.process();
+
+        languageManager = new LanguageManager();
+        languageManager.load();
 
         loadWorlds();
         registerListener();
@@ -101,8 +104,8 @@ public final class GWorld extends JavaPlugin {
         return dataHandler;
     }
 
-    public YamlConfiguration getLanguageFile() {
-        return languageFile;
+    public LanguageManager getLanguageManager() {
+        return languageManager;
     }
 
     private void init() {
