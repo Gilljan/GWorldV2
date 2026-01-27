@@ -1,5 +1,6 @@
 package de.gilljan.gworld.data;
 
+import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.data.mysql.MySQL;
 import de.gilljan.gworld.data.world.WorldData;
 import org.bukkit.WorldType;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class Database implements DataHandler {
+    private static final int CURRENT_DB_VERSION = 1;
+
     private final MySQL mySQL;
     private final HashMap<String, WorldData> worlds;
 
@@ -57,6 +60,12 @@ public class Database implements DataHandler {
                 "  animal varchar(32) NOT NULL," +
                 "  FOREIGN KEY (mapName) REFERENCES maps(mapName) ON DELETE CASCADE," +
                 "PRIMARY KEY (mapName, animal))");
+
+        //Versioning table
+        mySQL.update("CREATE TABLE if not exists gworld_info (id INT PRIMARY KEY, version INT)");
+
+        // Standard-Wert setzen, falls Tabelle neu ist
+        mySQL.update("INSERT IGNORE INTO gworld_info (id, version) VALUES (1, " + CURRENT_DB_VERSION + ")");
     }
 
     @Override
@@ -258,5 +267,27 @@ public class Database implements DataHandler {
     @Override
     public HashMap<String, WorldData> getWorlds() {
         return new HashMap<>(worlds);
+    }
+
+    private void checkSchemaUpdate() {
+        int dbVersion = 0;
+        try (ResultSet rs = mySQL.getResult("SELECT version FROM gworld_info WHERE id = 1")) {
+            if (rs.next()) dbVersion = rs.getInt("version");
+        } catch (SQLException e) { e.printStackTrace(); }
+
+        if (dbVersion < CURRENT_DB_VERSION) {
+            GWorld.getInstance().getLogger().info("Datenbank-Schema veraltet (v" + dbVersion + "). Starte Update...");
+
+            // Placeholder for future database updates
+        /* Example:
+        if (dbVersion < 2) {
+            mySQL.update("ALTER TABLE maps ADD COLUMN isHardcore TINYINT(1) DEFAULT 0");
+            dbVersion = 2;
+        }
+        */
+
+            // Neue Version speichern
+            mySQL.update("UPDATE gworld_info SET version = " + dbVersion + " WHERE id = 1");
+        }
     }
 }

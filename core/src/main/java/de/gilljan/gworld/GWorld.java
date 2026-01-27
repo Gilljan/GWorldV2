@@ -4,6 +4,7 @@ import de.gilljan.gworld.commands.*;
 import de.gilljan.gworld.data.DataHandler;
 import de.gilljan.gworld.data.Database;
 import de.gilljan.gworld.data.FileConfiguration;
+import de.gilljan.gworld.data.MigrationManager;
 import de.gilljan.gworld.data.mysql.MySQL;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.listener.EntitySpawnListener;
@@ -60,6 +61,11 @@ public final class GWorld extends JavaPlugin {
     public void onEnable() {
         init();
         loadSettings();
+
+        //Migrations
+        MigrationManager migrationManager = new MigrationManager();
+        migrationManager.process();
+
         loadWorlds();
         registerListener();
         registerCommands();

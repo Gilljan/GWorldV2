@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Optional;
 
 public class FileConfiguration implements DataHandler {
+    private static final int CURRENT_CONFIG_VERSION = 1;
+
     public HashMap<String, WorldData> worlds = new HashMap<>();
     private final File worldFile = new File(GWorld.getInstance().getDataFolder().getPath() + "/worlds.yml");
     private final YamlConfiguration worldData = YamlConfiguration.loadConfiguration(worldFile);
@@ -23,6 +25,16 @@ public class FileConfiguration implements DataHandler {
                 worldFile.createNewFile();
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+
+        if (!worldData.contains("ConfigVersion")) {
+            worldData.set("ConfigVersion", CURRENT_CONFIG_VERSION);
+
+            try {
+                worldData.save(worldFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
 
