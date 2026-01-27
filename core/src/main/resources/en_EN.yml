@@ -128,7 +128,7 @@ Help:
   gdelete: '&8/&egdelete <worldname> &8- &7Delete a world.'
   gimport: '&8/&egimport <worldname> &8- &7<normal|nether|end|large_biomes|amplified|flat> {World Generator} - Import a world. 
   If this was created with a WorldGenerator, it must be specified to keep the world functional.'
-  ginfo: '&8&eginfo <worldname> &8- &7Output the values of the flags for the specified world. As a player it is possible 
+  ginfo: '&8/&eginfo <worldname> &8- &7Output the values of the flags for the specified world. As a player it is possible 
   omit the world name (then the current world is selected).'
   gload: '&8/&egload <worldname> &8- &7Loads an imported but unloaded world.'
   grecreate: '&8/&egrecreate <worldname> <save (true:false)> &8- &7Creates the world based on the seed and generator 
