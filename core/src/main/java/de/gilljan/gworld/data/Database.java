@@ -217,7 +217,7 @@ public class Database implements DataHandler {
                                 org.bukkit.World.Environment.valueOf(rs.getString("environment")),
                                 WorldType.valueOf(rs.getString("type")),
                                 rs.getLong("seed"),
-                                rs.getString("worldGenerator")
+                                rs.getString("worldGenerator") == null || rs.getString("worldGenerator").equalsIgnoreCase("null") ? null : rs.getString("worldGenerator")
                         ),
                         rs.getBoolean("allowPvP"),
                         rs.getBoolean("keepSpawnInMemory"),

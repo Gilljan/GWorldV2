@@ -122,27 +122,33 @@ public final class GWorld extends JavaPlugin {
     }
 
     private void loadSettings() {
-        if (getConfig().getString("Language").equalsIgnoreCase("de")) {
-            languageFile = YamlConfiguration.loadConfiguration(new File(getDataFolder().getPath() + "//de_DE.yml"));
-        } else {
-            languageFile = YamlConfiguration.loadConfiguration(new File(getDataFolder().getPath() + "//en_EN.yml"));
-        }
-
-        if(getConfig().getString("Storage.Type").equalsIgnoreCase("YAML")) {
+        if(getConfig().getString("Storage.Type", "YAML").equalsIgnoreCase("YAML")) {
             dataHandler = new FileConfiguration();
         } else {
-            dataHandler = new Database(new MySQL(
+            MySQL mySQL = new MySQL(
                     this,
                     getConfig().getString("Storage.Host"),
                     getConfig().getString("Storage.Database"),
                     getConfig().getString("Storage.Username"),
                     getConfig().getString("Storage.Password"),
                     getConfig().getInt("Storage.Port")
-                    ));
+            );
+            mySQL.connect();
+
+            if(!mySQL.isConnected()) {
+                getLogger().severe("==============================================");
+                getLogger().severe(" ERROR: NO DATABASE CONNECTION!");
+                getLogger().severe(" Please check connection properties in config.yml");
+                getLogger().severe(" Change to YML mode as fallback.");
+                getLogger().severe("==============================================");
+                dataHandler = new FileConfiguration();
+            } else {
+                dataHandler = new Database(mySQL);
+            }
         }
 
-        prefix = SendMessageUtil.sendRawMessage(Objects.requireNonNull(getConfig().getString("Prefix")));
-        autoImport = getConfig().getBoolean("AutoImport");
+        prefix = SendMessageUtil.sendRawMessage(Objects.requireNonNull(getConfig().getString("Prefix", "&eGWorld &8┃&7")));
+        autoImport = getConfig().getBoolean("AutoImport", true);
     }
 
     private void loadWorlds() {

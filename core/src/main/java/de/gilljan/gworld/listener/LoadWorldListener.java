@@ -4,6 +4,7 @@ import de.gilljan.gworld.GWorld;
 import de.gilljan.gworld.data.world.WorldData;
 import de.gilljan.gworld.utils.SendMessageUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -46,13 +47,36 @@ public class LoadWorldListener implements Listener {
 
         //System.out.println("Auto imported world: " + event.getWorld().getName());
 
-        //todo inform players when permission is given
         for(Player player : Bukkit.getOnlinePlayers()) {
             if(player.hasPermission("gworld.notify")) {
                 player.sendMessage(SendMessageUtil.sendMessage("AutoImport").replace("%world%", event.getWorld().getName()));
             }
         }
 
+    }
+
+    @EventHandler
+    public void onWorldLoad2(WorldLoadEvent event) {
+        GWorld.getInstance().getDataHandler().getWorld(event.getWorld().getName()).ifPresent(worldData -> {
+            World world = event.getWorld();
+
+            long seed = world.getSeed();
+
+            if(worldData.getGeneralInformation().seed() == seed)
+                return;
+
+            worldData.updateGeneralInformation(
+                    new WorldData.GeneralInformation(
+                            worldData.getGeneralInformation().worldName(),
+                            worldData.getGeneralInformation().environment(),
+                            worldData.getGeneralInformation().worldType(),
+                            seed,
+                            worldData.getGeneralInformation().worldGenerator()
+                    )
+            );
+
+            GWorld.getInstance().getDataHandler().saveWorld(worldData);
+        });
     }
 
 }

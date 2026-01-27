@@ -7,7 +7,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class MigrationManager {
     // Die Version, die das Plugin aktuell erwartet
@@ -20,11 +22,14 @@ public class MigrationManager {
         List<WorldData> oldData = legacy.checkAndMigrateLegacyWorlds();
 
         if (!oldData.isEmpty()) {
-            GWorld.getInstance().getLogger().info("Integriere " + oldData.size() + " Legacy-Welten in das neue System...");
-            for (WorldData wd : oldData) {
-                // Speichert automatisch in DB oder YAML, je nach Config
-                GWorld.getInstance().getDataHandler().addWorld(wd);
+            GWorld.getInstance().getLogger().info("Integrate " + oldData.size() + " Legacy-worlds into the new system...");
+
+            DataHandler handler = GWorld.getInstance().getDataHandler();
+            if (handler instanceof FileConfiguration) {
+                ((FileConfiguration) handler).clearAndReset();
             }
+
+            importData(oldData);
         }
 
         DataHandler handler = GWorld.getInstance().getDataHandler();
@@ -69,6 +74,8 @@ public class MigrationManager {
 
         GWorld.getInstance().getLogger().info("Found local worlds.yml. Transfer to DB...");
 
+        List<WorldData> worlds = new ArrayList<>();
+
         int count = 0;
         // Process each world from YAML file
         for (String worldName : config.getConfigurationSection("Worlds").getKeys(false)) {
@@ -76,14 +83,14 @@ public class MigrationManager {
                 // Parse world data
                 WorldData wd = parseWorldFromYaml(worldName, config);
 
-                // Save to DB
-                GWorld.getInstance().getDataHandler().addWorld(wd);
+                worlds.add(wd);
                 count++;
             } catch (Exception e) {
-                GWorld.getInstance().getLogger().warning("Error while transfering world: " + worldName);
-                e.printStackTrace();
+                GWorld.getInstance().getLogger().log(Level.WARNING, "Error while transfering world: " + worldName, e);
             }
         }
+
+        importData(worlds);
 
         if (count > 0) {
             GWorld.getInstance().getLogger().info("Transfer finished (" + count + " worlds). Rename local conf...");
@@ -126,7 +133,7 @@ public class MigrationManager {
         try {
             config.save(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            GWorld.getInstance().getLogger().log(Level.SEVERE, "Could not save migration config: " + file.getName(), e);
         }
     }
 

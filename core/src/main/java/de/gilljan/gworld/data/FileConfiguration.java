@@ -15,7 +15,7 @@ public class FileConfiguration implements DataHandler {
 
     public HashMap<String, WorldData> worlds = new HashMap<>();
     private final File worldFile = new File(GWorld.getInstance().getDataFolder().getPath() + "/worlds.yml");
-    private final YamlConfiguration worldData = YamlConfiguration.loadConfiguration(worldFile);
+    private YamlConfiguration worldData = YamlConfiguration.loadConfiguration(worldFile);
     private static final String WORLD_PATH = "Worlds.";
 
     //todo maybe Loadingcache Google
@@ -30,12 +30,15 @@ public class FileConfiguration implements DataHandler {
         }
 
         if (!worldData.contains("ConfigVersion")) {
-            worldData.set("ConfigVersion", CURRENT_CONFIG_VERSION);
+            if (!worldData.contains("LoadWorlds")) {
+                worldData.set("ConfigVersion", CURRENT_CONFIG_VERSION);
 
-            try {
-                worldData.save(worldFile);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                try {
+                    worldData.save(worldFile);
+                } catch (IOException e) {
+                    GWorld.getInstance().getLogger().log(Level.SEVERE, "Could not save initial worlds.yml", e);
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -211,5 +214,18 @@ public class FileConfiguration implements DataHandler {
     @Override
     public HashMap<String, WorldData> getWorlds() {
         return new HashMap<>(worlds);
+    }
+
+    public synchronized void clearAndReset() {
+        // Speicher leeren
+        this.worldData = new YamlConfiguration();
+        // Neue Version setzen (jetzt starten wir ja sauber)
+        this.worldData.set("ConfigVersion", CURRENT_CONFIG_VERSION);
+
+        try {
+            worldData.save(worldFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
