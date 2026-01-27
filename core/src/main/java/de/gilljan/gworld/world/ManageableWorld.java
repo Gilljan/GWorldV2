@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 public class ManageableWorld implements IGWorldApi {
     private final WorldData worldData;
@@ -61,7 +62,7 @@ public class ManageableWorld implements IGWorldApi {
     @Override
     public boolean unloadMap() {
         if(MainWorldUtil.isMainWorld(this.getWorldName())) {
-            System.out.println("Cannot unload main world: " + this.getWorldName());
+            GWorld.getInstance().getLogger().warning("Cannot unload main world: " + this.getWorldName());
             return false;
         }
 
@@ -150,7 +151,7 @@ public class ManageableWorld implements IGWorldApi {
     public boolean createMap() {
         WorldCreator worldCreator = WorldCreator.name(worldData.getGeneralInformation().worldName());
 
-        System.out.println(worldData.getGeneralInformation());
+        //GWorld.getInstance().getLogger().info(String.valueOf(worldData.getGeneralInformation()));
 
         if (worldData.getGeneralInformation().environment() != null) {
             worldCreator.environment(worldData.getGeneralInformation().environment());
@@ -236,8 +237,8 @@ public class ManageableWorld implements IGWorldApi {
         clonedWorld.worldData.setImporting(true);
         GWorld.getInstance().getWorldManager().addWorld(clonedWorld.worldData);
 
-        System.out.println(clonedWorld.getWorldName());
-        System.out.println(clonedWorld.worldData);
+        //GWorld.getInstance().getLogger().info(clonedWorld.getWorldName());
+        //GWorld.getInstance().getLogger().info(String.valueOf(clonedWorld.worldData));
 
         if (!clonedWorld.importExisting()) {
             GWorld.getInstance().getLogger().warning("Could not clone world " + newWorldName);
@@ -278,7 +279,7 @@ public class ManageableWorld implements IGWorldApi {
 
                 FileUtils.moveDirectory(world, destination);
             } catch (IOException ignored) {
-                ignored.printStackTrace();
+                GWorld.getInstance().getLogger().log(Level.SEVERE, "Could not move world directory for recreation: " + worldData.getGeneralInformation().worldName(), ignored);
                 return false;
             }
         } else deleteMap(false);

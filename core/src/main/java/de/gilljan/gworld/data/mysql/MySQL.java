@@ -3,6 +3,7 @@ package de.gilljan.gworld.data.mysql;
 import de.gilljan.gworld.GWorld;
 
 import java.sql.*;
+import java.util.logging.Level;
 
 public class MySQL {
     private Connection con;
@@ -26,10 +27,9 @@ public class MySQL {
         if (!isConnected()) {
             try {
                 con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true", username, password);
-                System.out.println("[" + plugin.getName() + "] MySQL-Connection established!");
+                plugin.getLogger().info("[" + plugin.getName() + "] MySQL-Connection established!");
             } catch (SQLException ex) {
-                System.out.println("[" + plugin.getName() + "] Failed to connect to MySQL-Database!");
-                ex.printStackTrace();
+                plugin.getLogger().log(Level.SEVERE, "[" + plugin.getName() + "] Failed to connect to MySQL-Database!", ex);
             }
         }
     }
@@ -38,9 +38,9 @@ public class MySQL {
         if (isConnected()) {
             try {
                 con.close();
-                System.out.println("[" + plugin.getName() + "] Disconnected MySQL-Database!");
+                plugin.getLogger().info("[" + plugin.getName() + "] Disconnected MySQL-Database!");
             } catch (SQLException ex) {
-                System.out.println("[" + plugin.getName() + "] Failure during disconnecting from the MySQL-Database!");
+                plugin.getLogger().log(Level.SEVERE, "[" + plugin.getName() + "] Failure during disconnecting from the MySQL-Database!", ex);
             }
         }
     }
@@ -61,7 +61,7 @@ public class MySQL {
             try {
                 con.createStatement().executeUpdate(query);
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                plugin.getLogger().log(Level.SEVERE, "[" + plugin.getName() + "] Failed to execute update: " + query, ex);
             }
         }
         return false;
@@ -75,7 +75,7 @@ public class MySQL {
             try {
                 return con.createStatement().executeQuery(query);
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                plugin.getLogger().log(Level.SEVERE, "[" + plugin.getName() + "] Failed to execute query: " + query, ex);
             }
         }
         return null;
@@ -89,7 +89,7 @@ public class MySQL {
             try {
                 return con.prepareStatement(query);
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                plugin.getLogger().log(Level.SEVERE, "[" + plugin.getName() + "] Failed to prepare statement: " + query, ex);
             }
         }
         return null;

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 public class Database implements DataHandler {
     private static final int CURRENT_DB_VERSION = 1;
@@ -124,7 +125,7 @@ public class Database implements DataHandler {
             delMon.setString(1, world.getGeneralInformation().worldName());
             delMon.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            GWorld.getInstance().getLogger().log(Level.SEVERE, "Failed to delete disabledMonsters for world: " + world.getGeneralInformation().worldName(), e);
         }
 
         List<String> disabledMonsters = world.getDisabledMonsters();
@@ -137,7 +138,7 @@ public class Database implements DataHandler {
                 }
                 insMon.executeBatch();
             } catch (SQLException e) {
-                e.printStackTrace();
+                GWorld.getInstance().getLogger().log(Level.SEVERE, "Failed to insert disabledMonsters for world: " + world.getGeneralInformation().worldName(), e);
             }
         }
 
@@ -146,7 +147,7 @@ public class Database implements DataHandler {
             delAni.setString(1, world.getGeneralInformation().worldName());
             delAni.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            GWorld.getInstance().getLogger().log(Level.SEVERE, "Failed to delete disabledAnimals for world: " + world.getGeneralInformation().worldName(), e);
         }
 
         List<String> disabledAnimals = world.getDisabledAnimals();
@@ -159,9 +160,10 @@ public class Database implements DataHandler {
                 }
                 insAni.executeBatch();
             } catch (SQLException e) {
-                e.printStackTrace();
+                GWorld.getInstance().getLogger().log(Level.SEVERE, "Failed to insert disabledAnimals for world: " + world.getGeneralInformation().worldName(), e);
             }
         }
+
     }
 
     @Override
@@ -181,7 +183,7 @@ public class Database implements DataHandler {
                         .ifPresent(world -> worlds.put(world.getGeneralInformation().worldName(), world));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            GWorld.getInstance().getLogger().log(Level.SEVERE, "Failed to load worlds from database", e);
         }
     }
 
@@ -236,7 +238,7 @@ public class Database implements DataHandler {
                 ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            GWorld.getInstance().getLogger().log(Level.SEVERE, "Failed to fetch world: " + name, e);
         }
         return Optional.empty();
     }
@@ -254,7 +256,7 @@ public class Database implements DataHandler {
             statement.setString(1, worldData.getGeneralInformation().worldName());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            GWorld.getInstance().getLogger().log(Level.SEVERE, "Failed to remove world: " + worldData.getGeneralInformation().worldName(), e);
         }
 
     }
@@ -273,7 +275,9 @@ public class Database implements DataHandler {
         int dbVersion = 0;
         try (ResultSet rs = mySQL.getResult("SELECT version FROM gworld_info WHERE id = 1")) {
             if (rs.next()) dbVersion = rs.getInt("version");
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            GWorld.getInstance().getLogger().log(Level.SEVERE, "Failed to check schema version", e);
+        }
 
         if (dbVersion < CURRENT_DB_VERSION) {
             GWorld.getInstance().getLogger().info("Datenbank-Schema veraltet (v" + dbVersion + "). Starte Update...");

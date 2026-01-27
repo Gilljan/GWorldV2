@@ -25,6 +25,7 @@ public class LegacyMigrator {
 
     public List<WorldData> checkAndMigrateLegacyWorlds() {
         if (!shouldMigrate()) {
+            //System.out.println("Legacy migration not required.");
             return new ArrayList<>();
         }
 
@@ -45,13 +46,16 @@ public class LegacyMigrator {
     private boolean shouldMigrate() {
         if(!configFile.exists()) return false;
 
+        //System.out.println("Checking for legacy worlds.yml...");
+
         YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         //No migration needed for configs with version tag -> NO LEGACY data
         if(config.contains("ConfigVersion")) {
+            //System.out.println("worlds.yml contains version tag, no legacy migration needed.");
             return false;
         }
-
+        //System.out.println("worlds.yml does not contain version tag, checking for legacy format...");
         // Distinguishing feature: LoadWorlds list has to exist along with Worlds section
         return config.contains("LoadWorlds") && config.contains("Worlds");
     }

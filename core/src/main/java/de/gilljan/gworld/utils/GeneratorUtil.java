@@ -5,6 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
 
+import java.util.logging.Level;
+
 public class GeneratorUtil {
     public static void getGenerators() {
         for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
@@ -16,7 +18,7 @@ public class GeneratorUtil {
                     }
                 }
             } catch (Throwable e) {
-                e.printStackTrace();
+                GWorld.getInstance().getLogger().log(Level.WARNING, "Failed to get generator from plugin: " + plugin.getName(), e);
             }
         }
     }

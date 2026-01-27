@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.logging.Level;
 
 public class FileConfiguration implements DataHandler {
     private static final int CURRENT_CONFIG_VERSION = 1;
@@ -24,7 +25,7 @@ public class FileConfiguration implements DataHandler {
             try {
                 worldFile.createNewFile();
             } catch (Exception e) {
-                e.printStackTrace();
+                GWorld.getInstance().getLogger().log(Level.SEVERE, "Could not create worlds.yml file", e);
             }
         }
 
@@ -44,6 +45,7 @@ public class FileConfiguration implements DataHandler {
             try {
                 worldData.save(worldFile);
             } catch (IOException e) {
+                GWorld.getInstance().getLogger().log(Level.SEVERE, "Could not initialize worlds.yml", e);
                 throw new RuntimeException(e);
             }
         }
@@ -136,7 +138,7 @@ public class FileConfiguration implements DataHandler {
             try {
                 worldData.save(worldFile);
             } catch (Exception e) {
-                e.printStackTrace();
+                GWorld.getInstance().getLogger().log(Level.SEVERE, "Could not save worlds.yml", e);
             }
         }
     }
@@ -196,7 +198,7 @@ public class FileConfiguration implements DataHandler {
             try {
                 worldData.save(worldFile);
             } catch (Exception e) {
-                e.printStackTrace();
+                GWorld.getInstance().getLogger().log(Level.SEVERE, "Could not save worlds.yml", e);
             }
         }
     }
