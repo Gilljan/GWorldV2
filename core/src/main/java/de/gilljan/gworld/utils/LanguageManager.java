@@ -59,6 +59,7 @@ public class LanguageManager {
         }
         else if (fallbackConfig != null && fallbackConfig.contains(key)) {
             message = fallbackConfig.getString(key);
+            GWorld.getInstance().getLogger().warning("Missing translation for key '" + key + "' in language file. Using fallback. Please regenerate your language files to include missing keys.");
         }
 
         if (message == null) {
