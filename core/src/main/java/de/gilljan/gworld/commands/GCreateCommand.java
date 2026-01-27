@@ -69,17 +69,20 @@ public class GCreateCommand extends ArgsCommand {
         }
 
 
-        if(args.length == 3) {
-            if(Character.isDigit(args[2].charAt(0))) {
+        if (args.length > 2) {
+            try {
+                Long.parseLong(args[2]);
                 worldSeed = args[2];
-            } else {
+                if (args.length > 3) {
+                    generator = args[3];
+                }
+            } catch (NumberFormatException e) {
                 generator = args[2];
+                if (args.length > 3) {
+                    sender.sendMessage(SendMessageUtil.sendMessage("Create.use"));
+                    return;
+                }
             }
-        }
-
-        if(args.length == 4) {
-            worldSeed = args[2];
-            generator = args[3];
         }
 
         WorldTypeMapping mapping = WorldTypeMapping.fromString(worldType);
