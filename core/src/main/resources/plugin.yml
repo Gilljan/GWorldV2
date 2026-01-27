@@ -31,7 +31,9 @@ permissions:
       gworld.commands.info: true
       gworld.commands.tp: true
       gworld.tp.other: true
-      gworld.commands.tp.*: true
+      gworld.commands.tp.*:
+        children:
+          gworld.commands.tp: true
       gworld.commands.worlds: true
       gworld.commands.create: true
       gworld.commands.import: true
