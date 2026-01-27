@@ -20,7 +20,7 @@ import java.util.Optional;
 
 public class GSetCommand extends ArgsCommand {
     public GSetCommand() {
-        super("gset", 2, "Set.use", "gworld.commands.gset");
+        super("gset", 2, "Set.use", "gworld.commands.set");
     }
 
     @Override

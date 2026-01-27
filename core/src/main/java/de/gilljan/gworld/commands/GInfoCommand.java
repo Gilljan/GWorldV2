@@ -15,7 +15,7 @@ import java.util.Optional;
 public class GInfoCommand extends ArgsCommand {
 
     public GInfoCommand() {
-        super("ginfo", 0, "Info.use", "gworld.commands.ginfo");
+        super("ginfo", 0, "Info.use", "gworld.commands.info");
     }
 
     @Override

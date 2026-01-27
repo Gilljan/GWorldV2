@@ -14,7 +14,7 @@ import java.util.List;
 public class GRecreateCommand extends ArgsCommand {
 
     public GRecreateCommand() {
-        super("grecreate", 2, "Recreate.use", "gworld.commands.grecreate");
+        super("grecreate", 2, "Recreate.use", "gworld.commands.recreate");
     }
 
     @Override

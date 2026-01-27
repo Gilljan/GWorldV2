@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class GTpCommand extends ArgsCommand {
 
     public GTpCommand() {
-        super("gtp", 1, "Teleport.use", "gworld.commands.gtp");
+        super("gtp", 1, "Teleport.use", "gworld.commands.tp");
     }
 
 

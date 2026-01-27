@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 public class GDeleteCommand extends ArgsCommand {
 
     public GDeleteCommand() {
-        super("gdelete", 1, "Delete.use", "gworld.commands.gdelete");
+        super("gdelete", 1, "Delete.use", "gworld.commands.delete");
     }
 
 

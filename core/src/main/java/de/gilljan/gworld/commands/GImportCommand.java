@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 public class GImportCommand extends ArgsCommand {
 
     public GImportCommand() {
-        super("gimport", 2, "Import.use", "gworld.commands.gimport");
+        super("gimport", 2, "Import.use", "gworld.commands.import");
     }
 
     @Override

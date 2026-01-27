@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class GHelpCommand extends ArgsCommand {
 
     public GHelpCommand() {
-        super("ghelp", 0, "Help.use", "gworld.commands.ghelp");
+        super("ghelp", 0, "Help.use", "gworld.commands.help");
     }
 
     @Override

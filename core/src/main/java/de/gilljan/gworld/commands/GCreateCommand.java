@@ -19,7 +19,7 @@ public class GCreateCommand extends ArgsCommand {
     private static final Random RANDOM = new Random();
 
     public GCreateCommand() {
-        super("gcreate", 2, "Create.use", "gworld.commands.gcreate");
+        super("gcreate", 2, "Create.use", "gworld.commands.create");
     }
 
     @Override

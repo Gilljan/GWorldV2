@@ -1,5 +1,5 @@
 name: GWorld
-version: '${project.version}'
+version: '2.0.0'
 main: de.gilljan.gworld.GWorld
 prefix: GWorld
 load: STARTUP
@@ -20,3 +20,24 @@ commands:
   gwreload:
   ghelp:
   gset:
+
+permissions:
+  gworld.*:
+    description: Allows all GWorld commands and permissions
+    default: op
+    children:
+      gworld.updateNotification: true
+      gworld.notify: true
+      gworld.commands.info: true
+      gworld.commands.tp: true
+      gworld.commands.worlds: true
+      gworld.commands.create: true
+      gworld.commands.import: true
+      gworld.commands.clone: true
+      gworld.commands.delete: true
+      gworld.commands.load: true
+      gworld.commands.unload: true
+      gworld.commands.recreate: true
+      gworld.commands.reload: true
+      gworld.commands.help: true
+      gworld.commands.set: true

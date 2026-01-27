@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 public class GWorldsCommand extends ArgsCommand {
 
     public GWorldsCommand() {
-        super("gworlds", 0, "Worlds.use", "gworld.commands.gworlds");
+        super("gworlds", 0, "Worlds.use", "gworld.commands.worlds");
     }
 
     @Override

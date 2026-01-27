@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class GLoadCommand extends ArgsCommand {
 
     public GLoadCommand() {
-        super("gload", 1, "Load.use", "gworld.commands.gload");
+        super("gload", 1, "Load.use", "gworld.commands.load");
     }
 
     @Override

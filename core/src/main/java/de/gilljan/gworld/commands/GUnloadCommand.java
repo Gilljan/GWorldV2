@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 public class GUnloadCommand extends ArgsCommand {
 
     public GUnloadCommand() {
-        super("gunload", 0, "Unload.use", "gworld.commands.gunload");
+        super("gunload", 0, "Unload.use", "gworld.commands.unload");
     }
 
     @Override

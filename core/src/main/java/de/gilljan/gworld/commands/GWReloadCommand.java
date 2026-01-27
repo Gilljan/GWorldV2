@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 public class GWReloadCommand extends ArgsCommand {
     public GWReloadCommand() {
-        super("gwreload", 0, "Reload.use", "gworld.commands.gwreload");
+        super("gwreload", 0, "Reload.use", "gworld.commands.reload");
     }
 
     @Override
