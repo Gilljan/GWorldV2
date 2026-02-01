@@ -56,11 +56,6 @@ public class WorldManager implements IWorldManager {
 
     @Override
     public boolean removeWorld(IManageableWorld world) {
-        if(world == null || world.deleteMap()) {
-            return false;
-        }
-
-        GWorld.getInstance().getDataHandler().getWorld(world.getWorldName()).ifPresent(this::removeWorld);
-        return true;
+        return world != null && world.deleteMap();
     }
 }
