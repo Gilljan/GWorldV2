@@ -22,7 +22,7 @@ public class WorldManager implements IWorldManager {
         return manageableWorld;
     }
 
-    //@Nullable
+    @Override
     public Optional<IManageableWorld> getWorld(String name) {
         return GWorld.getInstance().getDataHandler().getWorld(name).map(ManageableWorld::new);
     }
@@ -31,7 +31,6 @@ public class WorldManager implements IWorldManager {
     public List<IManageableWorld> getWorlds() {
         return GWorld.getInstance().getDataHandler().getWorlds().values().stream()
                 .map(ManageableWorld::new)
-                .filter(ManageableWorld::isMapLoaded)
                 .map(IManageableWorld.class::cast)
                 .toList();
     }
