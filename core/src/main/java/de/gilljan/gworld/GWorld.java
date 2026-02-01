@@ -1,5 +1,6 @@
 package de.gilljan.gworld;
 
+import de.gilljan.gworld.api.GWorldAPI;
 import de.gilljan.gworld.commands.*;
 import de.gilljan.gworld.data.DataHandler;
 import de.gilljan.gworld.data.Database;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public final class GWorld extends JavaPlugin {
+public final class GWorld extends JavaPlugin implements GWorldAPI {
     private static GWorld instance;
     public static final List<String> AVAILABLE_GENERATORS = new ArrayList<>();
     public static final List<String> ANIMALS = new ArrayList<>();
@@ -106,6 +107,11 @@ public final class GWorld extends JavaPlugin {
 
     public LanguageManager getLanguageManager() {
         return languageManager;
+    }
+
+    @Override
+    public String getVersion() {
+        return "2.0.0";
     }
 
     private void init() {

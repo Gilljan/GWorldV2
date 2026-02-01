@@ -1,6 +1,7 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.api.IManageableWorld;
 import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.data.properties.WorldProperty;
 import de.gilljan.gworld.data.world.WorldData;
@@ -47,7 +48,7 @@ public class GInfoCommand extends ArgsCommand {
             return false;
         }
 
-        Optional<ManageableWorld> world = GWorld.getInstance().getWorldManager().getWorld(args[0]);
+        Optional<IManageableWorld> world = GWorld.getInstance().getWorldManager().getWorld(args[0]);
 
         if (world.isEmpty()) {
             console.sendMessage(SendMessageUtil.sendMessage("Info.failed").replace("%world%", args[0]));
@@ -70,7 +71,7 @@ public class GInfoCommand extends ArgsCommand {
         return root;
     }
 
-    private void sendInfo(CommandSender sender, ManageableWorld world) {
+    private void sendInfo(CommandSender sender, IManageableWorld world) {
         //Send messages
         sender.sendMessage(SendMessageUtil.sendMessage("Info.header"));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.name") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getWorldName()));

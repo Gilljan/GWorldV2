@@ -1,6 +1,7 @@
 package de.gilljan.gworld.listener;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.api.IManageableWorld;
 import de.gilljan.gworld.data.properties.WorldProperty;
 import de.gilljan.gworld.world.ManageableWorld;
 import org.bukkit.World;
@@ -25,7 +26,7 @@ public class EntitySpawnListener implements Listener {
             return;
         }
 
-        ManageableWorld manageableWorld = GWorld.getInstance().getWorldManager().getWorld(world.getName()).get();
+        IManageableWorld manageableWorld = GWorld.getInstance().getWorldManager().getWorld(world.getName()).get();
 
         EntityType spawnedType = event.getEntity().getType();
         String spawnedTypeName = spawnedType.name().toLowerCase();

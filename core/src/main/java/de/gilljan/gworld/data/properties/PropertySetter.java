@@ -1,8 +1,8 @@
 package de.gilljan.gworld.data.properties;
 
-import de.gilljan.gworld.world.ManageableWorld;
+import de.gilljan.gworld.api.IManageableWorld;
 
 @FunctionalInterface
 public interface PropertySetter<T> {
-    void set(ManageableWorld world, T value);
+    void set(IManageableWorld world, T value);
 }

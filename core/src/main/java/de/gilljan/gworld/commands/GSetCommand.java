@@ -1,6 +1,7 @@
 package de.gilljan.gworld.commands;
 
 import de.gilljan.gworld.GWorld;
+import de.gilljan.gworld.api.IManageableWorld;
 import de.gilljan.gworld.commands.tabcompletion.CompletionNode;
 import de.gilljan.gworld.data.properties.WorldProperty;
 import de.gilljan.gworld.data.world.WorldData;
@@ -83,7 +84,7 @@ public class GSetCommand extends ArgsCommand {
         return root;
     }
 
-    private void setFlag(CommandSender sender, ManageableWorld world, String[] args) {
+    private void setFlag(CommandSender sender, IManageableWorld world, String[] args) {
         Optional<Settings> optionalSetting = Settings.fromString(args[1]);
 
         if(optionalSetting.isEmpty()) {
@@ -117,7 +118,7 @@ public class GSetCommand extends ArgsCommand {
         }
     }
 
-    private void handleSpecificEntities(CommandSender sender, ManageableWorld world, WorldProperty<List<String>> property, String[] args, Settings setting) {
+    private void handleSpecificEntities(CommandSender sender, IManageableWorld world, WorldProperty<List<String>> property, String[] args, Settings setting) {
         List<String> disabledEntities = new ArrayList<>(WorldProperty.getValue(property, world));
         String entity = args[2];
         String flagName = SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()));
@@ -138,7 +139,7 @@ public class GSetCommand extends ArgsCommand {
         WorldProperty.setValue(property, world, disabledEntities);
     }
 
-    private void handleIntegerFlags(CommandSender sender, ManageableWorld world, WorldProperty<Integer> property, String[] args, Settings setting) {
+    private void handleIntegerFlags(CommandSender sender, IManageableWorld world, WorldProperty<Integer> property, String[] args, Settings setting) {
         try {
             int value = Integer.parseInt(args[2]);
             Integer oldValue = WorldProperty.getValue(property, world);
@@ -149,7 +150,7 @@ public class GSetCommand extends ArgsCommand {
         }
     }
 
-    private void handleLongFlags(CommandSender sender, ManageableWorld world, String[] args, Settings setting) {
+    private void handleLongFlags(CommandSender sender, IManageableWorld world, String[] args, Settings setting) {
         try {
             long value = Long.parseLong(args[2]);
             Long oldValue = WorldProperty.getValue(WorldProperty.TIME, world);
@@ -160,7 +161,7 @@ public class GSetCommand extends ArgsCommand {
         }
     }
 
-    private void handleBooleanFlags(CommandSender sender, ManageableWorld world, WorldProperty<Boolean> property, String[] args, Settings setting) {
+    private void handleBooleanFlags(CommandSender sender, IManageableWorld world, WorldProperty<Boolean> property, String[] args, Settings setting) {
         boolean value = Boolean.parseBoolean(args[2]);
         Boolean oldValue = WorldProperty.getValue(property, world);
         WorldProperty.setValue(property, world, value);
@@ -169,7 +170,7 @@ public class GSetCommand extends ArgsCommand {
         sendSuccessMessage(sender, world, setting, oldState, newState);
     }
 
-    private void handleGameModeFlags(CommandSender sender, ManageableWorld world, String[] args, Settings setting) {
+    private void handleGameModeFlags(CommandSender sender, IManageableWorld world, String[] args, Settings setting) {
         try {
             GameMode value = GameMode.valueOf(args[2].toUpperCase());
             GameMode oldValue = WorldProperty.getValue(WorldProperty.GAMEMODE, world);
@@ -180,7 +181,7 @@ public class GSetCommand extends ArgsCommand {
         }
     }
 
-    private void handleDifficultyFlags(CommandSender sender, ManageableWorld world, String[] args, Settings setting) {
+    private void handleDifficultyFlags(CommandSender sender, IManageableWorld world, String[] args, Settings setting) {
         try {
             Difficulty value = Difficulty.valueOf(args[2].toUpperCase());
             Difficulty oldValue = WorldProperty.getValue(WorldProperty.DIFFICULTY, world);
@@ -191,7 +192,7 @@ public class GSetCommand extends ArgsCommand {
         }
     }
 
-    private void handleWeatherFlags(CommandSender sender, ManageableWorld world, String[] args, Settings setting) {
+    private void handleWeatherFlags(CommandSender sender, IManageableWorld world, String[] args, Settings setting) {
         try {
             WorldData.WeatherType value = WorldData.WeatherType.valueOf(args[2].toUpperCase());
             WorldData.WeatherType oldValue = WorldProperty.getValue(WorldProperty.WEATHER_TYPE, world);
@@ -202,12 +203,12 @@ public class GSetCommand extends ArgsCommand {
         }
     }
 
-    private void sendSuccessMessage(CommandSender sender, ManageableWorld world, Settings setting, String oldValue, String newValue) {
+    private void sendSuccessMessage(CommandSender sender, IManageableWorld world, Settings setting, String oldValue, String newValue) {
         sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", world.getWorldName()));
         sender.sendMessage(SendMessageUtil.sendMessage("Set.changes").replace("%flag%", SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()))).replace("%oldValue%", oldValue).replace("%newValue%", newValue));
     }
 
-    private void sendFailureMessage(CommandSender sender, ManageableWorld world, Settings setting, String attemptedValue) {
+    private void sendFailureMessage(CommandSender sender, IManageableWorld world, Settings setting, String attemptedValue) {
         sender.sendMessage(SendMessageUtil.sendMessage("Set.failed").replace("%world%", world.getWorldName()).replace("%flag%", SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()))).replace("%value%", attemptedValue));
     }
 

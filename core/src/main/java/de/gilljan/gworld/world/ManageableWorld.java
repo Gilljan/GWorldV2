@@ -1,7 +1,7 @@
 package de.gilljan.gworld.world;
 
 import de.gilljan.gworld.GWorld;
-import de.gilljan.gworld.api.IGWorldApi;
+import de.gilljan.gworld.api.IManageableWorld;
 import de.gilljan.gworld.api.gamerule.GGameRule;
 import de.gilljan.gworld.api.gamerule.GameRuleAdapter;
 import de.gilljan.gworld.api.gamerule.GameRuleAdapterFactory;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
-public class ManageableWorld implements IGWorldApi {
+public class ManageableWorld implements IManageableWorld {
     private final WorldData worldData;
     private static final GameRuleAdapter GAME_RULE_ADAPTER = GameRuleAdapterFactory.createAdapter();
 
@@ -223,7 +223,7 @@ public class ManageableWorld implements IGWorldApi {
     }
 
     @Override
-    public Optional<IGWorldApi> clone(String newWorldName) {
+    public Optional<IManageableWorld> clone(String newWorldName) {
         this.saveWorld();
 
         if(!DirectoryUtil.copyMapDirectory(this.getWorldName(), newWorldName))

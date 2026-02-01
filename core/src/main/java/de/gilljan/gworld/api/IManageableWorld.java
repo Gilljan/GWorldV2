@@ -9,7 +9,7 @@ import org.bukkit.WorldType;
 import java.util.List;
 import java.util.Optional;
 
-public interface IGWorldApi {
+public interface IManageableWorld {
 
     boolean loadMap();
 
@@ -23,7 +23,7 @@ public interface IGWorldApi {
 
     boolean isMapLoaded();
 
-    Optional<IGWorldApi> clone(String newWorldName);
+    Optional<IManageableWorld> clone(String newWorldName);
 
     boolean reCreate(boolean saveWorldToFile);
 
