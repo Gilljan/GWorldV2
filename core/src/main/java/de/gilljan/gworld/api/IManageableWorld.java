@@ -30,7 +30,7 @@ public interface IManageableWorld {
     boolean unloadMap();
 
     /**
-     * Deletes the world map and its files.
+     * Deletes the world map and its files. It also removes the world from GWorld management.
      *
      * @return {@code true} if the map was deleted successfully, otherwise {@code false}.
      */
