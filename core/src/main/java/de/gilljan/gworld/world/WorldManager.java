@@ -8,6 +8,7 @@ import de.gilljan.gworld.data.properties.WorldProperty;
 import de.gilljan.gworld.data.world.WorldData;
 import org.bukkit.World;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,8 +28,12 @@ public class WorldManager implements IWorldManager {
     }
 
     @Override
-    public List<ManageableWorld> getWorlds() {
-        return GWorld.getInstance().getDataHandler().getWorlds().values().stream().map(ManageableWorld::new).filter(ManageableWorld::isMapLoaded).toList();
+    public List<IManageableWorld> getWorlds() {
+        return GWorld.getInstance().getDataHandler().getWorlds().values().stream()
+                .map(ManageableWorld::new)
+                .filter(ManageableWorld::isMapLoaded)
+                .map(IManageableWorld.class::cast)
+                .toList();
     }
 
     @Override
@@ -37,7 +42,6 @@ public class WorldManager implements IWorldManager {
         ManageableWorld manageableWorld = new ManageableWorld(worldData);
         builder.getProperties().forEach((property, value) -> setWorldProperty(manageableWorld, property, value));
         GWorld.getInstance().getDataHandler().addWorld(worldData);
-        manageableWorld.createMap();
         return manageableWorld;
     }
 

@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface IWorldManager {
     // Getter
     Optional<IManageableWorld> getWorld(String name);
-    List<ManageableWorld> getWorlds();
+    List<IManageableWorld> getWorlds();
 
     // Builder
     IManageableWorld addWorldFromBuilder(WorldCreationBuilder builder);
