@@ -39,9 +39,6 @@ Worlds:
   noMapsloaded: '%prefix% &cEs sind gerade keine Maps geladen.'
   hoverTeleport: '&aKlicke, um dich auf &e%world% &azuteleportieren.'
   use: '%prefix% &cBenutze: /gworlds'
-Reload:
-  info: '%prefix% &aEs ist nicht empfohlen, die Konfigurationen während des laufenden Betriebs zu ändern. Bitte starte den Server dafür neu.'
-  use: '%prefix% &cBenutze: /gwreload'
 Set:
   success: '%prefix% &aDie Weltenkonfiguration der Welt &e%world% &awurde erfolgreich geändert:'
   changes: '%prefix% &6%flag% &awurde von &6%oldValue% &aauf &e%newValue% &agesetzt.'
@@ -140,4 +137,3 @@ Help:
   gunload: '&8/&egunload <Weltenname> &8- &7Entlade eine importierte Welt, ohne diese zu löschen. Als Spieler ist es möglich,
   den Weltenname wegzulassen (dann wird die aktuelle Welt gewählt).'
   gworlds: '&8/&egworlds &8- &7Liste alle geladenen Welten. Per Klick teleportierst du dich auf die gewählte Welt.'
-  gwreload: '&8/&egwreload &8- &7Lade alle Konfigurationen neu.'

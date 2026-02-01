@@ -6,6 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * Command is not in use anymore
+ */
+@Deprecated(since = "1.3.3", forRemoval = true)
 public class GWReloadCommand extends ArgsCommand {
     public GWReloadCommand() {
         super("gwreload", 0, "Reload.use", "gworld.commands.reload");

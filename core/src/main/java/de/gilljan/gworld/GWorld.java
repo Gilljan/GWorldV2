@@ -189,7 +189,6 @@ public final class GWorld extends JavaPlugin implements GWorldAPI {
         getCommand("gload").setExecutor(new GLoadCommand());
         getCommand("gunload").setExecutor(new GUnloadCommand());
         getCommand("grecreate").setExecutor(new GRecreateCommand());
-        getCommand("gwreload").setExecutor(new GWReloadCommand());
         getCommand("gset").setExecutor(new GSetCommand());
         getCommand("ghelp").setExecutor(new GHelpCommand());
     }

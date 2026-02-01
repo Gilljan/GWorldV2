@@ -17,7 +17,6 @@ commands:
   gload:
   gunload:
   grecreate:
-  gwreload:
   ghelp:
   gset:
 
@@ -42,6 +41,5 @@ permissions:
       gworld.commands.load: true
       gworld.commands.unload: true
       gworld.commands.recreate: true
-      gworld.commands.reload: true
       gworld.commands.help: true
       gworld.commands.set: true
