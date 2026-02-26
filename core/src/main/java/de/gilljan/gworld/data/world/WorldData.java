@@ -19,6 +19,7 @@ public class WorldData {
     private boolean importing = false;
 
     //World properties
+    private String alias;
     private boolean allowPvP;
     private boolean keepSpawnInMemory;
     private boolean animalSpawning;
@@ -32,7 +33,6 @@ public class WorldData {
     private boolean defaultGamemode;
     private GameMode gameMode;
     private Difficulty difficulty;
-    //private int spawnChunkRadius; //todo entfernen und dafür loaded in DB!
     private boolean loadOnStartup;
     private int randomTickSpeed;
     private boolean announceAdvancements;
@@ -61,10 +61,10 @@ public class WorldData {
         this.loadOnStartup = true;
         this.randomTickSpeed = 3;
         this.announceAdvancements = true;
-        //this.spawnChunkRadius = 2;
+        this.alias = null;
     }
 
-    public WorldData(GeneralInformation generalInformation, boolean allowPvP, boolean keepSpawnInMemory, boolean animalSpawning, List<String> disabledAnimals, boolean monsterSpawning, List<String> disabledMonsters, boolean weatherCycle, WeatherType weatherType, boolean timeCycle, long time, boolean defaultGamemode, GameMode gameMode, Difficulty difficulty, boolean loadOnStartup, int randomTickSpeed, boolean announceAdvancements) {
+    public WorldData(GeneralInformation generalInformation, boolean allowPvP, boolean keepSpawnInMemory, boolean animalSpawning, List<String> disabledAnimals, boolean monsterSpawning, List<String> disabledMonsters, boolean weatherCycle, WeatherType weatherType, boolean timeCycle, long time, boolean defaultGamemode, GameMode gameMode, Difficulty difficulty, boolean loadOnStartup, int randomTickSpeed, boolean announceAdvancements, String alias) {
         this.generalInformation = generalInformation;
         this.loaded = false;
         this.allowPvP = allowPvP;
@@ -83,7 +83,7 @@ public class WorldData {
         this.loadOnStartup = loadOnStartup;
         this.randomTickSpeed = randomTickSpeed;
         this.announceAdvancements = announceAdvancements;
-        //this.spawnChunkRadius = spawnChunkRadius;
+        this.alias = alias;
     }
 
     public boolean isAllowPvP() {
@@ -249,6 +249,18 @@ public class WorldData {
         return importing;
     }
 
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public String getDisplayName() {
+        return (alias != null && !alias.isEmpty()) ? alias : generalInformation.worldName();
+    }
+
     public void updateGeneralInformation(GeneralInformation generalInformation) {
         this.generalInformation = generalInformation;
     }
@@ -292,6 +304,7 @@ public class WorldData {
         private boolean loadOnStartup;
         private int randomTickSpeed;
         private boolean announceAdvancements;
+        private String alias;
 
         public Builder setGeneralInformation(GeneralInformation generalInformation) {
             this.generalInformation = generalInformation;
@@ -378,8 +391,13 @@ public class WorldData {
             return this;
         }
 
+        public Builder setAlias(String alias) {
+            this.alias = alias;
+            return this;
+        }
+
         public WorldData build() {
-            return new WorldData(generalInformation, allowPvP, keepSpawnInMemory, animalSpawning, disabledAnimals, monsterSpawning, disabledMonsters, weatherCycle, weatherType, timeCycle, time, defaultGamemode, gameMode, difficulty, loadOnStartup, randomTickSpeed, announceAdvancements);
+            return new WorldData(generalInformation, allowPvP, keepSpawnInMemory, animalSpawning, disabledAnimals, monsterSpawning, disabledMonsters, weatherCycle, weatherType, timeCycle, time, defaultGamemode, gameMode, difficulty, loadOnStartup, randomTickSpeed, announceAdvancements, alias);
         }
     }
 }

@@ -319,6 +319,16 @@ public class ManageableWorld implements IManageableWorld {
     }
 
     @Override
+    public String getAlias() {
+        return worldData.getAlias();
+    }
+
+    @Override
+    public String getDisplayName() {
+        return worldData.getDisplayName();
+    }
+
+    @Override
     public void setAllowPvP(boolean allowPvP) {
         worldData.setAllowPvP(allowPvP);
         if (isMapLoaded()) {
@@ -464,6 +474,11 @@ public class ManageableWorld implements IManageableWorld {
         }
 
         worldData.setLoadOnStartup(loadOnStartup);
+    }
+
+    @Override
+    public void setAlias(String alias) {
+        worldData.setAlias(SendMessageUtil.sendRawMessage(alias)); //translate color codes
     }
 
     @Override

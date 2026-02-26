@@ -49,6 +49,7 @@ Set:
   use: '%prefix% &cUse: /gset <world name> <flag> <value>'
   flags:
     timeCycle: 'timeCycle'
+    alias: 'alias'
     time: 'time'
     weatherCycle: 'weatherCycle'
     weather: 'weather'
@@ -68,6 +69,7 @@ Set:
     true: '&atrue'
     false: '&cfalse'
     values: '&e'
+    none: '&cnone'
 Info:
   failed: '%prefix% &cThe world &e%world% &ccould not be found.'
   use: '%prefix% &cUse: /ginfo <world name>'
@@ -77,6 +79,7 @@ Info:
   generator: '&6generator &8: '
   flags:
     type: '&6type &8: '
+    alias: '&6alias &8: '
     environment: '&6environment &8: '
     timeCycle: '&6timeCycle &8: '
     time: '&6time &8: '

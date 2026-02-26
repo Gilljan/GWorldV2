@@ -1,10 +1,11 @@
 name: GWorld
-version: '2.0.0'
+version: '2.0.1'
 main: de.gilljan.gworld.GWorld
 prefix: GWorld
 load: STARTUP
 authors: [Gilljan]
 website: https://gilljan.de
+softdepend: [PlaceholderAPI]
 
 commands:
   ginfo:

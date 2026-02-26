@@ -11,31 +11,51 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import static de.gilljan.gworld.data.FileConfiguration.CURRENT_CONFIG_VERSION;
+
 public class MigrationManager {
-    // Die Version, die das Plugin aktuell erwartet
-    private static final int CURRENT_CONFIG_VERSION = 1;
     private static final List<String> STANDARD_WORLDS = List.of("world", "world_nether", "world_the_end");
 
-    public void process() {
-        // 1. LEGACY MIGRATION (1.x -> 2.0)
+    // Cached legacy data between phases
+    private List<WorldData> legacyData = new ArrayList<>();
+
+    /**
+     * Phase 1: Runs BEFORE the DataHandler is created.
+     * Checks for legacy worlds.yml (1.x format) and converts it.
+     * The converted data is stored in memory for Phase 2.
+     * After this, the old worlds.yml is renamed to a backup,
+     * so that FileConfiguration's constructor can safely create a fresh one.
+     */
+    public void migrateLegacy() {
         LegacyMigrator legacy = new LegacyMigrator();
-        List<WorldData> oldData = legacy.checkAndMigrateLegacyWorlds();
+        legacyData = legacy.checkAndMigrateLegacyWorlds();
 
-        if (!oldData.isEmpty()) {
-            GWorld.getInstance().getLogger().info("Integrate " + oldData.size() + " Legacy-worlds into the new system...");
+        if (!legacyData.isEmpty()) {
+            GWorld.getInstance().getLogger().info("Legacy migration: " + legacyData.size() + " worlds converted. Will import after DataHandler init.");
+        }
+    }
 
-            DataHandler handler = GWorld.getInstance().getDataHandler();
+    /**
+     * Phase 2: Runs AFTER the DataHandler is created.
+     * Imports legacy data into the DataHandler and runs schema updates / DB transfers.
+     */
+    public void processPostInit() {
+        DataHandler handler = GWorld.getInstance().getDataHandler();
+
+        // 1. Import legacy data if present
+        if (!legacyData.isEmpty()) {
+            GWorld.getInstance().getLogger().info("Importing " + legacyData.size() + " legacy worlds into the new system...");
+
             if (handler instanceof FileConfiguration) {
                 ((FileConfiguration) handler).clearAndReset();
             }
 
-            importData(oldData);
+            importData(legacyData);
+            legacyData.clear();
         }
 
-        DataHandler handler = GWorld.getInstance().getDataHandler();
-
         // 2. TRANSFER YAML -> DB (if user switched from YAML to DB)
-        if (GWorld.getInstance().getDataHandler() instanceof Database) {
+        if (handler instanceof Database) {
             checkYamlToDatabaseTransfer();
         }
 
@@ -44,7 +64,13 @@ public class MigrationManager {
             handleYamlUpdates();
         }
 
-        // Datenbank-Updates in DB-Class at startup
+        // Database schema updates would be handled internally in the Database class when connecting, so no action needed here
+    }
+
+    @Deprecated
+    public void process() {
+        migrateLegacy();
+        processPostInit();
     }
 
     private void importData(List<WorldData> dataList) {
@@ -99,41 +125,19 @@ public class MigrationManager {
     }
 
     private void handleYamlUpdates() {
-        File configFile = new File(GWorld.getInstance().getDataFolder(), "worlds.yml");
-        if (!configFile.exists()) return;
-
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-
-        // Wenn keine Version vorhanden, aber es keine Legacy-Datei, Version 1
-        if (!config.contains("ConfigVersion")) {
-            config.set("ConfigVersion", 1);
-            save(config, configFile);
-            return;
-        }
-
-        int version = config.getInt("ConfigVersion");
+        FileConfiguration fileConfig = (FileConfiguration) GWorld.getInstance().getDataHandler();
+        int version = fileConfig.getConfigVersion();
 
         if (version < CURRENT_CONFIG_VERSION) {
             GWorld.getInstance().getLogger().info("Update Config von v" + version + " auf v" + CURRENT_CONFIG_VERSION);
 
-            // Beispiel für zukünftiges Update:
-            /*
             if (version < 2) {
-                 // updateLogicForV2(config);
-                 version = 2;
+                // In v2 wurde ein neues Feld "Alias" hinzugefügt, das in v1 nicht existierte
+                // Da der Standard NULL ist, wird hier nichts getan
+                version = 2;
             }
-            */
 
-            config.set("ConfigVersion", version);
-            save(config, configFile);
-        }
-    }
-
-    private void save(YamlConfiguration config, File file) {
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            GWorld.getInstance().getLogger().log(Level.SEVERE, "Could not save migration config: " + file.getName(), e);
+            fileConfig.setConfigVersion(version);
         }
     }
 
@@ -167,7 +171,8 @@ public class MigrationManager {
                 parseEnum(org.bukkit.Difficulty.class, config.getString(path + ".Difficulty"), org.bukkit.Difficulty.NORMAL),
                 config.getBoolean(path + ".LoadOnStartup"),
                 config.getInt(path + ".RandomTickSpeed"),
-                config.getBoolean(path + ".AnnounceAdvancements")
+                config.getBoolean(path + ".AnnounceAdvancements"),
+                config.getString(path + ".Alias")
         );
     }
 

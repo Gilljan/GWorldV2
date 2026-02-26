@@ -49,6 +49,7 @@ Set:
   use: '%prefix% &cBenutze: /gset <Weltname> <flag> <value>'
   flags:
     timeCycle: 'timeCycle'
+    alias: 'alias'
     time: 'time'
     weatherCycle: 'weatherCycle'
     weather: 'weather'
@@ -68,6 +69,7 @@ Set:
     true: '&atrue'
     false: '&cfalse'
     values: '&e'
+    none: '&ckeine'
 Info:
   failed: '%prefix% &cDie Welt &e%world% &ckonnte nicht gefunden werden.'
   failed_world: '%prefix% &cDie Welt auf der du dich befindest, wurde nicht importiert.'
@@ -78,6 +80,7 @@ Info:
   generator: '&6generator &8: '
   flags:
     type: '&6type &8: '
+    alias: '&6alias &8: '
     environment: '&6environment &8: '
     timeCycle: '&6timeCycle &8: '
     time: '&6time &8: '

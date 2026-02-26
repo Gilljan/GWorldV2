@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 public class FileConfiguration implements DataHandler {
-    private static final int CURRENT_CONFIG_VERSION = 1;
+    public static final int CURRENT_CONFIG_VERSION = 2;
 
     public HashMap<String, WorldData> worlds = new HashMap<>();
     private final File worldFile = new File(GWorld.getInstance().getDataFolder().getPath() + "/worlds.yml");
@@ -86,7 +86,8 @@ public class FileConfiguration implements DataHandler {
                     org.bukkit.Difficulty.valueOf(worldData.getString(WORLD_PATH + name + ".Difficulty")),
                     worldData.getBoolean(WORLD_PATH + name + ".LoadOnStartup"),
                     worldData.getInt(WORLD_PATH + name + ".RandomTickSpeed"),
-                    worldData.getBoolean(WORLD_PATH + name + ".AnnounceAdvancements")
+                    worldData.getBoolean(WORLD_PATH + name + ".AnnounceAdvancements"),
+                    worldData.getString(WORLD_PATH + name + ".Alias")
                     );
             worlds.put(name, world);
             return Optional.of(world);
@@ -115,6 +116,7 @@ public class FileConfiguration implements DataHandler {
         worldData.set(WORLD_PATH + world.getGeneralInformation().worldName() + ".GameMode", world.getGameMode().name());
         worldData.set(WORLD_PATH + world.getGeneralInformation().worldName() + ".Difficulty", world.getDifficulty().name());
         worldData.set(WORLD_PATH + world.getGeneralInformation().worldName() + ".SpawnChunkRadius", world.getSpawnChunkRadius());*/
+        setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".Alias", world.getAlias());
         setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".Environment", world.getGeneralInformation().environment().name());
         setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".Type", world.getGeneralInformation().worldType().name());
         setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".Seed", world.getGeneralInformation().seed());
@@ -135,7 +137,6 @@ public class FileConfiguration implements DataHandler {
         setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".LoadOnStartup", world.isLoadOnStartup());
         setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".RandomTickSpeed", world.getRandomTickSpeed());
         setValueInConfig(WORLD_PATH + world.getGeneralInformation().worldName() + ".AnnounceAdvancements", world.isAnnounceAdvancements());
-
 
         synchronized (worldData) {
             try {
@@ -226,6 +227,21 @@ public class FileConfiguration implements DataHandler {
             worldData.save(worldFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public int getConfigVersion() {
+        return worldData.getInt("ConfigVersion", 1);
+    }
+
+    public void setConfigVersion(int version) {
+        worldData.set("ConfigVersion", version);
+        synchronized (worldData) {
+            try {
+                worldData.save(worldFile);
+            } catch (IOException e) {
+                GWorld.getInstance().getLogger().log(Level.SEVERE, "Could not save ConfigVersion to worlds.yml", e);
+            }
         }
     }
 }

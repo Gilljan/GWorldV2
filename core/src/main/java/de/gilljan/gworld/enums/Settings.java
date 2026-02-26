@@ -20,7 +20,8 @@ public enum Settings {
     DEFAULT_GAMEMODE("survival", "creative", "adventure", "spectator"),
     RANDOM_TICK_SPEED,
     ANNOUNCE_ADVANCEMENTS("true", "false"),
-    LOAD_ON_STARTUP("true", "false");
+    LOAD_ON_STARTUP("true", "false"),
+    ALIAS;
 
     private final List<String> values = new ArrayList<>();
 

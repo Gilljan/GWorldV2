@@ -76,6 +76,7 @@ public class GInfoCommand extends ArgsCommand {
         sender.sendMessage(SendMessageUtil.sendMessage("Info.header"));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.name") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getWorldName()));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.generator") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getGenerator() == null ? "Minecraft" : world.getGenerator()));
+        sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.alias") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getAlias() != null ? world.getAlias() : SendMessageUtil.sendMessage("Info.flags.none")));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.environment") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getEnvironment().name()));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.type") + SendMessageUtil.sendMessage("Info.flags.values").replace("%value%", world.getWorldType().name()));
         sender.sendMessage(SendMessageUtil.sendMessage("Info.flags.timeCycle") + SendMessageUtil.sendMessage("Info.flags." + String.valueOf(WorldProperty.getValue(WorldProperty.TIME_CYCLE, world))));

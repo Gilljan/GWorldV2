@@ -57,6 +57,10 @@
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.helpch.at/releases/</url>
+        </repository>
     </repositories>
 
     <dependencyManagement>
@@ -78,6 +82,12 @@
                 <artifactId>annotations</artifactId>
                 <version>24.1.0</version>
                 <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>me.clip</groupId>
+                <artifactId>placeholderapi</artifactId>
+                <version>2.12.2</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

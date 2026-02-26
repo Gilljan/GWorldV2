@@ -16,6 +16,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,10 +27,18 @@ public class GSetCommand extends ArgsCommand {
 
     @Override
     public boolean executeCommandForPlayer(Player player, String[] args) {
-        if(args.length == 2) {
+        // Check if args[0] is a setting name → player is in the world
+        boolean firstArgIsSetting = Settings.fromString(args[0]).isPresent();
+
+        if(firstArgIsSetting) {
             World world = player.getWorld();
+            // Rebuild args array: [worldName, setting, value...]
+            String[] newArgs = new String[args.length + 1];
+            newArgs[0] = world.getName();
+            System.arraycopy(args, 0, newArgs, 1, args.length);
+
             GWorld.getInstance().getWorldManager().getWorld(world.getName()).ifPresentOrElse(manageableWorld -> {
-                setFlag(player, manageableWorld, new String[]{world.getName(), args[0], args[1]});
+                setFlag(player, manageableWorld, newArgs);
                 manageableWorld.saveProperties();
             }, () -> GWorld.getInstance().getLogger().warning("No WorldData found for world: " + world.getName()));
             return true;
@@ -115,6 +124,7 @@ public class GSetCommand extends ArgsCommand {
             case FORCED_GAMEMODE -> handleBooleanFlags(sender, world, WorldProperty.DEFAULT_GAMEMODE, args, setting);
             case ANNOUNCE_ADVANCEMENTS -> handleBooleanFlags(sender, world, WorldProperty.ANNOUNCE_ADVANCEMENTS, args, setting);
             case LOAD_ON_STARTUP -> handleBooleanFlags(sender, world, WorldProperty.LOAD_ON_STARTUP, args, setting);
+            case ALIAS -> handleStringFlags(sender, world, WorldProperty.ALIAS, args, setting);
         }
     }
 
@@ -203,6 +213,13 @@ public class GSetCommand extends ArgsCommand {
         }
     }
 
+    private void handleStringFlags(CommandSender sender, IManageableWorld world, WorldProperty<String> property, String[] args, Settings setting) {
+        String value = Arrays.stream(args).skip(2).reduce((a, b) -> a + " " + b).orElse("");
+        String oldValue = WorldProperty.getValue(property, world) == null ? SendMessageUtil.sendMessage("Set.flags.none") : WorldProperty.getValue(property, world);
+        WorldProperty.setValue(property, world, value);
+        sendSuccessMessage(sender, world, setting, oldValue, SendMessageUtil.sendRawMessage(value));
+    }
+
     private void sendSuccessMessage(CommandSender sender, IManageableWorld world, Settings setting, String oldValue, String newValue) {
         sender.sendMessage(SendMessageUtil.sendMessage("Set.success").replace("%world%", world.getWorldName()));
         sender.sendMessage(SendMessageUtil.sendMessage("Set.changes").replace("%flag%", SendMessageUtil.sendMessage("Set.flags." + toCamelCase(setting.name()))).replace("%oldValue%", oldValue).replace("%newValue%", newValue));
@@ -213,7 +230,7 @@ public class GSetCommand extends ArgsCommand {
     }
 
     private boolean validateArgument(Settings settings, String arg) {
-        if (settings.equals(Settings.TIME) || settings.equals(Settings.RANDOM_TICK_SPEED)) {
+        if (settings.equals(Settings.TIME) || settings.equals(Settings.RANDOM_TICK_SPEED) || settings.equals(Settings.ALIAS)) {
             return true; //Check in handler
         }
         return settings.getValues().stream()

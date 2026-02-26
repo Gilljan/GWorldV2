@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 public class Database implements DataHandler {
-    private static final int CURRENT_DB_VERSION = 1;
+    private static final int CURRENT_DB_VERSION = 2;
 
     private final MySQL mySQL;
     private final HashMap<String, WorldData> worlds;
@@ -32,6 +32,7 @@ public class Database implements DataHandler {
     private void createTables() {
         mySQL.update("CREATE TABLE if not exists maps (" +
                 "  mapName varchar(32) NOT NULL," +
+                "  alias varchar(32) DEFAULT NULL," +
                 "  environment enum('NORMAL','NETHER','THE_END','') NOT NULL DEFAULT 'NORMAL'," +
                 "  type enum('NORMAL','FLAT','LARGE_BIOMES','AMPLIFIED') NOT NULL DEFAULT 'NORMAL'," +
                 "  seed bigint NOT NULL," +
@@ -67,11 +68,14 @@ public class Database implements DataHandler {
 
         // Standard-Wert setzen, falls Tabelle neu ist
         mySQL.update("INSERT IGNORE INTO gworld_info (id, version) VALUES (1, " + CURRENT_DB_VERSION + ")");
+
+        // Schema-Migration für bestehende Datenbanken
+        checkSchemaUpdate();
     }
 
     @Override
     public Optional<WorldData> getWorld(String name) {
-        if(!worlds.containsKey(name)) {
+        if (!worlds.containsKey(name)) {
             Optional<WorldData> world = fetchWorld(name);
             world.ifPresent(worldData -> worlds.put(name, worldData));
         }
@@ -80,8 +84,9 @@ public class Database implements DataHandler {
 
     @Override
     public void saveWorld(WorldData world) {
-        mySQL.update("INSERT INTO maps (mapName, environment, type, seed, worldGenerator, allowPvP, keepSpawnInMemory, animalSpawning, monsterSpawning, weatherCycle, weatherType, timeCycle, time, defaultGamemode, gameMode, difficulty, `load`, randomTickSpeed, announceAdvancements) " +
+        mySQL.update("INSERT INTO maps (mapName, alias, environment, type, seed, worldGenerator, allowPvP, keepSpawnInMemory, animalSpawning, monsterSpawning, weatherCycle, weatherType, timeCycle, time, defaultGamemode, gameMode, difficulty, `load`, randomTickSpeed, announceAdvancements) " +
                 "VALUES ('" + world.getGeneralInformation().worldName() + "', '" +
+                world.getAlias() + "', '" +
                 world.getGeneralInformation().environment().name() + "', '" +
                 world.getGeneralInformation().worldType().name() + "', " +
                 world.getGeneralInformation().seed() + ", '" +
@@ -101,6 +106,7 @@ public class Database implements DataHandler {
                 world.getRandomTickSpeed() + ", " +
                 world.isAnnounceAdvancements() +
                 ") ON DUPLICATE KEY UPDATE " +
+                "alias = VALUES(alias), " +
                 "environment = VALUES(environment), " +
                 "type = VALUES(type), " +
                 "seed = VALUES(seed), " +
@@ -168,7 +174,7 @@ public class Database implements DataHandler {
 
     @Override
     public void saveAllWorlds() {
-        for(WorldData world : worlds.values()) {
+        for (WorldData world : worlds.values()) {
             saveWorld(world);
         }
     }
@@ -178,7 +184,7 @@ public class Database implements DataHandler {
         worlds.clear();
         ResultSet rs = mySQL.getResult("SELECT * FROM maps;");
         try {
-            while(rs.next()) {
+            while (rs.next()) {
                 fetchWorld(rs.getString("mapName"))
                         .ifPresent(world -> worlds.put(world.getGeneralInformation().worldName(), world));
             }
@@ -198,7 +204,7 @@ public class Database implements DataHandler {
         try (PreparedStatement statement = mySQL.prepareStatement("SELECT * FROM maps WHERE mapName = ?")) {
             statement.setString(1, name);
             ResultSet rs = statement.executeQuery();
-            if(rs.next()) {
+            if (rs.next()) {
                 ResultSet rsMonsters = mySQL.getResult("SELECT * FROM disabledMonsters WHERE mapName = '" + rs.getString("mapName") + "';");
                 ResultSet rsAnimals = mySQL.getResult("SELECT * FROM disabledAnimals WHERE mapName = '" + rs.getString("mapName") + "';");
                 List<String> disabledMonsters = new ArrayList<>();
@@ -234,7 +240,8 @@ public class Database implements DataHandler {
                         org.bukkit.Difficulty.valueOf(rs.getString("difficulty")),
                         rs.getBoolean("load"),
                         rs.getInt("randomTickSpeed"),
-                        rs.getBoolean("announceAdvancements")
+                        rs.getBoolean("announceAdvancements"),
+                        rs.getString("alias")
                 ));
             }
         } catch (SQLException e) {
@@ -280,18 +287,18 @@ public class Database implements DataHandler {
         }
 
         if (dbVersion < CURRENT_DB_VERSION) {
-            GWorld.getInstance().getLogger().info("Datenbank-Schema veraltet (v" + dbVersion + "). Starte Update...");
+            GWorld.getInstance().getLogger().info("Database schema outdated (v" + dbVersion + "). Starting migration...");
 
-            // Placeholder for future database updates
-        /* Example:
-        if (dbVersion < 2) {
-            mySQL.update("ALTER TABLE maps ADD COLUMN isHardcore TINYINT(1) DEFAULT 0");
-            dbVersion = 2;
-        }
-        */
+            if (dbVersion < 2) {
+                GWorld.getInstance().getLogger().info("Migrating to schema version 2: Adding 'alias' column to 'maps' table...");
+                mySQL.update("ALTER TABLE maps ADD COLUMN alias VARCHAR(32) DEFAULT NULL");
+                GWorld.getInstance().getLogger().info("Migration to schema version 2 completed.");
+                dbVersion = 2;
+            }
 
             // Neue Version speichern
             mySQL.update("UPDATE gworld_info SET version = " + dbVersion + " WHERE id = 1");
+            GWorld.getInstance().getLogger().info("Database schema updated to version " + dbVersion + ".");
         }
     }
 }

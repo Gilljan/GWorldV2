@@ -28,6 +28,7 @@ public record WorldProperty<T> (PropertyFunction<T> getFunction, T defaultValue,
     public static final WorldProperty<Integer> RANDOM_TICK_SPEED = new WorldProperty<>(IManageableWorld::getRandomTickSpeed, 3, IManageableWorld::setRandomTickSpeed);
     public static final WorldProperty<Boolean> ANNOUNCE_ADVANCEMENTS = new WorldProperty<>(IManageableWorld::isAnnounceAdvancements, true, IManageableWorld::setAnnounceAdvancements);
     public static final WorldProperty<Boolean> LOAD_ON_STARTUP = new WorldProperty<>(IManageableWorld::isLoadOnStartup, true, IManageableWorld::setLoadOnStartup);
+    public static final WorldProperty<String> ALIAS = new WorldProperty<>(IManageableWorld::getAlias, null, IManageableWorld::setAlias);
 
 
     public static <T> T getValue(WorldProperty<T> property, IManageableWorld world) {

@@ -230,6 +230,21 @@ public interface IManageableWorld {
      */
     World.Environment getEnvironment();
 
+
+    /**
+     * Gets the alias of the world, which is only used as displayname for PAPI.
+     *
+     * @return The world's alias.
+     */
+    String getAlias();
+
+    /**
+     * Gets the display name of the world, which is used for all messages and placeholders.
+     *
+     * @return The world's display name. If no display name (alias) is set, it should return the world name as a fallback.
+     */
+    String getDisplayName();
+
     /**
      * Gets the seed of the world.
      *
@@ -348,4 +363,13 @@ public interface IManageableWorld {
      * @param loadOnStartup {@code true} to load on startup, {@code false} otherwise.
      */
     void setLoadOnStartup(boolean loadOnStartup);
+
+    /**
+     * Sets the alias of the world, which is only used as displayname for PAPI.
+     * This does not change the world name or the name used for commands/placeholders.
+     *
+     * @param alias The alias to set for the world.
+     */
+    void setAlias(String alias);
+
 }

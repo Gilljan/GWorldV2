@@ -12,6 +12,7 @@ import de.gilljan.gworld.listener.EntitySpawnListener;
 import de.gilljan.gworld.listener.LoadWorldListener;
 import de.gilljan.gworld.listener.PlayerJoinListener;
 import de.gilljan.gworld.listener.WorldChangeListener;
+import de.gilljan.gworld.placeholder.GWorldPlaceholderExpansion;
 import de.gilljan.gworld.utils.EntityUtil;
 import de.gilljan.gworld.utils.GeneratorUtil;
 import de.gilljan.gworld.utils.LanguageManager;
@@ -21,6 +22,10 @@ import de.gilljan.gworld.world.WorldManager;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -61,11 +66,16 @@ public final class GWorld extends JavaPlugin implements GWorldAPI {
     @Override
     public void onEnable() {
         init();
+
+        // Legacy migration must run BEFORE the DataHandler is created,
+        // because FileConfiguration's constructor modifies worlds.yml
+        MigrationManager migrationManager = new MigrationManager();
+        migrationManager.migrateLegacy();
+
         loadSettings();
 
-        //Migrations
-        MigrationManager migrationManager = new MigrationManager();
-        migrationManager.process();
+        // Schema updates and DB transfers require the DataHandler
+        migrationManager.processPostInit();
 
         languageManager = new LanguageManager();
         languageManager.load();
@@ -75,8 +85,23 @@ public final class GWorld extends JavaPlugin implements GWorldAPI {
         registerCommands();
         GeneratorUtil.getGenerators();
 
-//        System.out.println(MONSTER);
-//        System.out.println(ANIMALS);
+        //PAPI support
+        Plugin placeholderAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
+        if (placeholderAPI != null && placeholderAPI.isEnabled()) {
+            new GWorldPlaceholderExpansion(this).register();
+            getLogger().info("PlaceholderAPI support enabled.");
+        } else {
+            // Listener für PluginEnableEvent
+            Bukkit.getPluginManager().registerEvents(new Listener() {
+                @EventHandler
+                public void onPluginEnable(PluginEnableEvent event) {
+                    if (event.getPlugin().getName().equals("PlaceholderAPI")) {
+                        new GWorldPlaceholderExpansion(GWorld.this).register();
+                        getLogger().info("PlaceholderAPI support enabled (delayed).");
+                    }
+                }
+            }, this);
+        }
 
         //bstats metrics
         new Metrics(this, 11160);
