@@ -136,7 +136,7 @@ public final class GWorld extends JavaPlugin implements GWorldAPI {
 
     @Override
     public String getVersion() {
-        return "2.0.0";
+        return "2.0.1";
     }
 
     private void init() {
